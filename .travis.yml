@@ -19,6 +19,11 @@ android:
     # Specify at least one system image, if you need to run emulator(s) during your tests
     - sys-img-x86-android-28
 
+# Environment variable that should enable an emulator to be created before_script
+env:
+  global:
+    - export ANDROID_SDK_ROOT=/usr/local/android-sdk
+
 # Emulator Management: Create, Start and Wait
 before_script:
   - echo no | android create avd --force -n test -t android-28 --abi x86
