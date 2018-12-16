@@ -1,23 +1,14 @@
 language: android
 android:
   components:
-    # Uncomment the lines below if you want to use the latest revision of Android SDK Tools
-    - tools
-    - platform-tools
+    # The BuildTools version
+    - build-tools-25.0.2
 
-    # The BuildTools version used by your project
-    - build-tools-28.0.3
+    # The SDK version
+    - android-25
 
-    # The SDK version used to compile your project
-    - android-28
-
-    # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-
-    # Specify at least one system image, if you need to run emulator(s) during your tests
-    - sys-img-x86-android-28
+    # System Image
+    - sys-img-armeabi-v7a-google_apis-25
 
 # Environment variable that should enable an emulator to be created before_script
 env:
@@ -26,7 +17,7 @@ env:
 
 # Emulator Management: Create, Start and Wait
 before_script:
-  - echo no | android create avd --force -n test -t android-28 --abi x86
+  - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
