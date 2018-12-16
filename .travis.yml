@@ -10,9 +10,10 @@ android:
 
     # The SDK version
     - android-28
+    - android-22
 
     # System Image
-    - sys-img-armeabi-v7a-google_apis-25
+    - sys-img-armeabi-v7a-google_apis-22
 
 # Environment variable that should enable an emulator to be created before_script
 env:
@@ -21,8 +22,8 @@ env:
 
 # Emulator Management: Create, Start and Wait
 before_script:
-  - echo no | android create avd --force -n test --target android-25 --abi armeabi-v7a --tag google_apis
-  - emulator -avd test -no-window &
+  - echo no | android create avd --force -n test --target android-22 --abi armeabi-v7a --tag google_apis
+  - emulator -avd test -no-skin -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
