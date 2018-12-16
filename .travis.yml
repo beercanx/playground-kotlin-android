@@ -1,31 +1,11 @@
 language: android
 android:
   components:
-    # Use the latest revision of Android SDK Tools
-    - tools
-    - platform-tools
-
-    # The BuildTools version
     - build-tools-28.0.3
-
-    # The SDK version
     - android-28
-    - android-22
-
-    # System Image
-    - sys-img-armeabi-v7a-google_apis-22
-
-# Environment variable that should enable an emulator to be created before_script
-env:
-  global:
-    - export ANDROID_SDK_ROOT=/usr/local/android-sdk
-
-# Emulator Management: Create, Start and Wait
-before_script:
-  - echo no | android create avd --force -n test --target android-22 --abi armeabi-v7a --tag google_apis
-  - emulator -avd test -no-skin -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -36,3 +16,13 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
+
+before_install:
+    - yes | sdkmanager "platforms;android-28"
+
+before_script:
+  - chmod +x gradlew
+  - android list target
+
+script:
+  - ./gradlew build -x test
