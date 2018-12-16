@@ -1,11 +1,15 @@
 language: android
 android:
   components:
+    # Use the latest revision of Android SDK Tools
+    - tools
+    - platform-tools
+
     # The BuildTools version
-    - build-tools-25.0.2
+    - build-tools-28.0.3
 
     # The SDK version
-    - android-25
+    - android-28
 
     # System Image
     - sys-img-armeabi-v7a-google_apis-25
