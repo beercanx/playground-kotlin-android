@@ -40,13 +40,14 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         setContentView(R.layout.activity_login)
         // Set up the login form.
         populateAutoComplete()
-        password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
+        password.setOnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 attemptLogin()
-                return@OnEditorActionListener true
+                true
+            } else {
+                false
             }
-            false
-        })
+        }
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
     }
@@ -55,7 +56,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         if (!mayRequestContacts()) {
             return
         }
-
         loaderManager.initLoader(0, null, this)
     }
 
@@ -67,9 +67,11 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             return true
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                .setAction(android.R.string.ok,
-                    { requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS) })
+            Snackbar
+                .make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                .setAction(android.R.string.ok) {
+                    requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
+                }
         } else {
             requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
         }
@@ -150,7 +152,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     private fun isPasswordValid(password: String): Boolean {
         //TODO: Replace this with your own logic
-        return password.length > 4
+        return password.length >= 4
     }
 
     /**
@@ -250,8 +252,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    inner class UserLoginTask internal constructor(private val mEmail: String, private val mPassword: String) :
-        AsyncTask<Void, Void, Boolean>() {
+    inner class UserLoginTask internal constructor(
+        private val mEmail: String, private val mPassword: String
+    ) : AsyncTask<Void, Void, Boolean>() {
 
         override fun doInBackground(vararg params: Void): Boolean? {
             // TODO: attempt authentication against a network service.
@@ -296,7 +299,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         /**
          * Id to identity READ_CONTACTS permission request.
          */
-        private val REQUEST_READ_CONTACTS = 0
+        private const val REQUEST_READ_CONTACTS = 0
 
         /**
          * A dummy authentication store containing known user names and passwords.
