@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Train Departures</string>
+    <string name="title_activity_departure_search">DepartureSearchActivity</string>
+</resources>
