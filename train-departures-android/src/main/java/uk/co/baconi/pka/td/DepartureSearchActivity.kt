@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 
 import kotlinx.android.synthetic.main.activity_departure_search.*
+import uk.co.baconi.pka.tdb.station.StationCodes
 
 class DepartureSearchActivity : AppCompatActivity() {
 
@@ -14,7 +15,8 @@ class DepartureSearchActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar
+                .make(view, "Test lookup: ${StationCodes.firstByCode("SHF")}", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
     }

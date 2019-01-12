@@ -1,10 +1,10 @@
-package uk.co.baconi.pka.td.station
+package uk.co.baconi.pka.tdb.station
 
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import uk.co.baconi.pka.td.station.StationCodes.byCode
-import uk.co.baconi.pka.td.station.StationCodes.byName
+import uk.co.baconi.pka.tdb.station.StationCodes.byCode
+import uk.co.baconi.pka.tdb.station.StationCodes.byName
 
 /**
  * Created by James Bacon on 12/01/2019.

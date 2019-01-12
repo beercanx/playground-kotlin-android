@@ -2,13 +2,26 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    idea
-    kotlin("jvm")
+    id("com.android.library")
+    kotlin("android")
+    kotlin("android.extensions")
 }
 
-repositories {
-    mavenLocal()
-    mavenCentral()
+android {
+    compileSdkVersion(28)
+    defaultConfig {
+        minSdkVersion(22)
+        targetSdkVersion(28)
+        versionCode = 1
+        versionName = "1.0"
+        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
 }
 
 dependencies {
@@ -16,6 +29,7 @@ dependencies {
     val ktorVersion = "1.1.1"
 
     implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk7"))
 
     // https://ktor.io/clients/http-client.html
     implementation("io.ktor","ktor-client-core", ktorVersion)
