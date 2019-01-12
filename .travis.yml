@@ -36,6 +36,8 @@ deploy:
     - alpha/build/outputs/apk/release/alpha-release-unsigned.apk
     - beta/build/outputs/apk/debug/beta-debug.apk
     - beta/build/outputs/apk/release/beta-release-unsigned.apk
+    - train-departures-android/build/outputs/apk/debug/train-departures-android-debug.apk
+    - train-departures-android/build/outputs/apk/release/train-departures-android-release-unsigned.apk
   skip_cleanup: true
   on:
     repo: beercan1989/playground-kotlin-android
