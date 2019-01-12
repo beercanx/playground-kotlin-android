@@ -7,15 +7,30 @@ data class StationCode(val stationName: String, val crsCode: String)
 
 object StationCodes {
 
-    private val stationCodesCsv: Sequence<StationCode> = readFromResource("station_codes.csv")
+    fun stationCodes(): List<StationCode> = readFromResource("station_codes.csv")
 
-    private fun readFromResource(resource: String): Sequence<StationCode> = this::class.java
+    /**
+     * Returns predicate to filter by Station Name
+     */
+    fun byName(name: String): (StationCode) -> Boolean = { sc -> sc.stationName.contains(name.toUpperCase()) }
+
+    /**
+     * Returns predicate to filter by CRS Code
+     */
+    fun byCode(code: String): (StationCode) -> Boolean = { sc -> sc.crsCode.contains(code.toUpperCase()) }
+
+    private fun readFromResource(resource: String, ignoreFirstLine: Boolean = true): List<StationCode> = javaClass
+        .classLoader
         .getResourceAsStream(resource)
         .bufferedReader()
         .useLines { lines ->
-            lines
+            (if(ignoreFirstLine) lines.tail() else lines)
+                .map(String::toUpperCase)
                 .map { line -> line.split(',', limit = 2) }
                 .filter { line -> line.size == 2 }
                 .map { line -> StationCode(line[0], line[1]) }
+                .toList()
         }
+
+    private fun <T> Sequence<T>.tail() = drop(1)
 }

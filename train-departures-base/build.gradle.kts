@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -23,6 +24,17 @@ dependencies {
     implementation("io.ktor", "ktor-client-android", ktorVersion)
 
     // XML - https://developer.android.com/training/basics/network-ops/xml
+
+    // https://github.com/kotlintest/kotlintest/blob/master/doc/reference.md
+    testImplementation("io.kotlintest", "kotlintest-runner-junit5", "3.1.11")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = TestExceptionFormat.FULL
+    }
 }
 
 tasks.withType<KotlinCompile> {
