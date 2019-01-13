@@ -9,10 +9,9 @@ import uk.co.baconi.pka.tdb.StationCode
  */
 class GetNextDeparturesRequest(accessToken: AccessToken, from: StationCode, to: StationCode) : Request {
 
-    override val headers = mapOf(
-        "Content-Type" to "text/xml;charset=UTF-8",
-        "SOAPAction" to "http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDepartures"
-    )
+    override val contentType = "text/xml;charset=UTF-8"
+
+    override val action = "http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDepartures"
 
     override val body = """
         |<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"

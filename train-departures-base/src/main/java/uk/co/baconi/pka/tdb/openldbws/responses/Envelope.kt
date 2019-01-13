@@ -4,6 +4,7 @@ import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import uk.co.baconi.pka.tdb.xml.skip
 import java.io.InputStream
+import java.io.Reader
 
 data class Envelope(val body: Body?) {
 
@@ -11,14 +12,28 @@ data class Envelope(val body: Body?) {
 
         private val xmlParser = XmlPullParserFactory.newInstance()
 
+        fun fromReader(reader: Reader): Envelope? {
+            reader.use { openedReader ->
+                return fromInput {
+                    setInput(openedReader)
+                }
+            }
+        }
+
         fun fromInputStream(inputStream: InputStream): Envelope? {
             inputStream.use { openedStream ->
-                val parser: XmlPullParser = xmlParser.newPullParser()
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
-                parser.setInput(openedStream, "UTF-8")
-                parser.nextTag()
-                return fromXml(parser)
+                return fromInput {
+                    setInput(openedStream, "UTF-8")
+                }
             }
+        }
+
+        private fun fromInput(inner: XmlPullParser.() -> Unit): Envelope? {
+            val parser: XmlPullParser = xmlParser.newPullParser()
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
+            inner(parser)
+            parser.nextTag()
+            return fromXml(parser)
         }
 
         private fun fromXml(parser: XmlPullParser): Envelope? {

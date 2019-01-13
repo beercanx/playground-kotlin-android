@@ -4,7 +4,7 @@ import org.xmlpull.v1.XmlPullParser
 import uk.co.baconi.pka.tdb.xml.readText
 import uk.co.baconi.pka.tdb.xml.skip
 
-class Service(
+data class Service(
     val sta: String?,
     val eta: String?,
     val std: String?,

@@ -1,6 +1,7 @@
 package uk.co.baconi.pka.tdb
 
 interface Request {
-    val headers: Map<String, String>
+    val contentType: String
+    val action: String
     val body: String
 }
