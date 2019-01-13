@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.tdb.station
+package uk.co.baconi.pka.tdb
 
 /**
  * Source: http://www.nationalrail.co.uk/static/documents/content/station_codes.csv

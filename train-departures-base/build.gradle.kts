@@ -41,6 +41,9 @@ dependencies {
 
     // https://github.com/kotlintest/kotlintest/blob/master/doc/reference.md
     testImplementation("io.kotlintest", "kotlintest-runner-junit5", "3.1.11")
+
+    // XmlPull impl
+    testImplementation("net.sf.kxml", "kxml2", "2.3.0")
 }
 
 tasks.withType<Test> {

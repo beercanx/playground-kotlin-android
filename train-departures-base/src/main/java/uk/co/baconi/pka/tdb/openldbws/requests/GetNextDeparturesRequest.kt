@@ -1,12 +1,13 @@
-package uk.co.baconi.pka.tdb.openldbws
+package uk.co.baconi.pka.tdb.openldbws.requests
 
+import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Request
-import uk.co.baconi.pka.tdb.station.StationCode
+import uk.co.baconi.pka.tdb.StationCode
 
 /**
  * Created by James Bacon on 12/01/2019.
  */
-class GetNextDepartures(accessToken: AccessToken, from: StationCode, to: StationCode) : Request {
+class GetNextDeparturesRequest(accessToken: AccessToken, from: StationCode, to: StationCode) : Request {
 
     override val headers = mapOf(
         "Content-Type" to "text/xml;charset=UTF-8",
@@ -34,5 +35,4 @@ class GetNextDepartures(accessToken: AccessToken, from: StationCode, to: Station
         |    </soap:Body>
         |</soap:Envelope>
     """.trimMargin()
-
 }
