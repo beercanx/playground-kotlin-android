@@ -1,7 +1,7 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
-import uk.co.baconi.pka.tdb.xml.readText
+import uk.co.baconi.pka.tdb.xml.readAsText
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class Service(
@@ -23,7 +23,7 @@ data class Service(
 
         internal fun fromXml(parser: XmlPullParser): Service? {
 
-            parser.require(XmlPullParser.START_TAG, null, "lt7:service")
+            parser.require(XmlPullParser.START_TAG, null, "service")
 
             var sta: String? = null
             var eta: String? = null
@@ -43,23 +43,23 @@ data class Service(
                     continue
                 }
                 when (parser.name) {
-                    "lt4:sta" -> sta = parser.readText()
-                    "lt4:eta" -> eta = parser.readText()
-                    "lt4:std" -> std = parser.readText()
-                    "lt4:etd" -> etd = parser.readText()
-                    "lt4:platform" -> platform = parser.readText()
-                    "lt4:operator" -> operator = parser.readText()
-                    "lt4:operatorCode" -> operatorCode = parser.readText()
-                    "lt4:serviceType" -> serviceType = parser.readText()
-                    "lt4:serviceID" -> serviceID = parser.readText()
-                    "lt5:rsid" -> rsid = parser.readText()
-                    "lt5:origin" -> origin = readLocation(parser, "lt5:origin")
-                    "lt5:destination" -> destination = readLocation(parser, "lt5:destination")
+                    "sta" -> sta = parser.readAsText()
+                    "eta" -> eta = parser.readAsText()
+                    "std" -> std = parser.readAsText()
+                    "etd" -> etd = parser.readAsText()
+                    "platform" -> platform = parser.readAsText()
+                    "operator" -> operator = parser.readAsText()
+                    "operatorCode" -> operatorCode = parser.readAsText()
+                    "serviceType" -> serviceType = parser.readAsText()
+                    "serviceID" -> serviceID = parser.readAsText()
+                    "rsid" -> rsid = parser.readAsText()
+                    "origin" -> origin = readLocation(parser, "origin")
+                    "destination" -> destination = readLocation(parser, "destination")
                     else -> parser.skip()
                 }
             }
 
-            parser.require(XmlPullParser.END_TAG, null, "lt7:service")
+            parser.require(XmlPullParser.END_TAG, null, "service")
 
             return Service(
                 sta,
@@ -88,7 +88,7 @@ data class Service(
                     continue
                 }
                 when (parser.name) {
-                    "lt4:location" -> location = Location.fromXml(parser)
+                    "location" -> location = Location.fromXml(parser)
                     else -> parser.skip()
                 }
             }

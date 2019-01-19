@@ -9,7 +9,7 @@ data class Body(val getNextDeparturesResponse: GetNextDeparturesResponse?) {
 
         internal fun fromXml(parser: XmlPullParser): Body? {
 
-            parser.require(XmlPullParser.START_TAG, null, "soap:Body")
+            parser.require(XmlPullParser.START_TAG, null, "Body")
 
             var getNextDeparturesResponse: GetNextDeparturesResponse? = null
 
@@ -23,7 +23,7 @@ data class Body(val getNextDeparturesResponse: GetNextDeparturesResponse?) {
                 }
             }
 
-            parser.require(XmlPullParser.END_TAG, null, "soap:Body")
+            parser.require(XmlPullParser.END_TAG, null, "Body")
 
             return Body(getNextDeparturesResponse)
         }

@@ -9,7 +9,7 @@ data class Destination(val crs: String?, val service: Service?) {
 
         internal fun fromXml(parser: XmlPullParser): Destination? {
 
-            parser.require(XmlPullParser.START_TAG, null, "lt7:destination")
+            parser.require(XmlPullParser.START_TAG, null, "destination")
 
             val crs: String? = parser.getAttributeValue(null, "crs")
             var service: Service? = null
@@ -19,12 +19,12 @@ data class Destination(val crs: String?, val service: Service?) {
                     continue
                 }
                 when (parser.name) {
-                    "lt7:service" -> service = Service.fromXml(parser)
+                    "service" -> service = Service.fromXml(parser)
                     else -> parser.skip()
                 }
             }
 
-            parser.require(XmlPullParser.END_TAG, null, "lt7:destination")
+            parser.require(XmlPullParser.END_TAG, null, "destination")
 
             return Destination(crs, service)
         }

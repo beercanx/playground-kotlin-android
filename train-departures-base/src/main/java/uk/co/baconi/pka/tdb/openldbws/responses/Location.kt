@@ -1,7 +1,7 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
-import uk.co.baconi.pka.tdb.xml.readText
+import uk.co.baconi.pka.tdb.xml.readAsText
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class Location(
@@ -13,7 +13,7 @@ data class Location(
 
         internal fun fromXml(parser: XmlPullParser): Location? {
 
-            parser.require(XmlPullParser.START_TAG, null, "lt4:location")
+            parser.require(XmlPullParser.START_TAG, null, "location")
 
             var locationName: String? = null
             var crs: String? = null
@@ -23,13 +23,13 @@ data class Location(
                     continue
                 }
                 when (parser.name) {
-                    "lt4:locationName" -> locationName = parser.readText()
-                    "lt4:crs" -> crs = parser.readText()
+                    "locationName" -> locationName = parser.readAsText()
+                    "crs" -> crs = parser.readAsText()
                     else -> parser.skip()
                 }
             }
 
-            parser.require(XmlPullParser.END_TAG, null, "lt4:location")
+            parser.require(XmlPullParser.END_TAG, null, "location")
 
             return Location(locationName, crs)
         }

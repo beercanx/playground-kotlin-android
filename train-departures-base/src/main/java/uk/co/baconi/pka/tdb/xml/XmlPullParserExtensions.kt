@@ -15,7 +15,7 @@ fun XmlPullParser.skip() {
     }
 }
 
-fun XmlPullParser.readText(): String? {
+fun XmlPullParser.readAsText(): String? {
     var result: String? = null
     if (this.next() == XmlPullParser.TEXT) {
         result = this.text
@@ -24,6 +24,6 @@ fun XmlPullParser.readText(): String? {
     return result
 }
 
-fun XmlPullParser.readBoolean(): Boolean? {
-    return this.readText()?.toBoolean()
+fun XmlPullParser.readAsBoolean(): Boolean? {
+    return this.readAsText()?.toBoolean()
 }

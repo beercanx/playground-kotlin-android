@@ -1,8 +1,8 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
-import uk.co.baconi.pka.tdb.xml.readBoolean
-import uk.co.baconi.pka.tdb.xml.readText
+import uk.co.baconi.pka.tdb.xml.readAsBoolean
+import uk.co.baconi.pka.tdb.xml.readAsText
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class DeparturesBoard(
@@ -32,12 +32,12 @@ data class DeparturesBoard(
                     continue
                 }
                 when (parser.name) {
-                    "lt4:generatedAt" -> generatedAt = parser.readText()
-                    "lt4:locationName" -> locationName = parser.readText()
-                    "lt4:crs" -> crs = parser.readText()
-                    "lt4:nrccMessages" -> nrccMessages = NRCCMessages.fromXml(parser)
-                    "lt4:platformAvailable" -> platformAvailable = parser.readBoolean()
-                    "lt7:departures" -> departures = Departures.fromXml(parser)
+                    "generatedAt" -> generatedAt = parser.readAsText()
+                    "locationName" -> locationName = parser.readAsText()
+                    "crs" -> crs = parser.readAsText()
+                    "nrccMessages" -> nrccMessages = NRCCMessages.fromXml(parser)
+                    "platformAvailable" -> platformAvailable = parser.readAsBoolean()
+                    "departures" -> departures = Departures.fromXml(parser)
                     else -> parser.skip()
                 }
             }
