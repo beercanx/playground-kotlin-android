@@ -5,16 +5,16 @@ import uk.co.baconi.pka.tdb.xml.readText
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class Service(
-    val sta: String?,
-    val eta: String?,
-    val std: String?,
-    val etd: String?,
-    val platform: String?,
-    val operator: String?,
-    val operatorCode: String?,
-    val serviceType: String?,
-    val serviceID: String?,
-    val rsid: String?,
+    val sta: String?, // Scheduled Time of Arrival [10:41]
+    val eta: String?, // Estimated Time of Arrival [On time / 10:54]
+    val std: String?, // Scheduled Time of Departure [10:41]
+    val etd: String?, // Estimated Time of Departure [On time / 10:54]
+    val platform: String?, // null / 1 / bus
+    val operator: String?, // Northern
+    val operatorCode: String?, // NT
+    val serviceType: String?, // bus / train
+    val serviceID: String?, // Base64 encoded string
+    val rsid: String?, // NT044400
     val origin: Location?,
     val destination: Location?
 ) {

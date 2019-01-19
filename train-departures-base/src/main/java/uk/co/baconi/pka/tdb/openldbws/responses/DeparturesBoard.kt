@@ -6,11 +6,11 @@ import uk.co.baconi.pka.tdb.xml.readText
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class DeparturesBoard(
-    val generatedAt: String?,
-    val locationName: String?,
-    val crs: String?,
-    val nrccMessages: NRCCMessages?,
-    val platformAvailable: Boolean?,
+    val generatedAt: String?, // [2019-01-13T13:51:17.106902+00:00]
+    val locationName: String?, // Station Name [Sheffield]
+    val crs: String?, // CRS Code [SHF]
+    val nrccMessages: NRCCMessages?, // Messages [Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare.]
+    val platformAvailable: Boolean?, // [true|false|null]
     val departures: Departures?
 ) {
 

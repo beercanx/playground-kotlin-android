@@ -4,7 +4,10 @@ import org.xmlpull.v1.XmlPullParser
 import uk.co.baconi.pka.tdb.xml.readText
 import uk.co.baconi.pka.tdb.xml.skip
 
-data class Location(val locationName: String?, val crs: String?) {
+data class Location(
+    val locationName: String?, // Station name [Barnsley]
+    val crs: String? // CRS Code [BNY]
+) {
 
     companion object {
 
