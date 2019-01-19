@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.tdb
+package uk.co.baconi.pka.tdb.openldbws.requests
 
 interface Request {
     val contentType: String

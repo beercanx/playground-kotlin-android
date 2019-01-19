@@ -1,7 +1,6 @@
 package uk.co.baconi.pka.tdb.openldbws.requests
 
 import uk.co.baconi.pka.tdb.AccessToken
-import uk.co.baconi.pka.tdb.Request
 import uk.co.baconi.pka.tdb.StationCode
 
 /**
