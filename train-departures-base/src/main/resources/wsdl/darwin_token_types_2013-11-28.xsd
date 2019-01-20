@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://thalesgroup.com/RTTI/2013-11-28/Token/types" targetNamespace="http://thalesgroup.com/RTTI/2013-11-28/Token/types" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://thalesgroup.com/RTTI/2013-11-28/Token/types"
+           targetNamespace="http://thalesgroup.com/RTTI/2013-11-28/Token/types" elementFormDefault="qualified"
+           attributeFormDefault="unqualified" version="1.0">
     <!-- ================================================================
         Complex types
     =================================================================== -->
@@ -18,5 +20,5 @@
     <!-- ================================================================
         Elements
     =================================================================== -->
-    <xs:element name="AccessToken" type="tns:AccessToken" />
+    <xs:element name="AccessToken" type="tns:AccessToken"/>
 </xs:schema>

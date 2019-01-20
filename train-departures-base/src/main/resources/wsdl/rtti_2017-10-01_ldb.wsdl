@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tok="http://thalesgroup.com/RTTI/2013-11-28/Token/types" xmlns:tns="http://thalesgroup.com/RTTI/2017-10-01/ldb/" targetNamespace="http://thalesgroup.com/RTTI/2017-10-01/ldb/">
-    <wsdl:import namespace="http://thalesgroup.com/RTTI/2013-11-28/Token/types" location="darwin_token_types_2013-11-28.wsdl"/>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tok="http://thalesgroup.com/RTTI/2013-11-28/Token/types"
+                  xmlns:tns="http://thalesgroup.com/RTTI/2017-10-01/ldb/"
+                  targetNamespace="http://thalesgroup.com/RTTI/2017-10-01/ldb/">
+    <wsdl:import namespace="http://thalesgroup.com/RTTI/2013-11-28/Token/types"
+                 location="darwin_token_types_2013-11-28.wsdl"/>
     <wsdl:types>
-        <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://thalesgroup.com/RTTI/2017-10-01/ldb/" xmlns:ct2007="http://thalesgroup.com/RTTI/2007-10-10/ldb/commontypes" xmlns:ct2015="http://thalesgroup.com/RTTI/2015-11-27/ldb/commontypes" xmlns:ldbt20171001="http://thalesgroup.com/RTTI/2017-10-01/ldb/types">
-            <xs:import namespace="http://thalesgroup.com/RTTI/2007-10-10/ldb/commontypes" schemaLocation="rtti_2007-10-10_ldb_common_types.xsd"/>
-            <xs:import namespace="http://thalesgroup.com/RTTI/2015-11-27/ldb/commontypes" schemaLocation="rtti_2015-11-27_ldb_common_types.xsd"/>
-            <xs:import namespace="http://thalesgroup.com/RTTI/2017-10-01/ldb/types" schemaLocation="rtti_2017-10-01_ldb_types.xsd"/>
+        <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified"
+                   targetNamespace="http://thalesgroup.com/RTTI/2017-10-01/ldb/"
+                   xmlns:ct2007="http://thalesgroup.com/RTTI/2007-10-10/ldb/commontypes"
+                   xmlns:ct2015="http://thalesgroup.com/RTTI/2015-11-27/ldb/commontypes"
+                   xmlns:ldbt20171001="http://thalesgroup.com/RTTI/2017-10-01/ldb/types">
+            <xs:import namespace="http://thalesgroup.com/RTTI/2007-10-10/ldb/commontypes"
+                       schemaLocation="rtti_2007-10-10_ldb_common_types.xsd"/>
+            <xs:import namespace="http://thalesgroup.com/RTTI/2015-11-27/ldb/commontypes"
+                       schemaLocation="rtti_2015-11-27_ldb_common_types.xsd"/>
+            <xs:import namespace="http://thalesgroup.com/RTTI/2017-10-01/ldb/types"
+                       schemaLocation="rtti_2017-10-01_ldb_types.xsd"/>
             <!-- ============================================================================
                 REQUEST PARAMETER DEFINITIONS
             ==============================================================================-->
@@ -13,32 +25,52 @@
                 <xs:sequence>
                     <xs:element name="numRows" type="xs:unsignedShort">
                         <xs:annotation>
-                            <xs:documentation>The maximum number of services that are required to be returned. This will be limited to a maximum value by the server, which may change according to system load or other factors. Only the minimum required number of services should be requested. For example, if only 10 services are displayed in a user interface, then this parameter should be set to 10.</xs:documentation>
+                            <xs:documentation>The maximum number of services that are required to be returned. This will
+                                be limited to a maximum value by the server, which may change according to system load
+                                or other factors. Only the minimum required number of services should be requested. For
+                                example, if only 10 services are displayed in a user interface, then this parameter
+                                should be set to 10.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="crs" type="ct2007:CRSType">
                         <xs:annotation>
-                            <xs:documentation>The CRS code for the station departure board that is required.</xs:documentation>
+                            <xs:documentation>The CRS code for the station departure board that is required.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="filterCrs" type="ct2007:CRSType" minOccurs="0">
                         <xs:annotation>
-                            <xs:documentation>An optional CRS code that will filter the returned departure board. For example, if crs is set to "MAN", filterCRS is set to "EUS" and filterType is set to "to" then the departure board will return a list of services that depart Manchester Piccadilly and call at London Euston.</xs:documentation>
+                            <xs:documentation>An optional CRS code that will filter the returned departure board. For
+                                example, if crs is set to "MAN", filterCRS is set to "EUS" and filterType is set to "to"
+                                then the departure board will return a list of services that depart Manchester
+                                Piccadilly and call at London Euston.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="filterType" type="ct2007:FilterType" default="to" minOccurs="0">
                         <xs:annotation>
-                            <xs:documentation>The type of filter query that is required, either "from" or "to". This parameter is ignored unless filterCrs is also present.</xs:documentation>
+                            <xs:documentation>The type of filter query that is required, either "from" or "to". This
+                                parameter is ignored unless filterCrs is also present.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="timeOffset" type="xs:int" default="0" minOccurs="0">
                         <xs:annotation>
-                            <xs:documentation>A time offset that may be applied to the current time to give the base time for the departure board. The value could be negative if the client has suitable permission configured, otherwise the minimun value will be 0. If the client is not configured with suitable permission then upper bound will be 119.</xs:documentation>
+                            <xs:documentation>A time offset that may be applied to the current time to give the base
+                                time for the departure board. The value could be negative if the client has suitable
+                                permission configured, otherwise the minimun value will be 0. If the client is not
+                                configured with suitable permission then upper bound will be 119.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="timeWindow" type="xs:int" default="120" minOccurs="0">
                         <xs:annotation>
-                            <xs:documentation>The number of minutes added to the request start time to give the end time. The parameter default value is 120 minutes, if the supplied value is greater than 120 or not supplied. If the supplied pararmeter vaule is less than 0 then an error will return.</xs:documentation>
+                            <xs:documentation>The number of minutes added to the request start time to give the end
+                                time. The parameter default value is 120 minutes, if the supplied value is greater than
+                                120 or not supplied. If the supplied pararmeter vaule is less than 0 then an error will
+                                return.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                 </xs:sequence>
@@ -47,7 +79,11 @@
                 <xs:sequence>
                     <xs:element name="serviceID" type="ct2015:ServiceIDType">
                         <xs:annotation>
-                            <xs:documentation>The service ID obtained from a departure board response for which full details are required. Note that service details are only available for a short time after a service has arrived/departed from the location in the departure board that the ID was obtained from.</xs:documentation>
+                            <xs:documentation>The service ID obtained from a departure board response for which full
+                                details are required. Note that service details are only available for a short time
+                                after a service has arrived/departed from the location in the departure board that the
+                                ID was obtained from.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                 </xs:sequence>
@@ -56,12 +92,16 @@
                 <xs:sequence>
                     <xs:element name="crs" type="ct2007:CRSType">
                         <xs:annotation>
-                            <xs:documentation>The CRS code for the station departure board that is required.</xs:documentation>
+                            <xs:documentation>The CRS code for the station departure board that is required.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="filterList">
                         <xs:annotation>
-                            <xs:documentation>A list of CRS codes for the station destinations that are required. There must be at least one and may be no more than a maximum number of CRS codes in this list. The actual limit may vary and can be found in the documentation.</xs:documentation>
+                            <xs:documentation>A list of CRS codes for the station destinations that are required. There
+                                must be at least one and may be no more than a maximum number of CRS codes in this list.
+                                The actual limit may vary and can be found in the documentation.
+                            </xs:documentation>
                         </xs:annotation>
                         <xs:complexType>
                             <xs:sequence>
@@ -71,12 +111,20 @@
                     </xs:element>
                     <xs:element name="timeOffset" type="xs:int" default="0" minOccurs="0">
                         <xs:annotation>
-                            <xs:documentation>A time offset that may be applied to the current time to give the base time for the departure board. The value could be negative if the client has suitable permission configured, otherwise the minimun value will be 0. If the client is not configured with suitable permission then upper bound will be 119.</xs:documentation>
+                            <xs:documentation>A time offset that may be applied to the current time to give the base
+                                time for the departure board. The value could be negative if the client has suitable
+                                permission configured, otherwise the minimun value will be 0. If the client is not
+                                configured with suitable permission then upper bound will be 119.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="timeWindow" type="xs:int" default="120" minOccurs="0">
                         <xs:annotation>
-                            <xs:documentation>The number of minutes added to the request start time to give the end time. The parameter default value is 120 minutes, if the supplied value is greater than 120 or not supplied. If the supplied pararmeter vaule is less than 0 then an error will return.</xs:documentation>
+                            <xs:documentation>The number of minutes added to the request start time to give the end
+                                time. The parameter default value is 120 minutes, if the supplied value is greater than
+                                120 or not supplied. If the supplied pararmeter vaule is less than 0 then an error will
+                                return.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                 </xs:sequence>
@@ -135,7 +183,8 @@
             <xs:element name="GetNextDeparturesResponse" type="tns:DeparturesBoardResponseType"/>
             <xs:element name="GetNextDeparturesWithDetailsResponse" type="tns:DeparturesBoardWithDetailsResponseType"/>
             <xs:element name="GetFastestDeparturesResponse" type="tns:DeparturesBoardResponseType"/>
-            <xs:element name="GetFastestDeparturesWithDetailsResponse" type="tns:DeparturesBoardWithDetailsResponseType"/>
+            <xs:element name="GetFastestDeparturesWithDetailsResponse"
+                        type="tns:DeparturesBoardWithDetailsResponseType"/>
         </xs:schema>
     </wsdl:types>
     <wsdl:message name="GetDepartureBoardSoapIn">
@@ -276,7 +325,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetArrivalDepartureBoard">
-            <soap:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetArrivalDepartureBoard" style="document"/>
+            <soap:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetArrivalDepartureBoard"
+                            style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
                 <soap:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -296,7 +346,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetDepBoardWithDetails">
-            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetDepBoardWithDetails" style="document"/>
+            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetDepBoardWithDetails"
+                            style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
                 <soap:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -306,7 +357,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetArrBoardWithDetails">
-            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetArrBoardWithDetails" style="document"/>
+            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetArrBoardWithDetails"
+                            style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
                 <soap:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -316,7 +368,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetArrDepBoardWithDetails">
-            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetArrDepBoardWithDetails" style="document"/>
+            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetArrDepBoardWithDetails"
+                            style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
                 <soap:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -336,7 +389,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetNextDeparturesWithDetails">
-            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDeparturesWithDetails" style="document"/>
+            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDeparturesWithDetails"
+                            style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
                 <soap:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -346,7 +400,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetFastestDepartures">
-            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetFastestDepartures" style="document"/>
+            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetFastestDepartures"
+                            style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
                 <soap:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -356,7 +411,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetFastestDeparturesWithDetails">
-            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetFastestDeparturesWithDetails" style="document"/>
+            <soap:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetFastestDeparturesWithDetails"
+                            style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
                 <soap:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -369,7 +425,8 @@
     <wsdl:binding name="LDBServiceSoap12" type="tns:LDBServiceSoap">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="GetDepartureBoard">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetDepartureBoard" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetDepartureBoard"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -379,7 +436,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetArrivalBoard">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetArrivalBoard" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetArrivalBoard"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -389,7 +447,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetArrivalDepartureBoard">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetArrivalDepartureBoard" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetArrivalDepartureBoard"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -399,7 +458,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetServiceDetails">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetServiceDetails" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2012-01-13/ldb/GetServiceDetails"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -409,7 +469,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetDepBoardWithDetails">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetDepBoardWithDetails" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetDepBoardWithDetails"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -419,7 +480,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetArrBoardWithDetails">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetArrBoardWithDetails" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetArrBoardWithDetails"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -429,7 +491,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetArrDepBoardWithDetails">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetArrDepBoardWithDetails" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetArrDepBoardWithDetails"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -439,7 +502,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetNextDepartures">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDepartures" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDepartures"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -449,7 +513,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetNextDeparturesWithDetails">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDeparturesWithDetails" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDeparturesWithDetails"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -459,7 +524,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetFastestDepartures">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetFastestDepartures" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetFastestDepartures"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
@@ -469,7 +535,8 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetFastestDeparturesWithDetails">
-            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetFastestDeparturesWithDetails" soapActionRequired="true" style="document"/>
+            <soap12:operation soapAction="http://thalesgroup.com/RTTI/2015-05-14/ldb/GetFastestDeparturesWithDetails"
+                              soapActionRequired="true" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
                 <soap12:header message="tns:AccessTokenMessage" part="AccessToken" use="literal"/>
