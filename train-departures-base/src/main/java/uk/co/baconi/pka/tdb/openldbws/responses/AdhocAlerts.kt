@@ -9,9 +9,10 @@ data class AdhocAlerts(val messages: List<String>) {
     companion object {
 
         internal fun fromXml(parser: XmlPullParser): AdhocAlerts? {
-            val entries = mutableListOf<String>()
 
             parser.require(XmlPullParser.START_TAG, null, "adhocAlerts")
+
+            val entries = mutableListOf<String>()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {

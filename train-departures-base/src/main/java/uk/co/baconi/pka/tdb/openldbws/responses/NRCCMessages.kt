@@ -4,28 +4,26 @@ import org.xmlpull.v1.XmlPullParser
 import uk.co.baconi.pka.tdb.xml.readAsText
 import uk.co.baconi.pka.tdb.xml.skip
 
-class NRCCMessages {
+object NRCCMessages {
 
-    companion object {
+    internal fun fromXml(parser: XmlPullParser): List<String> {
 
-        internal fun fromXml(parser: XmlPullParser): List<String> {
-            val entries = mutableListOf<String>()
+        parser.require(XmlPullParser.START_TAG, null, "nrccMessages")
 
-            parser.require(XmlPullParser.START_TAG, null, "nrccMessages")
+        val entries = mutableListOf<String>()
 
-            while (parser.next() != XmlPullParser.END_TAG) {
-                if (parser.eventType != XmlPullParser.START_TAG) {
-                    continue
-                }
-                when (parser.name) {
-                    "message" -> parser.readAsText()?.let(entries::add)
-                    else -> parser.skip()
-                }
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.eventType != XmlPullParser.START_TAG) {
+                continue
             }
-
-            parser.require(XmlPullParser.END_TAG, null, "nrccMessages")
-
-            return entries.toList()
+            when (parser.name) {
+                "message" -> parser.readAsText()?.let(entries::add)
+                else -> parser.skip()
+            }
         }
+
+        parser.require(XmlPullParser.END_TAG, null, "nrccMessages")
+
+        return entries.toList()
     }
 }

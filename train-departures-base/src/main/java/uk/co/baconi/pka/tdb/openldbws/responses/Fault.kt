@@ -38,7 +38,7 @@ data class Fault(
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
-                when (parser.name.toLowerCase()) {
+                when (parser.name.toLowerCase()) { // TODO - Update to work with NRE style
                     "faultcode" -> faultCode = parser.readAsText()?.let(FaultCodes.Companion::lookup)
                     "faultstring" -> faultString = parser.readAsText()
                     "faultactor" -> faultActor = parser.readAsText()

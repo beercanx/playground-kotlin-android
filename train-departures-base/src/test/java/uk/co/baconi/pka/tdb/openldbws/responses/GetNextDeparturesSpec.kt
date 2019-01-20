@@ -36,11 +36,13 @@ class GetNextDeparturesSpec : StringSpec({
 
             departuresBoard?.nrccMessages?.first() shouldContain("Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare")
 
-            val destinations = departuresBoard?.departures?.departureItems
-            destinations?.size shouldBe 1
-            destinations?.first()?.crs shouldBe "CLE"
+            val departureItems = departuresBoard?.departures?.departureItems
+            departureItems?.size shouldBe 1
 
-            val service = destinations?.first()?.service
+            val departureItem = departureItems?.first()
+            departureItem?.crs shouldBe "CLE"
+
+            val service = departureItem?.service
             service?.sta shouldBe "14:08"
             service?.eta shouldBe "On time"
             service?.std shouldBe "14:29"
@@ -51,10 +53,20 @@ class GetNextDeparturesSpec : StringSpec({
             service?.serviceType shouldBe "train"
             service?.serviceID shouldBe "8ipq5Cv9fDMbR0rDg6riKA=="
             service?.rsid shouldBe "TP603200"
-            service?.origin?.locationName shouldBe "Manchester Airport"
-            service?.origin?.crs shouldBe "MIA"
-            service?.destination?.locationName shouldBe "Cleethorpes"
-            service?.destination?.crs shouldBe "CLE"
+
+            val origins = service?.origins
+            origins?.size shouldBe 1
+
+            val origin = origins?.first()
+            origin?.locationName shouldBe "Manchester Airport"
+            origin?.crs shouldBe "MIA"
+
+            val destinations = service?.destinations
+            destinations?.size shouldBe 1
+
+            val destination = destinations?.first()
+            destination?.locationName shouldBe "Cleethorpes"
+            destination?.crs shouldBe "CLE"
         }
     }
 })

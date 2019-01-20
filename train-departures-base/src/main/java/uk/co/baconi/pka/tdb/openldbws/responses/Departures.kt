@@ -9,9 +9,9 @@ data class Departures(val departureItems: List<DepartureItem>) {
 
         internal fun fromXml(parser: XmlPullParser): Departures? {
 
-            val entries = mutableListOf<DepartureItem>()
-
             parser.require(XmlPullParser.START_TAG, null, "departures")
+
+            val entries = mutableListOf<DepartureItem>()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
