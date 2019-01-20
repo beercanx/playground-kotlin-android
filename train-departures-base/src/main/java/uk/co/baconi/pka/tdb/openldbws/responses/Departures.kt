@@ -11,21 +11,21 @@ data class Departures(val departureItems: List<DepartureItem>) {
 
             parser.require(XmlPullParser.START_TAG, null, "departures")
 
-            val entries = mutableListOf<DepartureItem>()
+            val results = mutableListOf<DepartureItem>()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
                 when (parser.name) {
-                    "destination" -> DepartureItem.fromXml(parser).let(entries::add)
+                    "destination" -> DepartureItem.fromXml(parser).let(results::add)
                     else -> parser.skip()
                 }
             }
 
             parser.require(XmlPullParser.END_TAG, null, "departures")
 
-            return Departures(entries.toList())
+            return Departures(results.toList())
         }
     }
 }

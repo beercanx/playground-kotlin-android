@@ -6,7 +6,7 @@ import uk.co.baconi.pka.tdb.xml.skip
 import java.io.InputStream
 import java.io.Reader
 
-data class Envelope(val body: Body?) {
+data class Envelope(val body: Body? = null) {
 
     companion object {
 
@@ -40,21 +40,21 @@ data class Envelope(val body: Body?) {
 
             parser.require(XmlPullParser.START_TAG, null, "Envelope")
 
-            var body: Body? = null
+            var result = Envelope()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
                 when (parser.name) {
-                    "Body" -> body = Body.fromXml(parser)
+                    "Body" -> result = result.copy(body = Body.fromXml(parser))
                     else -> parser.skip()
                 }
             }
 
             parser.require(XmlPullParser.END_TAG, null, "Envelope")
 
-            return Envelope(body)
+            return result
         }
     }
 }

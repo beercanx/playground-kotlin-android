@@ -6,11 +6,11 @@ import uk.co.baconi.pka.tdb.xml.readAsText
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class ServiceLocation(
-    val locationName: String?, // Station name [Barnsley]
-    val crs: String?, // CRS Code [BNY]
-    val via: String?, // [via Leeds]
-    val futureChangeTo: String?, // [Bus / Ferry / Train]
-    val assocIsCancelled: Boolean?
+    val locationName: String? = null, // Station name [Barnsley]
+    val crs: String? = null, // CRS Code [BNY]
+    val via: String? = null, // [via Leeds]
+    val futureChangeTo: String? = null, // [Bus / Ferry / Train]
+    val assocIsCancelled: Boolean? = null
 ) {
 
     companion object {
@@ -19,29 +19,25 @@ data class ServiceLocation(
 
             parser.require(XmlPullParser.START_TAG, null, "location")
 
-            var locationName: String? = null
-            var crs: String? = null
-            var via: String? = null
-            var futureChangeTo: String? = null
-            var assocIsCancelled: Boolean? = null
+            var result = ServiceLocation()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
                 when (parser.name) {
-                    "locationName" -> locationName = parser.readAsText()
-                    "crs" -> crs = parser.readAsText()
-                    "via" -> via = parser.readAsText()
-                    "futureChangeTo" -> futureChangeTo = parser.readAsText()
-                    "assocIsCancelled" -> assocIsCancelled = parser.readAsBoolean()
+                    "locationName" -> result = result.copy(locationName = parser.readAsText())
+                    "crs" -> result = result.copy(crs = parser.readAsText())
+                    "via" -> result = result.copy(via = parser.readAsText())
+                    "futureChangeTo" -> result = result.copy(futureChangeTo = parser.readAsText())
+                    "assocIsCancelled" -> result = result.copy(assocIsCancelled = parser.readAsBoolean())
                     else -> parser.skip()
                 }
             }
 
             parser.require(XmlPullParser.END_TAG, null, "location")
 
-            return ServiceLocation(locationName, crs, via, futureChangeTo, assocIsCancelled)
+            return result
         }
     }
 }

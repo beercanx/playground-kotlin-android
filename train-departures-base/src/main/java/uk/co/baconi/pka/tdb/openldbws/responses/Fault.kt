@@ -17,10 +17,10 @@ enum class FaultCodes {
 }
 
 data class Fault(
-    val faultCode: FaultCodes?,
-    val faultString: String?,
-    val faultActor: String?,
-    val detail: String?
+    val faultCode: FaultCodes? = null,
+    val faultString: String? = null,
+    val faultActor: String? = null,
+    val detail: String? = null
 ) {
 
     companion object {
@@ -29,27 +29,24 @@ data class Fault(
 
             parser.require(XmlPullParser.START_TAG, null, "Fault")
 
-            var faultCode: FaultCodes? = null
-            var faultString: String? = null
-            var faultActor: String? = null
-            var detail: String? = null
+            var result = Fault()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
                 when (parser.name.toLowerCase()) { // TODO - Update to work with NRE style
-                    "faultcode" -> faultCode = parser.readAsText()?.let(FaultCodes.Companion::lookup)
-                    "faultstring" -> faultString = parser.readAsText()
-                    "faultactor" -> faultActor = parser.readAsText()
-                    "detail" -> detail = parser.readAsText()
+                    "faultcode" -> result = result.copy(faultCode = parser.readAsText()?.let(FaultCodes.Companion::lookup))
+                    "faultstring" -> result = result.copy(faultString = parser.readAsText())
+                    "faultactor" -> result = result.copy(faultActor = parser.readAsText())
+                    "detail" -> result = result.copy(detail = parser.readAsText())
                     else -> parser.skip()
                 }
             }
 
             parser.require(XmlPullParser.END_TAG, null, "Fault")
 
-            return Fault(faultCode, faultString, faultActor, detail)
+            return result
         }
     }
 }

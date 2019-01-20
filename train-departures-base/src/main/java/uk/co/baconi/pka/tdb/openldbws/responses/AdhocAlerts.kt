@@ -12,21 +12,21 @@ data class AdhocAlerts(val messages: List<String>) {
 
             parser.require(XmlPullParser.START_TAG, null, "adhocAlerts")
 
-            val entries = mutableListOf<String>()
+            val results = mutableListOf<String>()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
                 when (parser.name) {
-                    "adhocAlertText" -> parser.readAsText()?.let(entries::add)
+                    "adhocAlertText" -> parser.readAsText()?.let(results::add)
                     else -> parser.skip()
                 }
             }
 
             parser.require(XmlPullParser.END_TAG, null, "adhocAlerts")
 
-            return AdhocAlerts(entries.toList())
+            return AdhocAlerts(results.toList())
         }
     }
 }

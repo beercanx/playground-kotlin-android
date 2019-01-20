@@ -9,20 +9,20 @@ object ServiceLocations {
 
         parser.require(XmlPullParser.START_TAG, null, type)
 
-        val entries = mutableListOf<ServiceLocation>()
+        val results = mutableListOf<ServiceLocation>()
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType != XmlPullParser.START_TAG) {
                 continue
             }
             when (parser.name) {
-                "location" -> ServiceLocation.fromXml(parser).let(entries::add)
+                "location" -> ServiceLocation.fromXml(parser).let(results::add)
                 else -> parser.skip()
             }
         }
 
         parser.require(XmlPullParser.END_TAG, null, type)
 
-        return entries.toList()
+        return results.toList()
     }
 }

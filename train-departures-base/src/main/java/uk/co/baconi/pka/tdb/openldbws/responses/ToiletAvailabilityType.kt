@@ -15,8 +15,8 @@ enum class ToiletStatus {
 }
 
 data class ToiletAvailabilityType(
-    val status: ToiletStatus?,
-    val type: String? // [Unknown / None / Standard / Accessible]
+    val status: ToiletStatus? = null,
+    val type: String? = null // [Unknown / None / Standard / Accessible]
 ) {
 
     companion object {

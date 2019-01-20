@@ -9,20 +9,20 @@ object Coaches {
 
         parser.require(XmlPullParser.START_TAG, null, "coaches")
 
-        val entries = mutableListOf<CoachData>()
+        val results = mutableListOf<CoachData>()
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType != XmlPullParser.START_TAG) {
                 continue
             }
             when (parser.name) {
-                "coach" -> CoachData.fromXml(parser).let(entries::add)
+                "coach" -> CoachData.fromXml(parser).let(results::add)
                 else -> parser.skip()
             }
         }
 
         parser.require(XmlPullParser.END_TAG, null, "coaches")
 
-        return entries.toList()
+        return results.toList()
     }
 }

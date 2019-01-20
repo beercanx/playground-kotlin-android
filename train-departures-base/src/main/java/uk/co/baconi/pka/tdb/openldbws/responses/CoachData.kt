@@ -6,10 +6,10 @@ import uk.co.baconi.pka.tdb.xml.readAsText
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class CoachData(
-    val coachClass: String?, // [First / Mixed / Standard]
-    val loading: Int?, // The loading value in % (think this mean how full) [0-100]
-    val number: String?, // Identifier [A / 12]
-    val toilet: ToiletAvailabilityType?
+    val coachClass: String? = null, // [First / Mixed / Standard]
+    val loading: Int? = null, // The loading value in % (think this mean how full) [0-100]
+    val number: String? = null, // Identifier [A / 12]
+    val toilet: ToiletAvailabilityType? = null
 ) {
 
     companion object {
@@ -18,27 +18,24 @@ data class CoachData(
 
             parser.require(XmlPullParser.START_TAG, null, "coach")
 
-            var coachClass: String? = null
-            var loading: Int? = null
-            var number: String? = null
-            var toilet: ToiletAvailabilityType? = null
+            var result = CoachData()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
                 when (parser.name) {
-                    "coachClass" -> coachClass = parser.readAsText()
-                    "loading" -> loading = parser.readAsInt()
-                    "number" -> number = parser.readAsText()
-                    "toilet" -> toilet = ToiletAvailabilityType.fromXml(parser)
+                    "coachClass" -> result = result.copy(coachClass = parser.readAsText())
+                    "loading" -> result = result.copy(loading = parser.readAsInt())
+                    "number" -> result = result.copy(number = parser.readAsText())
+                    "toilet" -> result = result.copy(toilet = ToiletAvailabilityType.fromXml(parser))
                     else -> parser.skip()
                 }
             }
 
             parser.require(XmlPullParser.END_TAG, null, "coach")
 
-            return CoachData(coachClass, loading, number, toilet)
+            return result
         }
     }
 }

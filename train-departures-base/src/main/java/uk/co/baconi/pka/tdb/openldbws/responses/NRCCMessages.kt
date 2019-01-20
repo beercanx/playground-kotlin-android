@@ -10,20 +10,20 @@ object NRCCMessages {
 
         parser.require(XmlPullParser.START_TAG, null, "nrccMessages")
 
-        val entries = mutableListOf<String>()
+        val results = mutableListOf<String>()
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType != XmlPullParser.START_TAG) {
                 continue
             }
             when (parser.name) {
-                "message" -> parser.readAsText()?.let(entries::add)
+                "message" -> parser.readAsText()?.let(results::add)
                 else -> parser.skip()
             }
         }
 
         parser.require(XmlPullParser.END_TAG, null, "nrccMessages")
 
-        return entries.toList()
+        return results.toList()
     }
 }

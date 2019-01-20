@@ -6,7 +6,7 @@ import uk.co.baconi.pka.tdb.xml.readAsBoolean
 import uk.co.baconi.pka.tdb.xml.readAsInt
 import uk.co.baconi.pka.tdb.xml.skip
 
-data class FormationData(val avgLoading: Int?, val coaches: List<CoachData>?) {
+data class FormationData(val avgLoading: Int? = null, val coaches: List<CoachData>? = null) {
 
     companion object {
 
@@ -14,23 +14,22 @@ data class FormationData(val avgLoading: Int?, val coaches: List<CoachData>?) {
 
             parser.require(XmlPullParser.START_TAG, null, "formation")
 
-            var avgLoading: Int? = null
-            var coaches: List<CoachData>? = null
+            var result = FormationData()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
                 when (parser.name) {
-                    "avgLoading" -> avgLoading = parser.readAsInt()
-                    "coaches" -> coaches = Coaches.fromXml(parser)
+                    "avgLoading" -> result = result.copy(avgLoading = parser.readAsInt())
+                    "coaches" -> result = result.copy(coaches = Coaches.fromXml(parser))
                     else -> parser.skip()
                 }
             }
 
             parser.require(XmlPullParser.END_TAG, null, "formation")
 
-            return FormationData(avgLoading, coaches)
+            return result
         }
     }
 }
