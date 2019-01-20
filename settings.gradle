@@ -1,4 +1,2 @@
-include ':alpha'
-include ':beta'
 include ':train-departures-base'
 include ':train-departures-android'

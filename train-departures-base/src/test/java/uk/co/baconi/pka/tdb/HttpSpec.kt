@@ -7,9 +7,11 @@ import java.lang.RuntimeException
 
 class HttpSpec : StringSpec({
 
-    val accessToken = AccessToken(
-        System.getenv("ACCESS_TOKEN") ?: throw RuntimeException("Missing ACCESS_TOKEN environment variable")
-    )
+    val accessToken: AccessToken by lazy {
+        AccessToken(
+            System.getenv("ACCESS_TOKEN") ?: throw RuntimeException("Missing ACCESS_TOKEN environment variable")
+        )
+    }
 
     val from = StationCodes.firstByCode("MHS")
     val to = StationCodes.firstByCode("SHF")

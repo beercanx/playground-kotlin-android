@@ -32,10 +32,7 @@ deploy:
   api_key:
     secure: e3IuRgtsoWnYVfWcrgDkNmJaMco1LZhsz3sfPpKd7Zdym9ehBx0UjQcX1jzzZF0bOJaY4QN4ZnAlhtn+niwYegRbIPkxD2cuyBrVAcdkLr1U00ti9nME3cxnh4jo7iHUInY6S4BvYl7eGcDBrGol51UZ3i6moxH9NfKE1mNotD74IDXNDG5UjMIpjjh778qE+ih1ZXJavloMLHPDNmSriAy7LsV13TaLZSsbNUpZU7Pgjl7JnxwveZr4mr2xPEHpXE7vFWfJcynnj/RUfZmXG3R31qES4LkcJ8+6VcOTVwQmEBIsUlUcxZUN091o+2PeKk4DfM6pMPkNp/e9zrZT37PIEjkw6AynEu+XQkOLM8SL/P6ICw8lf+yMlcpsRAW6w6wMdW5FuYGnXoj9FJ+dG6Q8JyKp1FUmzQkvr3X7yxV4MnHRloq5ofKNciArxlXAjNQnuNaydhph3O47ldeeLLBvOjZcSaK+ZoI7kI/ZP/6YnSrCqDA8Wv/LmOtqQ6GOoDVc/Urx0WqgP8TdQVBYWFz3rBUUs63e621K+gKNlgc1a4PoLCTJaD29MgDSYNydtivOLFQmL2x3TdrAfKU142Ttwtjl8UXyPgznWc+Vqe9Z55hlXUBigR0hpy2n6eCSb4U/TQoVo0JTas4eT7aX5mKpyd0tFvBTo9h+pf7qK58=
   file:
-    - alpha/build/outputs/apk/debug/alpha-debug.apk
-    - alpha/build/outputs/apk/release/alpha-release-unsigned.apk
-    - beta/build/outputs/apk/debug/beta-debug.apk
-    - beta/build/outputs/apk/release/beta-release-unsigned.apk
+    - train-departures-base/build/outputs/aar/train-departures-base.aar
     - train-departures-android/build/outputs/apk/debug/train-departures-android-debug.apk
     - train-departures-android/build/outputs/apk/release/train-departures-android-release-unsigned.apk
   skip_cleanup: true
