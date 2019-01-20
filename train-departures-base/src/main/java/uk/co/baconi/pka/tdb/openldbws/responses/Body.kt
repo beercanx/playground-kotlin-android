@@ -3,21 +3,26 @@ package uk.co.baconi.pka.tdb.openldbws.responses
 import org.xmlpull.v1.XmlPullParser
 import uk.co.baconi.pka.tdb.xml.skip
 
-data class Body(val getNextDeparturesResponse: GetNextDeparturesResponse?) {
+data class BodyFailure(val fault: Fault?) : Body()
+data class BodySuccess(val getNextDeparturesResponse: GetNextDeparturesResponse?) : Body()
+
+sealed class Body {
 
     companion object {
 
-        internal fun fromXml(parser: XmlPullParser): Body? {
+        internal fun fromXml(parser: XmlPullParser): Body {
 
             parser.require(XmlPullParser.START_TAG, null, "Body")
 
             var getNextDeparturesResponse: GetNextDeparturesResponse? = null
+            var fault: Fault? = null
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
                 when (parser.name) {
+                    "Fault" -> fault = Fault.fromXml(parser)
                     "GetNextDeparturesResponse" -> getNextDeparturesResponse = GetNextDeparturesResponse.fromXml(parser)
                     else -> parser.skip()
                 }
@@ -25,7 +30,8 @@ data class Body(val getNextDeparturesResponse: GetNextDeparturesResponse?) {
 
             parser.require(XmlPullParser.END_TAG, null, "Body")
 
-            return Body(getNextDeparturesResponse)
+            // If we have a fault then return body failure, else it was a success
+            return fault?.let(::BodyFailure) ?: BodySuccess(getNextDeparturesResponse)
         }
     }
 }

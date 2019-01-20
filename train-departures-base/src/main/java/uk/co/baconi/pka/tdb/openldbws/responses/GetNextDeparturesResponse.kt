@@ -7,7 +7,7 @@ data class GetNextDeparturesResponse(val departuresBoard: DeparturesBoard?) {
 
     companion object {
 
-        internal fun fromXml(parser: XmlPullParser): GetNextDeparturesResponse? {
+        internal fun fromXml(parser: XmlPullParser): GetNextDeparturesResponse {
 
             parser.require(XmlPullParser.START_TAG, null, "GetNextDeparturesResponse")
 

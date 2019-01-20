@@ -1,7 +1,9 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import io.kotlintest.assertSoftly
+import io.kotlintest.matchers.beInstanceOf
 import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.should
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
@@ -12,7 +14,7 @@ class GetNextDeparturesSpec : StringSpec({
 
         val inputStream = GetNextDeparturesSpec::class.java
             .classLoader
-            ?.getResourceAsStream("openldbws/GetNextDepartures_SHF_to_CLE.xml")
+            ?.getResourceAsStream("openldbws/responses/GetNextDepartures_SHF_to_CLE.xml")
 
         inputStream shouldNotBe null
 
@@ -22,15 +24,19 @@ class GetNextDeparturesSpec : StringSpec({
 
         assertSoftly {
 
-            val departuresBoard = result?.body?.getNextDeparturesResponse?.departuresBoard
+            result?.body should beInstanceOf<BodySuccess>()
+
+            val body = result?.body as BodySuccess?
+
+            val departuresBoard = body?.getNextDeparturesResponse?.departuresBoard
             departuresBoard?.generatedAt shouldBe "2019-01-13T13:51:17.106902+00:00"
             departuresBoard?.locationName shouldBe "Sheffield"
             departuresBoard?.crs shouldBe "SHF"
             departuresBoard?.platformAvailable shouldBe true
 
-            departuresBoard?.nrccMessages?.messages?.first() shouldContain("Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare")
+            departuresBoard?.nrccMessages?.first() shouldContain("Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare")
 
-            val destinations = departuresBoard?.departures?.destination
+            val destinations = departuresBoard?.departures?.departureItems
             destinations?.size shouldBe 1
             destinations?.first()?.crs shouldBe "CLE"
 

@@ -27,3 +27,7 @@ fun XmlPullParser.readAsText(): String? {
 fun XmlPullParser.readAsBoolean(): Boolean? {
     return this.readAsText()?.toBoolean()
 }
+
+fun XmlPullParser.readAsInt(): Int? {
+    return this.readAsText()?.toIntOrNull()
+}

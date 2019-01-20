@@ -11,7 +11,7 @@ data class Location(
 
     companion object {
 
-        internal fun fromXml(parser: XmlPullParser): Location? {
+        internal fun fromXml(parser: XmlPullParser): Location {
 
             parser.require(XmlPullParser.START_TAG, null, "location")
 

@@ -9,8 +9,12 @@ data class DeparturesBoard(
     val generatedAt: String?, // [2019-01-13T13:51:17.106902+00:00]
     val locationName: String?, // Station Name [Sheffield]
     val crs: String?, // CRS Code [SHF]
-    val nrccMessages: NRCCMessages?, // Messages [Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare.]
+    val filterLocationName: String?,
+    val filtercrs: String?,
+    val filterType: String?,
+    val nrccMessages: List<String>?, // Messages [Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare.]
     val platformAvailable: Boolean?, // [true|false|null]
+    val areServicesAvailable: Boolean?, // [true|false|null]
     val departures: Departures?
 ) {
 
@@ -23,8 +27,12 @@ data class DeparturesBoard(
             var generatedAt: String? = null
             var locationName: String? = null
             var crs: String? = null
-            var nrccMessages: NRCCMessages? = null
+            var filterLocationName: String? = null
+            var filtercrs: String? = null
+            var filterType: String? = null
+            var nrccMessages: List<String>? = null
             var platformAvailable: Boolean? = null
+            var areServicesAvailable: Boolean? = null
             var departures: Departures? = null
 
             while (parser.next() != XmlPullParser.END_TAG) {
@@ -35,8 +43,12 @@ data class DeparturesBoard(
                     "generatedAt" -> generatedAt = parser.readAsText()
                     "locationName" -> locationName = parser.readAsText()
                     "crs" -> crs = parser.readAsText()
+                    "filterLocationName" -> filterLocationName = parser.readAsText()
+                    "filtercrs" -> filtercrs = parser.readAsText()
+                    "filterType" -> filterType = parser.readAsText()
                     "nrccMessages" -> nrccMessages = NRCCMessages.fromXml(parser)
                     "platformAvailable" -> platformAvailable = parser.readAsBoolean()
+                    "areServicesAvailable" -> areServicesAvailable = parser.readAsBoolean()
                     "departures" -> departures = Departures.fromXml(parser)
                     else -> parser.skip()
                 }
@@ -44,7 +56,18 @@ data class DeparturesBoard(
 
             parser.require(XmlPullParser.END_TAG, null, "DeparturesBoard")
 
-            return DeparturesBoard(generatedAt, locationName, crs, nrccMessages, platformAvailable, departures)
+            return DeparturesBoard(
+                generatedAt,
+                locationName,
+                crs,
+                filterLocationName,
+                filtercrs,
+                filterType,
+                nrccMessages,
+                platformAvailable,
+                areServicesAvailable,
+                departures
+            )
         }
     }
 }

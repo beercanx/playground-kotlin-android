@@ -3,13 +3,13 @@ package uk.co.baconi.pka.tdb.openldbws.responses
 import org.xmlpull.v1.XmlPullParser
 import uk.co.baconi.pka.tdb.xml.skip
 
-data class Departures(val destination: List<Destination>) {
+data class Departures(val departureItems: List<DepartureItem>) {
 
     companion object {
 
         internal fun fromXml(parser: XmlPullParser): Departures? {
 
-            val entries = mutableListOf<Destination>()
+            val entries = mutableListOf<DepartureItem>()
 
             parser.require(XmlPullParser.START_TAG, null, "departures")
 
@@ -18,14 +18,14 @@ data class Departures(val destination: List<Destination>) {
                     continue
                 }
                 when (parser.name) {
-                    "destination" -> Destination.fromXml(parser)?.let(entries::add)
+                    "destination" -> DepartureItem.fromXml(parser).let(entries::add)
                     else -> parser.skip()
                 }
             }
 
             parser.require(XmlPullParser.END_TAG, null, "departures")
 
-            return Departures(entries)
+            return Departures(entries.toList())
         }
     }
 }
