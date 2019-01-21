@@ -15,13 +15,21 @@ sealed class Body {
             parser.require(XmlPullParser.START_TAG, null, "Body")
 
             var result: Body = BodyFailure()
+            var hasFault = false
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
+                if(hasFault) {
+                    parser.skip()
+                    continue
+                }
                 when (parser.name) {
-                    "Fault" -> result = BodyFailure(Fault.fromXml(parser))
+                    "Fault" -> {
+                        result = BodyFailure(Fault.fromXml(parser))
+                        hasFault = true
+                    }
                     "GetNextDeparturesResponse" -> result = BodySuccess(GetNextDeparturesResponse.fromXml(parser))
                     else -> parser.skip()
                 }

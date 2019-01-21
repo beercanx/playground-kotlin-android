@@ -17,8 +17,8 @@ data class ServiceItem(
     val serviceType: String? = null, // [bus / train / ferry]
     val serviceID: String? = null, // Base64 encoded string
     val rsid: String? = null, // Retail Service ID [NT044400]
-    val origins: List<ServiceLocation>? = null,
-    val destinations: List<ServiceLocation>? = null,
+    val origin: List<ServiceLocation>? = null,
+    val destination: List<ServiceLocation>? = null,
     val currentOrigins: List<ServiceLocation>? = null,
     val currentDestinations: List<ServiceLocation>? = null,
     val isCircularRoute: Boolean? = null, // is operating on a circular route
@@ -29,7 +29,7 @@ data class ServiceItem(
     val isReverseFormation: Boolean? = null, // if the service is operating in the reverse of its normal formation
     val cancelReason: String? = null,
     val delayReason: String? = null,
-    val adhocAlerts: AdhocAlerts? = null,
+    val adhocAlerts: List<String>? = null,
     val formation: FormationData? = null
 ) {
 
@@ -66,8 +66,8 @@ data class ServiceItem(
                     "delayReason" -> result = result.copy(delayReason = parser.readAsText())
                     "adhocAlerts" -> result = result.copy(adhocAlerts = AdhocAlerts.fromXml(parser))
                     "formation" -> result = result.copy(formation = FormationData.fromXml(parser))
-                    "origin" -> result = result.copy(origins = ServiceLocations.fromXml(parser, "origin"))
-                    "destination" -> result = result.copy(destinations = ServiceLocations.fromXml(parser, "destination"))
+                    "origin" -> result = result.copy(origin = ServiceLocations.fromXml(parser, "origin"))
+                    "destination" -> result = result.copy(destination = ServiceLocations.fromXml(parser, "destination"))
                     "currentOrigins" -> result = result.copy(currentOrigins = ServiceLocations.fromXml(parser, "currentOrigins"))
                     "currentDestinations" -> result = result.copy(currentDestinations = ServiceLocations.fromXml(parser, "currentDestinations"))
                     else -> parser.skip()

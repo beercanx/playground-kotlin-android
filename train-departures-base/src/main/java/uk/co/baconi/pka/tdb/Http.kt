@@ -9,13 +9,15 @@ import io.ktor.http.headersOf
 import uk.co.baconi.pka.tdb.openldbws.requests.GetNextDeparturesRequest
 import uk.co.baconi.pka.tdb.openldbws.requests.Request
 import uk.co.baconi.pka.tdb.openldbws.responses.Envelope
+import uk.co.baconi.pka.tdb.xml.XmlParser
 
 object Http {
 
-    suspend fun performGetNextDeparturesRequest(accessToken: AccessToken, from: StationCode, to: StationCode): Envelope? {
+    suspend fun performGetNextDeparturesRequest(accessToken: AccessToken, from: StationCode, to: StationCode): Envelope {
         val request = GetNextDeparturesRequest(accessToken, from, to)
         val response = performSoapRequest<String>(request)
-        return Envelope.fromReader(response.reader())
+        val parser = XmlParser.fromReader(response.reader())
+        return Envelope.fromXml(parser)
     }
 
     private suspend inline fun <reified T> performSoapRequest(request: Request): T = HttpClient(Android) {

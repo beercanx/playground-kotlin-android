@@ -8,13 +8,16 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNot
 import io.kotlintest.specs.StringSpec
 import uk.co.baconi.pka.tdb.TestExtensions.toResourceInputStream
+import uk.co.baconi.pka.tdb.xml.XmlParser
 
-class SoapFaultSpec : StringSpec({
+class FaultSpec : StringSpec({
 
     "Should support [faultcode/faultstring/detail] style faults" {
 
-        val result: Envelope = Envelope.fromInputStream(
-            "openldbws/responses/Soap_Fault_Unknown_Soap_Action.xml".toResourceInputStream()
+        val result: Envelope = Envelope.fromXml(
+            XmlParser.fromInputStream(
+                "openldbws/responses/Soap_Fault_Unknown_Soap_Action.xml".toResourceInputStream()
+            )
         )
 
         result.body should beInstanceOf<BodyFailure>()
@@ -30,8 +33,10 @@ class SoapFaultSpec : StringSpec({
 
     "Should support [Code/Reason/Detail] style faults" {
 
-        val result: Envelope = Envelope.fromInputStream(
-            "openldbws/responses/Soap_Fault_InternalServerError.xml".toResourceInputStream()
+        val result: Envelope = Envelope.fromXml(
+            XmlParser.fromInputStream(
+                "openldbws/responses/Soap_Fault_InternalServerError.xml".toResourceInputStream()
+            )
         )
 
         result.body should beInstanceOf<BodyFailure>()
@@ -44,5 +49,4 @@ class SoapFaultSpec : StringSpec({
             body.fault?.reason shouldBe "Unexpected server error"
         }
     }
-
 })

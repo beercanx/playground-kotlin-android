@@ -7,13 +7,16 @@ import io.kotlintest.should
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import uk.co.baconi.pka.tdb.TestExtensions.toResourceInputStream
+import uk.co.baconi.pka.tdb.xml.XmlParser
 
 class GetNextDeparturesSpec : StringSpec({
 
     "Should be able to deserialise example response of Sheffield to Cleethorpes" {
 
-        val result: Envelope = Envelope.fromInputStream(
-            "openldbws/responses/GetNextDepartures_SHF_to_CLE.xml".toResourceInputStream()
+        val result: Envelope = Envelope.fromXml(
+            XmlParser.fromInputStream(
+                "openldbws/responses/GetNextDepartures_SHF_to_CLE.xml".toResourceInputStream()
+            )
         )
 
         assertSoftly {
@@ -30,7 +33,7 @@ class GetNextDeparturesSpec : StringSpec({
 
             departuresBoard?.nrccMessages?.first() shouldContain("Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare")
 
-            val departureItems = departuresBoard?.departures?.departureItems
+            val departureItems = departuresBoard?.departures
             departureItems?.size shouldBe 1
 
             val departureItem = departureItems?.first()
@@ -48,14 +51,14 @@ class GetNextDeparturesSpec : StringSpec({
             service?.serviceID shouldBe "8ipq5Cv9fDMbR0rDg6riKA=="
             service?.rsid shouldBe "TP603200"
 
-            val origins = service?.origins
+            val origins = service?.origin
             origins?.size shouldBe 1
 
             val origin = origins?.first()
             origin?.locationName shouldBe "Manchester Airport"
             origin?.crs shouldBe "MIA"
 
-            val destinations = service?.destinations
+            val destinations = service?.destination
             destinations?.size shouldBe 1
 
             val destination = destinations?.first()

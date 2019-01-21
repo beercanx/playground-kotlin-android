@@ -15,12 +15,12 @@ data class DeparturesBoard(
     val nrccMessages: List<String>? = null, // Messages [Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare.]
     val platformAvailable: Boolean? = null, // [true|false|null]
     val areServicesAvailable: Boolean? = null, // [true|false|null]
-    val departures: Departures? = null
+    val departures: List<DepartureItem>? = null
 ) {
 
     companion object {
 
-        internal fun fromXml(parser: XmlPullParser): DeparturesBoard? {
+        internal fun fromXml(parser: XmlPullParser): DeparturesBoard {
 
             parser.require(XmlPullParser.START_TAG, null, "DeparturesBoard")
 
