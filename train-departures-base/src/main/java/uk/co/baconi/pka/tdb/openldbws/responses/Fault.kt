@@ -19,19 +19,15 @@ enum class FaultCodes {
     }
 }
 
-data class Fault(
-    val code: FaultCodes? = null,
-    val reason: String? = null,
-    val node: String? = null,
-    val role: String? = null,
-    val detail: String? = null
-) {
+data class Fault(val code: FaultCodes? = null, val reason: String? = null) {
 
     companion object {
 
         internal fun fromXml(parser: XmlPullParser): Fault {
 
             parser.require(XmlPullParser.START_TAG, null, "Fault")
+
+            val prefix = parser.prefix
 
             var result = Fault()
 
@@ -43,15 +39,10 @@ data class Fault(
                     // Fault style 1
                     "Code" -> result = result.copy(code = codeFromXml(parser))
                     "Reason" -> result = result.copy(reason = reasonFromXml(parser))
-                    "Node" -> result = result.copy(node = parser.readAsText())
-                    "Role" -> result = result.copy(role = parser.readAsText())
-                    "Detail" -> result = result.copy(detail = parser.readAsText())
 
                     // Fault style 2
-                    "faultcode" -> result = result.copy(code = parser.readAsText()?.let(FaultCodes.Companion::lookup))
+                    "faultcode" -> result = result.copy(code = codeFromXml(parser, prefix))
                     "faultstring" -> result = result.copy(reason = parser.readAsText())
-                    "faultactor" -> result = result.copy(node = parser.readAsText())
-                    "detail" -> result = result.copy(detail = parser.readAsText())
                     else -> parser.skip()
                 }
             }
@@ -61,6 +52,16 @@ data class Fault(
             return result
         }
 
+
+        /*
+            <faultcode>soap:Client</faultcode>
+         */
+        private fun codeFromXml(parser: XmlPullParser, prefix: String): FaultCodes? {
+            return parser.readAsText()
+                ?.replace("$prefix:", "")
+                ?.let(FaultCodes.Companion::lookup)
+        }
+
         /*
             <soap:Code>
                 <soap:Value>soap:Receiver</soap:Value>
@@ -68,7 +69,7 @@ data class Fault(
         */
         private fun codeFromXml(parser: XmlPullParser): FaultCodes? {
 
-            parser.require(XmlPullParser.START_TAG, null, "Fault")
+            parser.require(XmlPullParser.START_TAG, null, "Code")
 
             var result: FaultCodes? = null
 
@@ -76,12 +77,17 @@ data class Fault(
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
-                when (parser.name.toLowerCase()) {
-                    "Value" -> result = parser.readAsText()?.let(FaultCodes.Companion::lookup) // TODO - soap:Receiver
+                when (parser.name) {
+                    "Value" -> result = parser
+                        .readAsText()
+                        ?.replace("${parser.prefix}:", "")
+                        ?.let(FaultCodes.Companion::lookup)
+
+                    else -> parser.skip()
                 }
             }
 
-            parser.require(XmlPullParser.END_TAG, null, "Fault")
+            parser.require(XmlPullParser.END_TAG, null, "Code")
 
             return result
         }
@@ -101,8 +107,9 @@ data class Fault(
                 if (parser.eventType != XmlPullParser.START_TAG) {
                     continue
                 }
-                when (parser.name.toLowerCase()) {
+                when (parser.name) {
                     "Text" -> result = parser.readAsText()
+                    else -> parser.skip()
                 }
             }
 

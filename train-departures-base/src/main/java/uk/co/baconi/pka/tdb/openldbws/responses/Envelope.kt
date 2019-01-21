@@ -12,7 +12,7 @@ data class Envelope(val body: Body? = null) {
 
         private val xmlParser = XmlPullParserFactory.newInstance()
 
-        fun fromReader(reader: Reader): Envelope? {
+        fun fromReader(reader: Reader): Envelope {
             reader.use { openedReader ->
                 return fromInput {
                     setInput(openedReader)
@@ -20,7 +20,7 @@ data class Envelope(val body: Body? = null) {
             }
         }
 
-        fun fromInputStream(inputStream: InputStream): Envelope? {
+        fun fromInputStream(inputStream: InputStream): Envelope {
             inputStream.use { openedStream ->
                 return fromInput {
                     setInput(openedStream, "UTF-8")
@@ -28,7 +28,7 @@ data class Envelope(val body: Body? = null) {
             }
         }
 
-        private fun fromInput(inner: XmlPullParser.() -> Unit): Envelope? {
+        private fun fromInput(inner: XmlPullParser.() -> Unit): Envelope {
             val parser: XmlPullParser = xmlParser.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true)
             inner(parser)
@@ -36,7 +36,7 @@ data class Envelope(val body: Body? = null) {
             return fromXml(parser)
         }
 
-        private fun fromXml(parser: XmlPullParser): Envelope? {
+        private fun fromXml(parser: XmlPullParser): Envelope {
 
             parser.require(XmlPullParser.START_TAG, null, "Envelope")
 

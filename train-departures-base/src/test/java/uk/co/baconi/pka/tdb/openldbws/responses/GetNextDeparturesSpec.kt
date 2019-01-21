@@ -5,30 +5,24 @@ import io.kotlintest.matchers.beInstanceOf
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.should
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
+import uk.co.baconi.pka.tdb.TestExtensions.toResourceInputStream
 
 class GetNextDeparturesSpec : StringSpec({
 
     "Should be able to deserialise example response of Sheffield to Cleethorpes" {
 
-        val inputStream = GetNextDeparturesSpec::class.java
-            .classLoader
-            ?.getResourceAsStream("openldbws/responses/GetNextDepartures_SHF_to_CLE.xml")
-
-        inputStream shouldNotBe null
-
-        val result: Envelope? = inputStream?.let { Envelope.fromInputStream(it) }
-
-        result shouldNotBe null
+        val result: Envelope = Envelope.fromInputStream(
+            "openldbws/responses/GetNextDepartures_SHF_to_CLE.xml".toResourceInputStream()
+        )
 
         assertSoftly {
 
-            result?.body should beInstanceOf<BodySuccess>()
+            result.body should beInstanceOf<BodySuccess>()
 
-            val body = result?.body as BodySuccess?
+            val body = result.body as BodySuccess
 
-            val departuresBoard = body?.getNextDeparturesResponse?.departuresBoard
+            val departuresBoard = body.getNextDeparturesResponse?.departuresBoard
             departuresBoard?.generatedAt shouldBe "2019-01-13T13:51:17.106902+00:00"
             departuresBoard?.locationName shouldBe "Sheffield"
             departuresBoard?.crs shouldBe "SHF"
