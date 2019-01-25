@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Train Departures</string>
     <string name="title_activity_departure_search">DepartureSearchActivity</string>
+    
+    <!-- Strings related to Settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_nre_api_key">National Rail Enquiries API Key</string>
+
 </resources>
