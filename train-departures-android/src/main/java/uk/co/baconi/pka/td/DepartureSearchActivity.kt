@@ -3,6 +3,8 @@ package uk.co.baconi.pka.td
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeechService
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 
@@ -16,6 +18,7 @@ import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Http
 import uk.co.baconi.pka.tdb.StationCodes
 import uk.co.baconi.pka.tdb.openldbws.responses.BodySuccess
+import java.util.*
 
 class DepartureSearchActivity : AppCompatActivity() {
 
@@ -28,6 +31,8 @@ class DepartureSearchActivity : AppCompatActivity() {
         settings.setOnClickListener { view ->
             startActivity(Intent(this, SettingsActivity::class.java))
         }
+
+        val mTts = TextToSpeech(this@DepartureSearchActivity) {}
 
         fab.setOnClickListener { view ->
 
@@ -57,6 +62,9 @@ class DepartureSearchActivity : AppCompatActivity() {
                 Snackbar
                     .make(view, "The $departureTime to $destination on platform $platform $actualTime", 10000)
                     .setAction("Action", null).show()
+
+                mTts.language = Locale.UK
+                mTts.speak("The $departureTime to $destination on platform $platform $actualTime", TextToSpeech.QUEUE_FLUSH, null)
             }
         }
     }
