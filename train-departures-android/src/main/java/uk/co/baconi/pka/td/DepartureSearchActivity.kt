@@ -4,68 +4,87 @@ import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.speech.tts.TextToSpeech
-import android.speech.tts.TextToSpeechService
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 
 import kotlinx.android.synthetic.main.activity_departure_search.fab
 import kotlinx.android.synthetic.main.activity_departure_search.settings
 import kotlinx.android.synthetic.main.activity_departure_search.toolbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import uk.co.baconi.pka.tdb.AccessToken
 
-import uk.co.baconi.pka.tdb.Http
+import uk.co.baconi.pka.tdb.AccessToken
+import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.StationCodes
-import uk.co.baconi.pka.tdb.openldbws.responses.BodySuccess
+
 import java.util.*
 
 class DepartureSearchActivity : AppCompatActivity() {
 
+    private lateinit var textToSpeech: TextToSpeech
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if(!this::textToSpeech.isInitialized) {
+            textToSpeech = TextToSpeech(this) {}
+        }
 
         setContentView(R.layout.activity_departure_search)
         setSupportActionBar(toolbar)
 
-        settings.setOnClickListener { view ->
+        settings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
-
-        val mTts = TextToSpeech(this@DepartureSearchActivity) {}
 
         fab.setOnClickListener { view ->
 
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            val nreApiKey = sharedPreferences.getString("nre_api_key", null)
 
-            GlobalScope.launch {
-
-                val departuresBoard = sharedPreferences.getString("nre_api_key", null)?.let(::AccessToken)?.let { apiKey ->
-                    val from = StationCodes.firstByCode("SHF")
-                    val to = StationCodes.firstByCode("MHS")
-                    (Http.performGetNextDeparturesRequest(apiKey, from, to).body as BodySuccess).getNextDeparturesResponse?.departuresBoard
+            when(nreApiKey) {
+                is String -> searchForDepartures(nreApiKey, view)
+                else -> {
+                    Snackbar
+                        .make(view, "No NRE API Key set in the settings.", 5000)
+                        .setAction("Action", null).show()
                 }
-
-                val service = departuresBoard?.departures?.first()?.service
-
-                val platform = service?.platform
-                val destination = service?.destination?.first()?.locationName
-                val departureTime = service?.std
-                val estimatedDepartureTime = service?.etd
-
-                val actualTime = if(estimatedDepartureTime == "On time") {
-                    "is on time"
-                } else {
-                    "is expected at $estimatedDepartureTime"
-                }
-
-                Snackbar
-                    .make(view, "The $departureTime to $destination on platform $platform $actualTime", 10000)
-                    .setAction("Action", null).show()
-
-                mTts.language = Locale.UK
-                mTts.speak("The $departureTime to $destination on platform $platform $actualTime", TextToSpeech.QUEUE_FLUSH, null)
             }
+        }
+    }
+
+    private fun searchForDepartures(nreApiKey: String, view: View) {
+
+        GlobalScope.launch {
+
+            val from = StationCodes.firstByCode("SHF")
+            val to = StationCodes.firstByCode("MHS")
+
+            val actionResult = Actions.getNextDepartures(nreApiKey.let(::AccessToken), from, to)
+
+            val departuresBoard = actionResult?.departuresBoard
+            val service = departuresBoard?.departures?.first()?.service
+            val platform = service?.platform
+            val destination = service?.destination?.first()?.locationName
+            val departureTime = service?.std
+            val estimatedDepartureTime = service?.etd
+
+            val actualDepartureTime = when(estimatedDepartureTime) {
+                null -> "no departure time"
+                "On time" -> "is on time"
+                "Delayed" -> "is delayed"
+                else -> "is expected at $estimatedDepartureTime"
+            }
+
+            val resultDisplay = "The $departureTime to $destination on platform $platform $actualDepartureTime"
+
+            Snackbar
+                .make(view, resultDisplay, 10000)
+                .setAction("Action", null).show()
+
+            textToSpeech.language = Locale.UK
+            textToSpeech.speak(resultDisplay, TextToSpeech.QUEUE_FLUSH, null)
         }
     }
 }

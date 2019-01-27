@@ -5,7 +5,7 @@ import io.kotlintest.specs.StringSpec
 import kotlinx.coroutines.runBlocking
 import java.lang.RuntimeException
 
-class HttpSpec : StringSpec({
+class ActionsSpec : StringSpec({
 
     val accessToken: AccessToken by lazy {
         AccessToken(
@@ -19,7 +19,7 @@ class HttpSpec : StringSpec({
     // Disabled as this was being used for local testing
     "[Integration Test] Call service and print out the results".config(enabled = false) {
         runBlocking {
-            val result = Http.performGetNextDeparturesRequest(accessToken, from, to)
+            val result = Actions.getNextDepartures(accessToken, from, to)
 
             result shouldNotBe null
 
