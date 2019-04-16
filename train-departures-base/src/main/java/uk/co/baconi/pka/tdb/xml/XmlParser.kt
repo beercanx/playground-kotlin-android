@@ -2,6 +2,7 @@ package uk.co.baconi.pka.tdb.xml
 
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
+import org.xmlpull.v1.XmlSerializer
 import java.io.InputStream
 import java.io.Reader
 
@@ -32,4 +33,6 @@ object XmlParser {
         parser.nextTag()
         return parser
     }
+
+    fun serializer(): XmlSerializer = xmlParserFactory.newSerializer()
 }
