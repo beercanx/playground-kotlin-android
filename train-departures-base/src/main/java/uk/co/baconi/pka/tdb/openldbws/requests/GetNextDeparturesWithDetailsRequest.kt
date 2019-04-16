@@ -2,9 +2,9 @@ package uk.co.baconi.pka.tdb.openldbws.requests
 
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.StationCode
-import uk.co.baconi.pka.tdb.openldbws.requests.RequestTypes.GetNextDepartures
+import uk.co.baconi.pka.tdb.openldbws.requests.RequestTypes.GetNextDeparturesWithDetails
 
-class GetNextDeparturesRequest(
+class GetNextDeparturesWithDetailsRequest(
     accessToken: AccessToken,
     from: StationCode,
     to: StationCode
@@ -12,5 +12,5 @@ class GetNextDeparturesRequest(
     accessToken,
     from,
     to,
-    GetNextDepartures
+    GetNextDeparturesWithDetails
 )
