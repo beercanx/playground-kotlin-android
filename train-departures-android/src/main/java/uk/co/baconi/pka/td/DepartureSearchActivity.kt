@@ -61,7 +61,7 @@ class DepartureSearchActivity : AppCompatActivity() {
             val from = StationCodes.firstByCode("SHF")
             val to = StationCodes.firstByCode("MHS")
 
-            val actionResult = Actions.getNextDepartures(nreApiKey.let(::AccessToken), from, to)
+            val actionResult = Actions.getFastestDepartures(nreApiKey.let(::AccessToken), from, to)
 
             val departuresBoard = actionResult?.departuresBoard
             val service = departuresBoard?.departures?.first()?.service
@@ -83,8 +83,11 @@ class DepartureSearchActivity : AppCompatActivity() {
                 .make(view, resultDisplay, 10000)
                 .setAction("Action", null).show()
 
+            // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
+            val utteranceId = UUID.randomUUID().toString()
+
             textToSpeech.language = Locale.UK
-            textToSpeech.speak(resultDisplay, TextToSpeech.QUEUE_FLUSH, null)
+            textToSpeech.speak(resultDisplay, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
         }
     }
 }

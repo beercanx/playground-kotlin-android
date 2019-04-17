@@ -4,7 +4,10 @@ import org.xmlpull.v1.XmlPullParser
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class BodyFailure(val fault: Fault? = null) : Body()
-data class BodySuccess(val getNextDeparturesResponse: GetNextDeparturesResponse? = null) : Body()
+data class BodySuccess(
+    val getNextDeparturesResponse: GetNextDeparturesResponse? = null,
+    val getFastestDeparturesResponse: GetFastestDeparturesResponse? = null
+) : Body()
 
 sealed class Body {
 
@@ -30,7 +33,12 @@ sealed class Body {
                         result = BodyFailure(Fault.fromXml(parser))
                         hasFault = true
                     }
-                    "GetNextDeparturesResponse" -> result = BodySuccess(GetNextDeparturesResponse.fromXml(parser))
+                    "GetNextDeparturesResponse" -> result = BodySuccess(
+                        getNextDeparturesResponse = GetNextDeparturesResponse.fromXml(parser)
+                    )
+                    "GetFastestDeparturesResponse" -> result = BodySuccess(
+                        getFastestDeparturesResponse = GetFastestDeparturesResponse.fromXml(parser)
+                    )
                     else -> parser.skip()
                 }
             }

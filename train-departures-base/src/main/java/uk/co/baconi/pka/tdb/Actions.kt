@@ -6,22 +6,31 @@ import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.content.TextContent
 import io.ktor.http.headersOf
+import uk.co.baconi.pka.tdb.openldbws.requests.GetFastestDeparturesRequest
 import uk.co.baconi.pka.tdb.openldbws.requests.GetNextDeparturesRequest
 import uk.co.baconi.pka.tdb.openldbws.requests.Request
 import uk.co.baconi.pka.tdb.openldbws.responses.BodySuccess
 import uk.co.baconi.pka.tdb.openldbws.responses.Envelope
+import uk.co.baconi.pka.tdb.openldbws.responses.GetFastestDeparturesResponse
 import uk.co.baconi.pka.tdb.openldbws.responses.GetNextDeparturesResponse
 import uk.co.baconi.pka.tdb.xml.XmlParser
 
 object Actions {
 
-    suspend fun getNextDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): GetNextDeparturesResponse? = try {
-        val request = GetNextDeparturesRequest(accessToken, from, to)
+    suspend fun getFastestDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): GetFastestDeparturesResponse? {
+        return getBody(GetFastestDeparturesRequest(accessToken, from, to))?.getFastestDeparturesResponse
+    }
+
+    suspend fun getNextDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): GetNextDeparturesResponse? {
+        return getBody(GetNextDeparturesRequest(accessToken, from, to))?.getNextDeparturesResponse
+    }
+
+    private suspend fun getBody(request: Request): BodySuccess? = try {
         val response = performSoapRequest<String>(request)
         val parser = XmlParser.fromReader(response.reader())
         val result = Envelope.fromXml(parser)
         when(result.body) {
-            is BodySuccess -> result.body.getNextDeparturesResponse
+            is BodySuccess -> result.body
             else -> null // TODO - Add in logging
         }
     } catch (exception: Exception) {
