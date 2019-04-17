@@ -10,5 +10,5 @@ interface Request {
     val contentType: String
         get() = "text/xml;charset=UTF-8"
 
-    val type: RequestTypes
+    val type: RequestType
 }

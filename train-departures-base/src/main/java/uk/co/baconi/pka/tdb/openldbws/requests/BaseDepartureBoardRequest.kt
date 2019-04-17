@@ -4,11 +4,11 @@ import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.StationCode
 import uk.co.baconi.pka.tdb.xml.*
 
-abstract class BaseDeparturesRequest(
+abstract class BaseDepartureBoardRequest(
     private val accessToken: AccessToken,
     private val from: StationCode,
     private val to: StationCode,
-    override val type: DeparturesRequestType
+    override val type: DepartureBoardRequestType
 ) : Request {
 
     /**
@@ -25,11 +25,8 @@ abstract class BaseDeparturesRequest(
      *      <soap:Body>
      *          <ldb:${type}Request>
      *              <ldb:crs>${from}</ldb:crs>
-     *              <ldb:filterList>
-     *                  <ldb:crs>${to}</ldb:crs>
-     *              </ldb:filterList>
-     *              <ldb:timeOffset>0</ldb:timeOffset>
-     *              <ldb:timeWindow>120</ldb:timeWindow>
+     *              <ldb:filterCrs>${to}</ldb:filterCrs>
+     *              <ldb:numRows>10</ldb:numRows>
      *          </ldb:${type}Request>
      *      </soap:Body>
      *  </soap:Envelope>

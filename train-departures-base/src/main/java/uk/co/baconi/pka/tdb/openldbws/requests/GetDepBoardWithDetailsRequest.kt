@@ -2,15 +2,15 @@ package uk.co.baconi.pka.tdb.openldbws.requests
 
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.StationCode
-import uk.co.baconi.pka.tdb.openldbws.requests.DeparturesRequestType.GetNextDeparturesWithDetails
+import uk.co.baconi.pka.tdb.openldbws.requests.DepartureBoardRequestType.GetDepBoardWithDetails
 
-class GetNextDeparturesWithDetailsRequest(
+class GetDepBoardWithDetailsRequest(
     accessToken: AccessToken,
     from: StationCode,
     to: StationCode
-) : BaseDeparturesRequest(
+) : BaseDepartureBoardRequest(
     accessToken,
     from,
     to,
-    GetNextDeparturesWithDetails
+    GetDepBoardWithDetails
 )
