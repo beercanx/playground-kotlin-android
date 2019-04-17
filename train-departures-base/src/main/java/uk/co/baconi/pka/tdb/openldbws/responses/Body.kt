@@ -5,8 +5,7 @@ import uk.co.baconi.pka.tdb.xml.skip
 
 data class BodyFailure(val fault: Fault? = null) : Body()
 data class BodySuccess(
-    val getNextDeparturesResponse: GetNextDeparturesResponse? = null,
-    val getFastestDeparturesResponse: GetFastestDeparturesResponse? = null
+    val departuresResponse: BaseDeparturesResponse? = null
 ) : Body()
 
 sealed class Body {
@@ -34,10 +33,16 @@ sealed class Body {
                         hasFault = true
                     }
                     "GetNextDeparturesResponse" -> result = BodySuccess(
-                        getNextDeparturesResponse = GetNextDeparturesResponse.fromXml(parser)
+                        departuresResponse = BaseDeparturesResponse.fromXml(parser, "GetNextDeparturesResponse")
+                    )
+                    "GetNextDeparturesWithDetailsResponse" -> result = BodySuccess(
+                        departuresResponse = BaseDeparturesResponse.fromXml(parser, "GetNextDeparturesWithDetailsResponse")
                     )
                     "GetFastestDeparturesResponse" -> result = BodySuccess(
-                        getFastestDeparturesResponse = GetFastestDeparturesResponse.fromXml(parser)
+                        departuresResponse = BaseDeparturesResponse.fromXml(parser, "GetFastestDeparturesResponse")
+                    )
+                    "GetFastestDeparturesWithDetailsResponse" -> result = BodySuccess(
+                        departuresResponse = BaseDeparturesResponse.fromXml(parser, "GetFastestDeparturesWithDetailsResponse")
                     )
                     else -> parser.skip()
                 }

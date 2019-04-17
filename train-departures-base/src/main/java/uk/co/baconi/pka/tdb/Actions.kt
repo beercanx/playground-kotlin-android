@@ -11,18 +11,17 @@ import uk.co.baconi.pka.tdb.openldbws.requests.GetNextDeparturesRequest
 import uk.co.baconi.pka.tdb.openldbws.requests.Request
 import uk.co.baconi.pka.tdb.openldbws.responses.BodySuccess
 import uk.co.baconi.pka.tdb.openldbws.responses.Envelope
-import uk.co.baconi.pka.tdb.openldbws.responses.GetFastestDeparturesResponse
-import uk.co.baconi.pka.tdb.openldbws.responses.GetNextDeparturesResponse
+import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
 import uk.co.baconi.pka.tdb.xml.XmlParser
 
 object Actions {
 
-    suspend fun getFastestDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): GetFastestDeparturesResponse? {
-        return getBody(GetFastestDeparturesRequest(accessToken, from, to))?.getFastestDeparturesResponse
+    suspend fun getFastestDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDeparturesResponse? {
+        return getBody(GetFastestDeparturesRequest(accessToken, from, to))?.departuresResponse
     }
 
-    suspend fun getNextDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): GetNextDeparturesResponse? {
-        return getBody(GetNextDeparturesRequest(accessToken, from, to))?.getNextDeparturesResponse
+    suspend fun getNextDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDeparturesResponse? {
+        return getBody(GetNextDeparturesRequest(accessToken, from, to))?.departuresResponse
     }
 
     private suspend fun getBody(request: Request): BodySuccess? = try {

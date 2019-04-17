@@ -6,7 +6,6 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.should
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import uk.co.baconi.pka.tdb.TestExtensions.toResourceInputStream
 import uk.co.baconi.pka.tdb.xml.XmlParser
 
 class GetNextDeparturesSpec : StringSpec({
@@ -81,7 +80,7 @@ class GetNextDeparturesSpec : StringSpec({
 
             val body = result.body as BodySuccess
 
-            val departuresBoard = body.getNextDeparturesResponse?.departuresBoard
+            val departuresBoard = body.departuresResponse?.departuresBoard
             departuresBoard?.generatedAt shouldBe "2019-01-13T13:51:17.106902+00:00"
             departuresBoard?.locationName shouldBe "Sheffield"
             departuresBoard?.crs shouldBe "SHF"

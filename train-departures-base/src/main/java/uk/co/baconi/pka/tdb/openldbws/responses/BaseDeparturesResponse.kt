@@ -3,15 +3,15 @@ package uk.co.baconi.pka.tdb.openldbws.responses
 import org.xmlpull.v1.XmlPullParser
 import uk.co.baconi.pka.tdb.xml.skip
 
-data class GetNextDeparturesResponse(val departuresBoard: DeparturesBoard? = null) {
+data class BaseDeparturesResponse(val departuresBoard: DeparturesBoard? = null) {
 
     companion object {
 
-        internal fun fromXml(parser: XmlPullParser): GetNextDeparturesResponse {
+        internal fun fromXml(parser: XmlPullParser, type: String): BaseDeparturesResponse {
 
-            parser.require(XmlPullParser.START_TAG, null, "GetNextDeparturesResponse")
+            parser.require(XmlPullParser.START_TAG, null, type)
 
-            var result = GetNextDeparturesResponse()
+            var result = BaseDeparturesResponse()
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.eventType != XmlPullParser.START_TAG) {
@@ -23,7 +23,7 @@ data class GetNextDeparturesResponse(val departuresBoard: DeparturesBoard? = nul
                 }
             }
 
-            parser.require(XmlPullParser.END_TAG, null, "GetNextDeparturesResponse")
+            parser.require(XmlPullParser.END_TAG, null, type)
 
             return result
         }

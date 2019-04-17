@@ -6,6 +6,9 @@ import uk.co.baconi.pka.tdb.xml.readAsInt
 import uk.co.baconi.pka.tdb.xml.readAsText
 import uk.co.baconi.pka.tdb.xml.skip
 
+/**
+ * Covers both ServiceItem and ServiceItemWithCallingPoints (for parents of type WithDetails)
+ */
 data class ServiceItem(
     val sta: String? = null, // Scheduled Time of Arrival [10:41]
     val eta: String? = null, // Estimated Time of Arrival [On time / 10:54]
@@ -30,7 +33,9 @@ data class ServiceItem(
     val cancelReason: String? = null,
     val delayReason: String? = null,
     val adhocAlerts: List<String>? = null,
-    val formation: FormationData? = null
+    val formation: FormationData? = null,
+    val previousCallingPoints: List<CallingPoints>? = null, // A list of lists of the subsequent calling points in the journey.
+    val subsequentCallingPoints: List<CallingPoints>? = null // A list of lists of the previous calling points in the journey.
 ) {
 
     companion object {
@@ -70,6 +75,8 @@ data class ServiceItem(
                     "destination" -> result = result.copy(destination = ServiceLocations.fromXml(parser, "destination"))
                     "currentOrigins" -> result = result.copy(currentOrigins = ServiceLocations.fromXml(parser, "currentOrigins"))
                     "currentDestinations" -> result = result.copy(currentDestinations = ServiceLocations.fromXml(parser, "currentDestinations"))
+                    "previousCallingPoints" -> result = result.copy(previousCallingPoints = CallingPoints.fromXml(parser, "previousCallingPoints"))
+                    "subsequentCallingPoints" -> result = result.copy(subsequentCallingPoints = CallingPoints.fromXml(parser, "subsequentCallingPoints"))
                     else -> parser.skip()
                 }
             }
