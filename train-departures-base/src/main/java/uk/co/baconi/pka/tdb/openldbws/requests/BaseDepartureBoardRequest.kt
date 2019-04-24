@@ -26,7 +26,10 @@ abstract class BaseDepartureBoardRequest(
      *          <ldb:${type}Request>
      *              <ldb:crs>${from}</ldb:crs>
      *              <ldb:filterCrs>${to}</ldb:filterCrs>
-     *              <ldb:numRows>10</ldb:numRows>
+     *              <ldb:filterType>to</ldb:filterType>
+     *              <ldb:numRows>5</ldb:numRows>
+     *              <ldb:timeOffset>0</ldb:timeOffset>
+     *              <ldb:timeWindow>120</ldb:timeWindow>
      *          </ldb:${type}Request>
      *      </soap:Body>
      *  </soap:Envelope>
@@ -37,10 +40,14 @@ abstract class BaseDepartureBoardRequest(
                 tag("ldb:crs") {
                     text(from.crsCode)
                 }
-                tag("ldb:filterList") {
-                    tag("ldb:crs") {
-                        text(to.crsCode)
-                    }
+                tag("ldb:filterCrs") {
+                    text(to.crsCode)
+                }
+                tag("ldb:filterType") {
+                    text("to")
+                }
+                tag("ldb:numRows") {
+                    text("5")
                 }
                 tag("ldb:timeOffset") {
                     text("0")
