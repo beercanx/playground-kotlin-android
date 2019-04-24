@@ -1,5 +1,6 @@
 package uk.co.baconi.pka.tdb
 
+import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.request.post
@@ -9,12 +10,12 @@ import io.ktor.http.headersOf
 import uk.co.baconi.pka.tdb.openldbws.requests.GetFastestDeparturesRequest
 import uk.co.baconi.pka.tdb.openldbws.requests.GetNextDeparturesRequest
 import uk.co.baconi.pka.tdb.openldbws.requests.Request
-import uk.co.baconi.pka.tdb.openldbws.responses.BodySuccess
-import uk.co.baconi.pka.tdb.openldbws.responses.Envelope
-import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
+import uk.co.baconi.pka.tdb.openldbws.responses.*
 import uk.co.baconi.pka.tdb.xml.XmlParser
 
 object Actions {
+
+    private val TAG = Actions::class.simpleName
 
     suspend fun getFastestDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDeparturesResponse? {
         return getBody(GetFastestDeparturesRequest(accessToken, from, to))?.departuresResponse
@@ -30,11 +31,24 @@ object Actions {
         val result = Envelope.fromXml(parser)
         when(result.body) {
             is BodySuccess -> result.body
-            else -> null // TODO - Add in logging
+            is BodyFailure ->  when(result.body.fault) {
+                is Fault -> {
+                    Log.e(TAG, "Decoded response that contained a failure body: ${result.body.fault}")
+                    null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
+                }
+                else -> {
+                    Log.e(TAG, "Decoded response that contained a no known successful body.")
+                    null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
+                }
+            }
+            null -> {
+                Log.e(TAG, "Decoded response that contained no body.")
+                null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
+            }
         }
     } catch (exception: Exception) {
-        // TODO - Add in logging
-        null
+        Log.e(TAG, "Issues communicating with the OpenLDBWS service.", exception)
+        null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
     }
 
     // TODO - Look at supporting input streams and passing directly to XmlParser
