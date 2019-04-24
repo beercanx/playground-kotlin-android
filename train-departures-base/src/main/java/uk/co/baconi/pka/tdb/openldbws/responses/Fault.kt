@@ -78,11 +78,7 @@ data class Fault(val code: FaultCodes? = null, val reason: String? = null) {
                     continue
                 }
                 when (parser.name) {
-                    "Value" -> result = parser
-                        .readAsText()
-                        ?.replace("${parser.prefix}:", "")
-                        ?.let(FaultCodes.Companion::lookup)
-
+                    "Value" -> result = codeFromXml(parser, parser.prefix)
                     else -> parser.skip()
                 }
             }
