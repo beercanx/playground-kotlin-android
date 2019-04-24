@@ -8,4 +8,11 @@
     tools:showIn="@layout/activity_departure_search"
     tools:context="uk.co.baconi.pka.td.DepartureSearchActivity">
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp"
+        tools:listitem="@layout/recycler_view_item" />
+
 </android.support.constraint.ConstraintLayout>

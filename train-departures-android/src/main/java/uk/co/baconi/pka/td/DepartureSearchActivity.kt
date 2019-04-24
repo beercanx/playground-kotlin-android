@@ -6,10 +6,11 @@ import android.preference.PreferenceManager
 import android.speech.tts.TextToSpeech
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 
 import kotlinx.android.synthetic.main.activity_departure_search.fab
-import kotlinx.android.synthetic.main.activity_departure_search.settings
 import kotlinx.android.synthetic.main.activity_departure_search.toolbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -34,10 +35,6 @@ class DepartureSearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_departure_search)
         setSupportActionBar(toolbar)
 
-        settings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
-
         fab.setOnClickListener { view ->
 
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -51,6 +48,28 @@ class DepartureSearchActivity : AppCompatActivity() {
                         .setAction("Action", null).show()
                 }
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.app_bar_settings -> {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            true
+        }
+        R.id.app_bar_search -> {
+            Snackbar
+                .make(item.actionView, "No NRE API Key set in the settings.", 5000)
+                .setAction("Action", null).show()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
         }
     }
 
