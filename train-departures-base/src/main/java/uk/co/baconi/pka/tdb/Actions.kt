@@ -15,7 +15,7 @@ import uk.co.baconi.pka.tdb.xml.XmlParser
 
 object Actions {
 
-    private val TAG = Actions::class.simpleName
+    private const val TAG = "Actions"
 
     suspend fun getFastestDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDeparturesResponse? {
         return getBody(GetFastestDeparturesRequest(accessToken, from, to))?.departuresResponse

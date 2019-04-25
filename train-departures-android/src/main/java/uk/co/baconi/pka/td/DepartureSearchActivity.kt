@@ -29,7 +29,7 @@ import java.util.*
 class DepartureSearchActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = Actions::class.simpleName
+        private const val TAG = "DepartureSearchActivity"
     }
 
     private lateinit var textToSpeech: TextToSpeech
@@ -65,10 +65,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
 
         floating_search_button.setOnClickListener { view ->
-
-            val nreApiKey = Settings.NreApiKey.getSetting(this)
-
-            when(nreApiKey) {
+            when(val nreApiKey = Settings.NreApiKey.getSetting(this)) {
                 is String -> searchForDepartures(nreApiKey, view)
                 else -> {
                     Snackbar
@@ -106,9 +103,25 @@ class DepartureSearchActivity : AppCompatActivity() {
         viewAdapter.notifyDataSetChanged()
     }
 
-    private fun speakSearchResult(result: String) {
+    private fun speakSearchResult(result: BaseDeparturesResponse) {
 
         if(Settings.EnableSpeakingFirstResult.getSetting(this)) {
+
+            val departuresBoard = result.departuresBoard
+            val service = departuresBoard?.departures?.first()?.service
+            val platform = service?.platform
+            val destination = service?.destination?.first()?.locationName
+            val departureTime = service?.std
+            val estimatedDepartureTime = service?.etd
+
+            val actualDepartureTime = when(estimatedDepartureTime) {
+                null -> "no departure time"
+                "On time" -> "is on time"
+                "Delayed" -> "is delayed"
+                else -> "is expected at $estimatedDepartureTime"
+            }
+
+            val speechText = "The $departureTime to $destination on platform $platform $actualDepartureTime"
 
             // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
             val utteranceId = UUID.randomUUID().toString()
@@ -116,7 +129,7 @@ class DepartureSearchActivity : AppCompatActivity() {
             textToSpeech.language = Locale.UK
 
             // TODO - Check error/success response for queueing speech request
-            textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+            textToSpeech.speak(speechText, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
 
         } else {
             Log.d(TAG, "Speaking results is disabled")
@@ -128,32 +141,16 @@ class DepartureSearchActivity : AppCompatActivity() {
         val from = StationCodes.firstByCode("SHF")
         val to = StationCodes.firstByCode("MHS")
 
-        val actionResult = Actions.getFastestDepartures(nreApiKey.let(::AccessToken), from, to)
+        val result = Actions.getFastestDepartures(nreApiKey.let(::AccessToken), from, to)
 
-        if(actionResult is BaseDeparturesResponse) {
-            updateSearchResults(actionResult)
+        if(result is BaseDeparturesResponse) {
+            updateSearchResults(result)
+            speakSearchResult(result)
+        } else {
+            // TODO - Better error messaging required
+            Snackbar
+                .make(view, "Unable to get a result", 10000)
+                .setAction("Action", null).show()
         }
-
-        val departuresBoard = actionResult?.departuresBoard
-        val service = departuresBoard?.departures?.first()?.service
-        val platform = service?.platform
-        val destination = service?.destination?.first()?.locationName
-        val departureTime = service?.std
-        val estimatedDepartureTime = service?.etd
-
-        val actualDepartureTime = when(estimatedDepartureTime) {
-            null -> "no departure time"
-            "On time" -> "is on time"
-            "Delayed" -> "is delayed"
-            else -> "is expected at $estimatedDepartureTime"
-        }
-
-        val resultDisplay = "The $departureTime to $destination on platform $platform $actualDepartureTime"
-
-        speakSearchResult(resultDisplay)
-
-        Snackbar
-            .make(view, resultDisplay, 10000)
-            .setAction("Action", null).show()
     }
 }

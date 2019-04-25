@@ -12,12 +12,10 @@
         android:title="@string/pref_title_nre_api_key" />
 
     <SwitchPreference
-        android:defaultValue="true"
         android:key="enable_coloured_avatars"
         android:title="Colour code platform number" />
 
     <SwitchPreference
-        android:defaultValue="true"
         android:key="enable_speaking_first_result"
         android:title="Read out the first result" />
 
