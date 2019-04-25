@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
+import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
-class SearchResultsAdapter(private val searchResults: MutableList<BaseDeparturesResponse>) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
+class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -39,15 +39,13 @@ class SearchResultsAdapter(private val searchResults: MutableList<BaseDepartures
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: SearchResultsViewHolder, position: Int) {
 
-        val searchResult = searchResults[position]
-        val departuresBoard = searchResult.departuresBoard
-        val service = departuresBoard?.departures?.first()?.service
-        val platform = service?.platform
-        val destination = service?.destination?.first()
+        val service = searchResults[position]
+        val platform = service.platform
+        val destination = service.destination?.first()
         val destinationName = destination?.locationName
         val destinationCrs = destination?.crs
-        val departureTime = service?.std
-        val estimatedDepartureTime = service?.etd
+        val departureTime = service.std
+        val estimatedDepartureTime = service.etd
 
         val actualDepartureTime = when(estimatedDepartureTime) {
             null -> "no departure time"

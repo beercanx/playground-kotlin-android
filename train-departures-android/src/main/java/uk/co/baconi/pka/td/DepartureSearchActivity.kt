@@ -25,6 +25,8 @@ import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.StationCode
 import uk.co.baconi.pka.tdb.StationCodes
 import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
+import uk.co.baconi.pka.tdb.openldbws.responses.DepartureItem
+import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
 import java.util.*
 
@@ -36,7 +38,7 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     private lateinit var textToSpeech: TextToSpeech
 
-    private lateinit var searchResults: MutableList<BaseDeparturesResponse>
+    private lateinit var searchResults: MutableList<ServiceItem>
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: SearchResultsAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -121,32 +123,57 @@ class DepartureSearchActivity : AppCompatActivity() {
         val from = StationCodes.firstByCode(search_criteria_from_spinner.selectedItem as String)
         val to = StationCodes.firstByCode(search_criteria_to_spinner.selectedItem as String)
 
-        val result = Actions.getFastestDepartures(nreApiKey, from, to)
+        val searchType = Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)
 
-        if(result is BaseDeparturesResponse) {
-            updateSearchResults(result)
-            speakSearchResult(result)
+        val result: List<ServiceItem>? = when(searchType) {
+            SearchType.SINGLE_RESULT -> {
+                Actions.getFastestDepartures(nreApiKey, from, to)
+                    ?.departuresBoard
+                    ?.departures
+                    ?.mapNotNull(DepartureItem::service)
+            }
+            SearchType.MULTIPLE_RESULTS -> {
+                Actions.getDepartureBoard(nreApiKey, from, to)
+                    ?.stationBoardResult
+                    ?.trainServices
+            }
+        }
+
+        if(result is List<ServiceItem>) {
+            updateSearchResults(searchType, result)
+            speakSearchResult(result.first())
         } else {
             // TODO - Better error messaging required
             Snackbar.make(recyclerView, "Unable to get a result", 10000).show()
         }
     }
 
-    private fun updateSearchResults(response: BaseDeparturesResponse) = GlobalScope.launch(Dispatchers.Main) {
-        searchResults.add(0, response)
+    private fun updateSearchResults(searchType: SearchType, serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
+
+        when(searchType) {
+            SearchType.SINGLE_RESULT -> {
+                if(searchResults.size >= 4) {
+                    searchResults.clear()
+                }
+                searchResults.add(0, serviceItems.first())
+            }
+            SearchType.MULTIPLE_RESULTS -> {
+                searchResults.clear()
+                searchResults.addAll(serviceItems)
+            }
+        }
+
         viewAdapter.notifyDataSetChanged()
     }
 
-    private fun speakSearchResult(result: BaseDeparturesResponse) {
+    private fun speakSearchResult(service: ServiceItem) {
 
         if(Settings.EnableSpeakingFirstResult.getSetting(this)) {
 
-            val departuresBoard = result.departuresBoard
-            val service = departuresBoard?.departures?.first()?.service
-            val platform = service?.platform
-            val destination = service?.destination?.first()?.locationName
-            val departureTime = service?.std
-            val estimatedDepartureTime = service?.etd
+            val platform = service.platform
+            val destination = service.destination?.first()?.locationName
+            val departureTime = service.std
+            val estimatedDepartureTime = service.etd
 
             val actualDepartureTime = when(estimatedDepartureTime) {
                 null -> "no departure time"
