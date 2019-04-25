@@ -7,15 +7,15 @@ import uk.co.baconi.pka.tdb.xml.skip
 
 data class StationBoardResult(
     val generatedAt: String? = null,
-//    val locationName: String? = null, // Station Name [Sheffield]
-//    val crs: String? = null, // CRS Code [SHF]
-//    val filterLocationName: String? = null,
-//    val filtercrs: String? = null,
-//    val filterType: String? = null,
-//    val nrccMessages: List<String>? = null, // Messages [Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare.]
-//    val platformAvailable: Boolean? = null, // [true|false|null]
-//    val areServicesAvailable: Boolean? = null, // [true|false|null]
-//    val departures: List<DepartureItem>? = null
+    val locationName: String? = null,
+    val crs: String? = null,
+    val filterLocationName: String? = null,
+    val filtercrs: String? = null,
+    val filterType: String? = null,
+    val nrccMessages: List<String>? = null,
+    val platformAvailable: Boolean? = null,
+    val areServicesAvailable: Boolean? = null,
+
     val trainServices: List<ServiceItem>? = null,
     val busServices: List<ServiceItem>? = null,
     val ferryServices: List<ServiceItem>? = null
@@ -43,7 +43,9 @@ data class StationBoardResult(
                     "nrccMessages" -> result = result.copy(nrccMessages = NRCCMessages.fromXml(parser))
                     "platformAvailable" -> result = result.copy(platformAvailable = parser.readAsBoolean())
                     "areServicesAvailable" -> result = result.copy(areServicesAvailable = parser.readAsBoolean())
-                    "departures" -> result = result.copy(departures = Departures.fromXml(parser))
+                    "trainServices" -> result = result.copy(trainServices = ServiceItems.fromXml(parser, "trainServices"))
+                    "busServices" -> result = result.copy(busServices = ServiceItems.fromXml(parser, "busServices"))
+                    "ferryServices" -> result = result.copy(ferryServices = ServiceItems.fromXml(parser, "ferryServices"))
                     else -> parser.skip()
                 }
             }
