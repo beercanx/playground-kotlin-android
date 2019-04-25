@@ -99,7 +99,7 @@ class DepartureSearchActivity : AppCompatActivity() {
     }
 
     private fun updateSearchResults(response: BaseDeparturesResponse) = GlobalScope.launch(Dispatchers.Main) {
-        searchResults.add(response)
+        searchResults.add(0, response)
         viewAdapter.notifyDataSetChanged()
     }
 
