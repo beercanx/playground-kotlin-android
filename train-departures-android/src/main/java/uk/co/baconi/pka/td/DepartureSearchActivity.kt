@@ -6,24 +6,34 @@ import android.preference.PreferenceManager
 import android.speech.tts.TextToSpeech
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 
-import kotlinx.android.synthetic.main.activity_departure_search.fab
 import kotlinx.android.synthetic.main.activity_departure_search.toolbar
+import kotlinx.android.synthetic.main.activity_departure_search.floating_search_button
+import kotlinx.android.synthetic.main.content_departure_search.search_results
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.StationCodes
+import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
 
 import java.util.*
 
 class DepartureSearchActivity : AppCompatActivity() {
 
     private lateinit var textToSpeech: TextToSpeech
+
+    private lateinit var searchResults: MutableList<BaseDeparturesResponse>
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: SearchResultsAdapter
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +45,22 @@ class DepartureSearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_departure_search)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
+        searchResults = mutableListOf()
+        viewManager = LinearLayoutManager(this)
+        viewAdapter = SearchResultsAdapter(searchResults)
+        recyclerView = search_results.apply {
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            setHasFixedSize(true)
+
+            // use a linear layout manager
+            layoutManager = viewManager
+
+            // specify an viewAdapter (see also next example)
+            adapter = viewAdapter
+        }
+
+        floating_search_button.setOnClickListener { view ->
 
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             val nreApiKey = sharedPreferences.getString("nre_api_key", null)
@@ -73,40 +98,46 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun searchForDepartures(nreApiKey: String, view: View) {
+    private fun updateSearchResults(response: BaseDeparturesResponse) = GlobalScope.launch(Dispatchers.Main) {
+        searchResults.add(response)
+        viewAdapter.notifyDataSetChanged()
+    }
 
-        GlobalScope.launch {
+    private fun searchForDepartures(nreApiKey: String, view: View) = GlobalScope.launch {
 
-            val from = StationCodes.firstByCode("SHF")
-            val to = StationCodes.firstByCode("MHS")
+        val from = StationCodes.firstByCode("SHF")
+        val to = StationCodes.firstByCode("MHS")
 
-            val actionResult = Actions.getFastestDepartures(nreApiKey.let(::AccessToken), from, to)
+        val actionResult = Actions.getFastestDepartures(nreApiKey.let(::AccessToken), from, to)
 
-            val departuresBoard = actionResult?.departuresBoard
-            val service = departuresBoard?.departures?.first()?.service
-            val platform = service?.platform
-            val destination = service?.destination?.first()?.locationName
-            val departureTime = service?.std
-            val estimatedDepartureTime = service?.etd
-
-            val actualDepartureTime = when(estimatedDepartureTime) {
-                null -> "no departure time"
-                "On time" -> "is on time"
-                "Delayed" -> "is delayed"
-                else -> "is expected at $estimatedDepartureTime"
-            }
-
-            val resultDisplay = "The $departureTime to $destination on platform $platform $actualDepartureTime"
-
-            Snackbar
-                .make(view, resultDisplay, 10000)
-                .setAction("Action", null).show()
-
-            // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
-            val utteranceId = UUID.randomUUID().toString()
-
-            textToSpeech.language = Locale.UK
-            textToSpeech.speak(resultDisplay, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+        if(actionResult is BaseDeparturesResponse) {
+            updateSearchResults(actionResult)
         }
+
+        val departuresBoard = actionResult?.departuresBoard
+        val service = departuresBoard?.departures?.first()?.service
+        val platform = service?.platform
+        val destination = service?.destination?.first()?.locationName
+        val departureTime = service?.std
+        val estimatedDepartureTime = service?.etd
+
+        val actualDepartureTime = when(estimatedDepartureTime) {
+            null -> "no departure time"
+            "On time" -> "is on time"
+            "Delayed" -> "is delayed"
+            else -> "is expected at $estimatedDepartureTime"
+        }
+
+        val resultDisplay = "The $departureTime to $destination on platform $platform $actualDepartureTime"
+
+        Snackbar
+            .make(view, resultDisplay, 10000)
+            .setAction("Action", null).show()
+
+        // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
+        val utteranceId = UUID.randomUUID().toString()
+
+        textToSpeech.language = Locale.UK
+        textToSpeech.speak(resultDisplay, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
     }
 }
