@@ -7,9 +7,7 @@ import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.content.TextContent
 import io.ktor.http.headersOf
-import uk.co.baconi.pka.tdb.openldbws.requests.GetFastestDeparturesRequest
-import uk.co.baconi.pka.tdb.openldbws.requests.GetNextDeparturesRequest
-import uk.co.baconi.pka.tdb.openldbws.requests.Request
+import uk.co.baconi.pka.tdb.openldbws.requests.*
 import uk.co.baconi.pka.tdb.openldbws.responses.*
 import uk.co.baconi.pka.tdb.xml.XmlParser
 
@@ -23,6 +21,10 @@ object Actions {
 
     suspend fun getNextDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDeparturesResponse? {
         return getBody(GetNextDeparturesRequest(accessToken, from, to))?.departuresResponse
+    }
+
+    suspend fun getDepartureBoard(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDepartureBoardResponse? {
+        return getBody(GetDepartureBoardRequest(accessToken, from, to))?.departureBoardResponse
     }
 
     private suspend fun getBody(request: Request): BodySuccess? = try {

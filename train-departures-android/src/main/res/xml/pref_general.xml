@@ -9,14 +9,20 @@
         android:selectAllOnFocus="true"
         android:singleLine="false"
         android:maxLength="45"
-        android:title="@string/pref_title_nre_api_key" />
+        android:title="@string/pref_title_nre_api_key_title" />
 
     <SwitchPreference
         android:key="enable_coloured_avatars"
-        android:title="Colour code platform number" />
+        android:title="@string/pref_enable_coloured_avatars_title" />
 
     <SwitchPreference
         android:key="enable_speaking_first_result"
-        android:title="Read out the first result" />
+        android:title="@string/pref_enable_speaking_first_result_title" />
+
+    <ListPreference
+        android:key="which_search_type"
+        android:title="@string/pref_which_search_type_title"
+        android:entries="@array/pref_which_search_type_labels"
+        android:entryValues="@array/pref_which_search_type_values"/>
 
 </PreferenceScreen>
