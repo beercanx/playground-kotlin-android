@@ -28,10 +28,10 @@ class SearchResultsAdapter(private val searchResults: MutableList<BaseDepartures
         // create a new view
         val layout = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item, parent, false)
 
-        val avatar: TextView = layout.findViewById(R.id.imageView2)
-        val destination: TextView = layout.findViewById(R.id.textView)
-        val tickerLine: TextView = layout.findViewById(R.id.textView2)
-        val departureTime: TextView = layout.findViewById(R.id.textView3)
+        val avatar: TextView = layout.findViewById(R.id.search_result_avatar)
+        val destination: TextView = layout.findViewById(R.id.search_result_destination)
+        val tickerLine: TextView = layout.findViewById(R.id.search_result_ticker_line)
+        val departureTime: TextView = layout.findViewById(R.id.search_result_departure_time)
 
         return SearchResultsViewHolder(layout, avatar, destination, tickerLine, departureTime)
     }

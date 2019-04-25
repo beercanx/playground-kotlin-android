@@ -7,9 +7,9 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/imageView2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:id="@+id/search_result_avatar"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/black"
@@ -24,36 +24,38 @@
         tools:text="BPS" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/search_result_destination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        app:layout_constraintBottom_toTopOf="@+id/search_result_ticker_line"
+        app:layout_constraintStart_toEndOf="@+id/search_result_avatar"
+        app:layout_constraintTop_toTopOf="@+id/search_result_avatar"
         tools:text="@tools:sample/full_names" />
 
-  <TextView
-      android:id="@+id/textView2"
-      android:layout_width="285dp"
-      android:layout_height="20dp"
-      tools:text="@tools:sample/lorem[4:10]"
-      app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-      app:layout_constraintStart_toEndOf="@+id/imageView2"
-      android:layout_marginStart="8dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      android:layout_marginEnd="8dp"
-      app:layout_constraintHorizontal_bias="0.050" />
+    <TextView
+        android:id="@+id/search_result_ticker_line"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/search_result_departure_time"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/search_result_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/search_result_departure_time"
+        tools:text="@tools:sample/lorem[10:10]" />
 
   <TextView
-      android:id="@+id/textView3"
+      android:id="@+id/search_result_departure_time"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       tools:text="@tools:sample/date/hhmm"
-      app:layout_constraintTop_toTopOf="@+id/imageView2"
+      app:layout_constraintTop_toTopOf="@+id/search_result_avatar"
       app:layout_constraintEnd_toEndOf="parent"
       android:layout_marginEnd="8dp" />
 
