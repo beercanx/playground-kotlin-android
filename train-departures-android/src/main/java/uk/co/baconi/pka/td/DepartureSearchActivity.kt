@@ -77,6 +77,14 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         search_criteria_to_spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, crsCodes)
         search_criteria_to_spinner.setSelection(crsCodes.indexOf("SHF")) // TODO - Retrieve from save
+
+        // Toggle the from and to search selections
+        search_criteria_switch_destination.setOnClickListener {
+            val fromPosition = search_criteria_from_spinner.selectedItemPosition
+            val toPosition = search_criteria_to_spinner.selectedItemPosition
+            search_criteria_from_spinner.setSelection(toPosition, true)
+            search_criteria_to_spinner.setSelection(fromPosition, true)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
