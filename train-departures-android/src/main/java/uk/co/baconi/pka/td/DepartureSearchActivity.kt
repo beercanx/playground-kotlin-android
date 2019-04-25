@@ -2,12 +2,12 @@ package uk.co.baconi.pka.td
 
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.speech.tts.TextToSpeech
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -27,6 +27,10 @@ import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
 import java.util.*
 
 class DepartureSearchActivity : AppCompatActivity() {
+
+    companion object {
+        private val TAG = Actions::class.simpleName
+    }
 
     private lateinit var textToSpeech: TextToSpeech
 
@@ -62,8 +66,7 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         floating_search_button.setOnClickListener { view ->
 
-            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-            val nreApiKey = sharedPreferences.getString("nre_api_key", null)
+            val nreApiKey = Settings.NreApiKey.getSetting(this)
 
             when(nreApiKey) {
                 is String -> searchForDepartures(nreApiKey, view)
@@ -103,6 +106,23 @@ class DepartureSearchActivity : AppCompatActivity() {
         viewAdapter.notifyDataSetChanged()
     }
 
+    private fun speakSearchResult(result: String) {
+
+        if(Settings.EnableSpeakingFirstResult.getSetting(this)) {
+
+            // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
+            val utteranceId = UUID.randomUUID().toString()
+
+            textToSpeech.language = Locale.UK
+
+            // TODO - Check error/success response for queueing speech request
+            textToSpeech.speak(result, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+
+        } else {
+            Log.d(TAG, "Speaking results is disabled")
+        }
+    }
+
     private fun searchForDepartures(nreApiKey: String, view: View) = GlobalScope.launch {
 
         val from = StationCodes.firstByCode("SHF")
@@ -130,14 +150,10 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         val resultDisplay = "The $departureTime to $destination on platform $platform $actualDepartureTime"
 
+        speakSearchResult(resultDisplay)
+
         Snackbar
             .make(view, resultDisplay, 10000)
             .setAction("Action", null).show()
-
-        // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
-        val utteranceId = UUID.randomUUID().toString()
-
-        textToSpeech.language = Locale.UK
-        textToSpeech.speak(resultDisplay, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
     }
 }

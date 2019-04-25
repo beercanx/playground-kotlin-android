@@ -56,10 +56,9 @@ class SearchResultsAdapter(private val searchResults: MutableList<BaseDepartures
             else -> "is expected at $estimatedDepartureTime"
         }
 
-        // TODO - Possibly change the avatar to be platform number
         // TODO - Dynamically change colour depending on display text
-        holder.avatar.text = destinationCrs
-        holder.destination.text = destinationName
+        holder.avatar.text = platform
+        holder.destination.text = "$destinationName ($destinationCrs)"
         holder.tickerLine.text = "The $departureTime to $destinationName on platform $platform $actualDepartureTime"
         holder.departureTime.text = departureTime
     }

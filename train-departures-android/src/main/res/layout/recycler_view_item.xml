@@ -54,6 +54,7 @@
       android:id="@+id/search_result_departure_time"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textStyle="bold"
       tools:text="@tools:sample/date/hhmm"
       app:layout_constraintTop_toTopOf="@+id/search_result_avatar"
       app:layout_constraintEnd_toEndOf="parent"

@@ -1,7 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
-    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference
         android:capitalize="none"
         android:inputType="textNoSuggestions"
@@ -10,6 +8,17 @@
         android:minLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="false"
+        android:maxLength="45"
         android:title="@string/pref_title_nre_api_key" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="enable_coloured_avatars"
+        android:title="Colour code platform number" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="enable_speaking_first_result"
+        android:title="Read out the first result" />
 
 </PreferenceScreen>
