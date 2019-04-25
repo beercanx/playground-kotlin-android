@@ -27,7 +27,7 @@ abstract class BaseDepartureBoardRequest(
      *              <ldb:crs>${from}</ldb:crs>
      *              <ldb:filterCrs>${to}</ldb:filterCrs>
      *              <ldb:filterType>to</ldb:filterType>
-     *              <ldb:numRows>5</ldb:numRows>
+     *              <ldb:numRows>8</ldb:numRows>
      *              <ldb:timeOffset>0</ldb:timeOffset>
      *              <ldb:timeWindow>120</ldb:timeWindow>
      *          </ldb:${type}Request>
@@ -47,7 +47,7 @@ abstract class BaseDepartureBoardRequest(
                     text("to")
                 }
                 tag("ldb:numRows") {
-                    text("5")
+                    text("8") // TODO - Probably look at making this dynamic based on devices screen size.
                 }
                 tag("ldb:timeOffset") {
                     text("0")

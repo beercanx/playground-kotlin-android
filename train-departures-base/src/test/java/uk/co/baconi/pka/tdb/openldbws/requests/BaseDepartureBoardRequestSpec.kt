@@ -31,7 +31,7 @@ class BaseDepartureBoardRequestSpec : StringSpec({
                             <ldb:crs>${from.crsCode}</ldb:crs>
                             <ldb:filterCrs>${to.crsCode}</ldb:filterCrs>
                             <ldb:filterType>to</ldb:filterType>
-                            <ldb:numRows>5</ldb:numRows>
+                            <ldb:numRows>8</ldb:numRows>
                             <ldb:timeOffset>0</ldb:timeOffset>
                             <ldb:timeWindow>120</ldb:timeWindow>
                         </ldb:${type}Request>
