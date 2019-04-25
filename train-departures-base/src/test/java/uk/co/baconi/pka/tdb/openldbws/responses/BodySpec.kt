@@ -2,8 +2,6 @@ package uk.co.baconi.pka.tdb.openldbws.responses
 
 import io.kotlintest.matchers.beInstanceOf
 import io.kotlintest.should
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import uk.co.baconi.pka.tdb.xml.XmlParser
 
@@ -47,14 +45,23 @@ class BodySpec : StringSpec({
         ) should beInstanceOf<BodyFailure>()
     }
 
-    "Should decode with action present" {
+    listOf(
+        "GetNextDeparturesResponse",
+        "GetNextDeparturesWithDetailsResponse",
+        //"GetServiceDetailsResponse", // TODO - Implement ability to send request and decode response
+        "GetFastestDeparturesResponse",
+        "GetFastestDeparturesWithDetailsResponse",
+        "GetDepartureBoardResponse",
+        "GetDepBoardWithDetailsResponse"
+    ).forEach { tag ->
 
-        val result = Body.fromXml(
-            XmlParser.fromReader(
-                "<Body><GetNextDeparturesResponse/></Body>".reader()
-            )
-        )
+        "Should decode with $tag field present" {
 
-        result should beInstanceOf<BodySuccess>()
+            Body.fromXml(
+                XmlParser.fromReader(
+                    "<Body><$tag/></Body>".reader()
+                )
+            ) should beInstanceOf<BodySuccess>()
+        }
     }
 })

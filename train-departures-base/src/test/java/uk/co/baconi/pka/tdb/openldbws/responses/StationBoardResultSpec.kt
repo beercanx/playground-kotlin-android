@@ -7,34 +7,34 @@ import io.kotlintest.specs.StringSpec
 import uk.co.baconi.pka.tdb.xml.XmlParser
 import kotlin.reflect.full.memberProperties
 
-class DeparturesBoardSpec : StringSpec({
+class StationBoardResultSpec : StringSpec({
 
     "Should decode with no fields present" {
 
-        DeparturesBoard.fromXml(
+        StationBoardResult.fromXml(
             XmlParser.fromReader(
-                "<DeparturesBoard/>".reader()
+                "<GetStationBoardResult/>".reader()
             )
         ).let {
             it.generatedAt shouldBe null
             it.nrccMessages shouldBe null
-            it.departures shouldBe null
+            it.trainServices shouldBe null
         }
 
-        DeparturesBoard.fromXml(
+        StationBoardResult.fromXml(
             XmlParser.fromReader(
-                "<DeparturesBoard></DeparturesBoard>".reader()
+                "<GetStationBoardResult></GetStationBoardResult>".reader()
             )
         ).let {
             it.generatedAt shouldBe null
             it.nrccMessages shouldBe null
-            it.departures shouldBe null
+            it.trainServices shouldBe null
         }
     }
 
-    fun underTest(tag: String, value: Any) = DeparturesBoard.fromXml(
+    fun underTest(tag: String, value: Any) = StationBoardResult.fromXml(
         XmlParser.fromReader(
-            "<DeparturesBoard><$tag>$value</$tag></DeparturesBoard>".reader()
+            "<GetStationBoardResult><$tag>$value</$tag></GetStationBoardResult>".reader()
         )
     )
 
@@ -49,22 +49,28 @@ class DeparturesBoardSpec : StringSpec({
         "areServicesAvailable" to true
     ).forEach { (tag, value) ->
         "Should decode with $tag field present" {
-            val field = DeparturesBoard::class.memberProperties.find { property -> property.name == tag }
+            val field = StationBoardResult::class.memberProperties.find { property -> property.name == tag }
             field?.get(underTest(tag, value)) shouldBe value
         }
     }
 
     "Should decode with nrccMessages field present" {
-        val field = DeparturesBoard::class.memberProperties.find { property -> property.name == "nrccMessages" }
+        val field = StationBoardResult::class.memberProperties.find { property -> property.name == "nrccMessages" }
         field?.get(underTest("nrccMessages", "")) shouldBe beEmpty<String>()
         field?.get(underTest("nrccMessages", "<message/>")) shouldBe beEmpty<String>()
         field?.get(underTest("nrccMessages", "<message></message>")) shouldBe beEmpty<String>()
     }
 
-    "Should decode with departures field present" {
-        val field = DeparturesBoard::class.memberProperties.find { property -> property.name == "departures" }
-        field?.get(underTest("departures", "")) shouldBe beEmpty<String>()
-        field?.get(underTest("departures", "<destination/>")) shouldBe haveSize<String>(1)
-        field?.get(underTest("departures", "<destination></destination>")) shouldBe haveSize<String>(1)
+    mapOf(
+        "trainServices" to "service",
+        "busServices" to "service",
+        "ferryServices" to "service"
+    ).forEach { (tag, innerTag) ->
+        "Should decode with $tag field present" {
+            val field = StationBoardResult::class.memberProperties.find { property -> property.name == tag }
+            field?.get(underTest(tag, "")) shouldBe beEmpty<String>()
+            field?.get(underTest(tag, "<$innerTag/>")) shouldBe haveSize<String>(1)
+            field?.get(underTest(tag, "<$innerTag></$innerTag>")) shouldBe haveSize<String>(1)
+        }
     }
 })
