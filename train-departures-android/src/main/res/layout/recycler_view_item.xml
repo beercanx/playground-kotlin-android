@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/search_result_avatar"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:padding="2dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/darker_gray"
+        android:textStyle="bold"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1B" />
+
+    <TextView
+        android:id="@+id/search_result_destination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/search_result_ticker_line"
+        app:layout_constraintStart_toEndOf="@+id/search_result_avatar"
+        app:layout_constraintTop_toTopOf="@+id/search_result_avatar"
+        tools:text="Sheffield (SHF)" />
+
+    <TextView
+        android:id="@+id/search_result_ticker_line"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/search_result_departure_time"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/search_result_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/search_result_departure_time"
+        tools:text="The 13:30 to Sheffield on platform 1B is on time" />
+
+  <TextView
+      android:id="@+id/search_result_departure_time"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textStyle="bold"
+      tools:text="@tools:sample/date/hhmm"
+      app:layout_constraintTop_toTopOf="@+id/search_result_avatar"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:layout_marginEnd="8dp" />
+
+</android.support.constraint.ConstraintLayout>

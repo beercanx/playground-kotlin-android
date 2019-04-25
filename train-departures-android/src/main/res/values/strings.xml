@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Train Departures</string>
+    <string name="title_activity_departure_search">DepartureSearchActivity</string>
+    
+    <string name="title_activity_settings">Settings</string>
+    <string name="settings">Settings</string>
+    <string name="search">Search</string>
+    <string name="search_criteria_from_label">From:</string>
+    <string name="search_criteria_to_label">To:</string>
+
+</resources>
