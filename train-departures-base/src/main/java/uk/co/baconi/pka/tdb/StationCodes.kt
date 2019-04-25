@@ -7,11 +7,12 @@ data class StationCode(val stationName: String, val crsCode: String)
 
 object StationCodes {
 
-    fun stationCodes(): List<StationCode> = readFromResource("station_codes.csv")
+    val stationCodes: List<StationCode>
+        get() = readFromResource("station_codes.csv")
 
-    fun firstByName(name: String) = stationCodes().first(byName(name))
+    fun firstByName(name: String) = stationCodes.first(byName(name))
 
-    fun firstByCode(name: String) = stationCodes().first(byCode(name))
+    fun firstByCode(name: String) = stationCodes.first(byCode(name))
 
     /**
      * Returns predicate to filter by Station Name

@@ -11,16 +11,18 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 
 import kotlinx.android.synthetic.main.activity_departure_search.toolbar
 import kotlinx.android.synthetic.main.activity_departure_search.floating_search_button
-import kotlinx.android.synthetic.main.content_departure_search.search_results
+import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
+import uk.co.baconi.pka.tdb.StationCode
 import uk.co.baconi.pka.tdb.StationCodes
 import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
 
@@ -53,9 +55,6 @@ class DepartureSearchActivity : AppCompatActivity() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = SearchResultsAdapter(searchResults)
         recyclerView = search_results.apply {
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            setHasFixedSize(true)
 
             // use a linear layout manager
             layoutManager = viewManager
@@ -65,15 +64,19 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
 
         floating_search_button.setOnClickListener { view ->
-            when(val nreApiKey = Settings.NreApiKey.getSetting(this)) {
-                is String -> searchForDepartures(nreApiKey, view)
-                else -> {
-                    Snackbar
-                        .make(view, "No NRE API Key set in the settings.", 5000)
-                        .setAction("Action", null).show()
-                }
-            }
+            startSearchForDepartures(view)
         }
+
+        val crsCodes = StationCodes.stationCodes.map(StationCode::crsCode)
+
+        // TODO - Implement our own Adapter so we can store StationCode values and render with both name and code
+        // TODO - Also look into supporting a filter/search option to help pick
+
+        search_criteria_from_spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, crsCodes)
+        search_criteria_from_spinner.setSelection(crsCodes.indexOf("MHS")) // TODO - Retrieve from save
+
+        search_criteria_to_spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, crsCodes)
+        search_criteria_to_spinner.setSelection(crsCodes.indexOf("SHF")) // TODO - Retrieve from save
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -88,13 +91,36 @@ class DepartureSearchActivity : AppCompatActivity() {
             true
         }
         R.id.app_bar_search -> {
-            Snackbar
-                .make(item.actionView, "No NRE API Key set in the settings.", 5000)
-                .setAction("Action", null).show()
+            startSearchForDepartures(recyclerView)
             true
         }
         else -> {
             super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun startSearchForDepartures(view: View) {
+        when(val nreApiKey = Settings.NreApiKey.getSetting(this)) {
+            is String -> searchForDepartures(nreApiKey.let(::AccessToken))
+            else -> {
+                Snackbar.make(view, "No NRE API Key set in the settings.", 5000).show()
+            }
+        }
+    }
+
+    private fun searchForDepartures(nreApiKey: AccessToken) = GlobalScope.launch {
+
+        val from = StationCodes.firstByCode(search_criteria_from_spinner.selectedItem as String)
+        val to = StationCodes.firstByCode(search_criteria_to_spinner.selectedItem as String)
+
+        val result = Actions.getFastestDepartures(nreApiKey, from, to)
+
+        if(result is BaseDeparturesResponse) {
+            updateSearchResults(result)
+            speakSearchResult(result)
+        } else {
+            // TODO - Better error messaging required
+            Snackbar.make(recyclerView, "Unable to get a result", 10000).show()
         }
     }
 
@@ -133,24 +159,6 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         } else {
             Log.d(TAG, "Speaking results is disabled")
-        }
-    }
-
-    private fun searchForDepartures(nreApiKey: String, view: View) = GlobalScope.launch {
-
-        val from = StationCodes.firstByCode("SHF")
-        val to = StationCodes.firstByCode("MHS")
-
-        val result = Actions.getFastestDepartures(nreApiKey.let(::AccessToken), from, to)
-
-        if(result is BaseDeparturesResponse) {
-            updateSearchResults(result)
-            speakSearchResult(result)
-        } else {
-            // TODO - Better error messaging required
-            Snackbar
-                .make(view, "Unable to get a result", 10000)
-                .setAction("Action", null).show()
         }
     }
 }
