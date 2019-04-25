@@ -14,7 +14,7 @@ class StationCodesSpec : StringSpec({
     val underTest = StationCodes
 
     "Should contain exactly 2570 train station names to CSR codes" {
-        underTest.stationCodes().toList() shouldHaveSize 2570
+        underTest.stationCodes.toList() shouldHaveSize 2570
     }
 
     mapOf(
@@ -23,22 +23,22 @@ class StationCodesSpec : StringSpec({
         "Leeds" to "LDS",
         "Scarborough" to "SCA",
         "Whitby" to "WTB"
-    ).forEach { name, code ->
+    ).forEach { (name, code) ->
         "Should contain only one by station name [$name] with CSR code [$code]" {
-            val searchResults = underTest.stationCodes().filter(byName(name))
+            val searchResults = underTest.stationCodes.filter(byName(name))
             searchResults shouldHaveSize 1
             searchResults.first().crsCode shouldBe code
         }
 
         "Should contain only one by CRS code [$code] with station name [$name]" {
-            val searchResults = underTest.stationCodes().filter(byCode(code))
+            val searchResults = underTest.stationCodes.filter(byCode(code))
             searchResults shouldHaveSize 1
             searchResults.first().stationName shouldBe name
         }
     }
 
     "Should not contain csv headers 'Station Name' and 'CRS Code'" {
-        underTest.stationCodes().filter(byName("Station Name")) shouldHaveSize 0
-        underTest.stationCodes().filter(byCode("CRS Code")) shouldHaveSize 0
+        underTest.stationCodes.filter(byName("Station Name")) shouldHaveSize 0
+        underTest.stationCodes.filter(byCode("CRS Code")) shouldHaveSize 0
     }
 })
