@@ -39,25 +39,30 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: SearchResultsViewHolder, position: Int) {
 
+        val context = holder.itemView.context
+
         val service = searchResults[position]
         val platform = service.platform
         val destination = service.destination?.first()
         val destinationName = destination?.locationName
         val destinationCrs = destination?.crs
         val departureTime = service.std
-        val estimatedDepartureTime = service.etd
 
-        val actualDepartureTime = when(estimatedDepartureTime) {
-            null -> "no departure time"
-            "On time" -> "is on time"
-            "Delayed" -> "is delayed"
-            else -> "is expected at $estimatedDepartureTime"
+        val actualDepartureTime = when(service.etd) {
+            null -> context.getString(R.string.search_result_etd_null)
+            "On time" -> context.getString(R.string.search_result_etd_on_time)
+            "Delayed" -> context.getString(R.string.search_result_etd_delayed)
+            else -> context.getString(R.string.search_result_etd_other, service.etd)
         }
 
         // TODO - Dynamically change colour depending on display text
         holder.avatar.text = platform
-        holder.destination.text = "$destinationName ($destinationCrs)"
-        holder.tickerLine.text = "The $departureTime to $destinationName on platform $platform $actualDepartureTime"
+        holder.destination.text = context.getString(
+            R.string.search_result_destination, destinationName, destinationCrs
+        )
+        holder.tickerLine.text = context.getString(
+            R.string.search_result_ticker_line, departureTime, destinationName, platform, actualDepartureTime
+        )
         holder.departureTime.text = departureTime
     }
 

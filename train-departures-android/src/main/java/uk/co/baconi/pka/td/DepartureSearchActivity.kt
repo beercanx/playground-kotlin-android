@@ -1,5 +1,6 @@
 package uk.co.baconi.pka.td
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -13,8 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 
-import kotlinx.android.synthetic.main.activity_departure_search.toolbar
-import kotlinx.android.synthetic.main.activity_departure_search.floating_search_button
+import kotlinx.android.synthetic.main.activity_departure_search.*
 import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,11 +24,15 @@ import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.StationCode
 import uk.co.baconi.pka.tdb.StationCodes
-import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
 import uk.co.baconi.pka.tdb.openldbws.responses.DepartureItem
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
-import java.util.*
+import java.util.UUID
+import java.util.Locale
+import android.support.v4.os.ConfigurationCompat.getLocales
+import android.os.Build
+
+
 
 class DepartureSearchActivity : AppCompatActivity() {
 
@@ -171,29 +175,38 @@ class DepartureSearchActivity : AppCompatActivity() {
         if(Settings.EnableSpeakingFirstResult.getSetting(this)) {
 
             val platform = service.platform
-            val destination = service.destination?.first()?.locationName
+            val destinationName = service.destination?.first()?.locationName
             val departureTime = service.std
-            val estimatedDepartureTime = service.etd
 
-            val actualDepartureTime = when(estimatedDepartureTime) {
-                null -> "no departure time"
-                "On time" -> "is on time"
-                "Delayed" -> "is delayed"
-                else -> "is expected at $estimatedDepartureTime"
+            val actualDepartureTime = when(service.etd) {
+                null -> applicationContext.getString(R.string.search_result_etd_null)
+                "On time" -> applicationContext.getString(R.string.search_result_etd_on_time)
+                "Delayed" -> applicationContext.getString(R.string.search_result_etd_delayed)
+                else -> applicationContext.getString(R.string.search_result_etd_other, service.etd)
             }
 
-            val speechText = "The $departureTime to $destination on platform $platform $actualDepartureTime"
+            val speechText = applicationContext.getString(
+                R.string.search_result_ticker_line, departureTime, destinationName, platform, actualDepartureTime
+            )
 
             // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
             val utteranceId = UUID.randomUUID().toString()
 
-            textToSpeech.language = Locale.UK
+            textToSpeech.language = getCurrentLocale(applicationContext)
 
             // TODO - Check error/success response for queueing speech request
             textToSpeech.speak(speechText, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
 
         } else {
             Log.d(TAG, "Speaking results is disabled")
+        }
+    }
+
+    private fun getCurrentLocale(context: Context): Locale {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.resources.configuration.locales.get(0)
+        } else {
+            context.resources.configuration.locale
         }
     }
 }
