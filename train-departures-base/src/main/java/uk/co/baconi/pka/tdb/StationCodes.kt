@@ -24,6 +24,7 @@ object StationCodes {
      */
     fun byCode(code: String): (StationCode) -> Boolean = { sc -> sc.crsCode.toUpperCase().contains(code.toUpperCase()) }
 
+    // TODO - Consider a better CSV format or better storage mechanism for minimalistic code for reading
     private fun readFromResource(resource: String, ignoreFirstLine: Boolean = true): List<StationCode> = javaClass
         .classLoader
         ?.getResourceAsStream(resource)
