@@ -1,5 +1,6 @@
 package uk.co.baconi.pka.td
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -8,13 +9,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.ArrayAdapter
+import android.widget.TextView
+import gr.escsoft.michaelprimez.searchablespinner.interfaces.ISpinnerSelectedView
+import gr.escsoft.michaelprimez.searchablespinner.interfaces.IStatusListener
 
-import kotlinx.android.synthetic.main.activity_departure_search.toolbar
-import kotlinx.android.synthetic.main.activity_departure_search.floating_search_button
+import kotlinx.android.synthetic.main.activity_departure_search.*
 import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,11 +25,11 @@ import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.StationCode
 import uk.co.baconi.pka.tdb.StationCodes
-import uk.co.baconi.pka.tdb.openldbws.responses.BaseDeparturesResponse
 import uk.co.baconi.pka.tdb.openldbws.responses.DepartureItem
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
-import java.util.*
+import java.util.UUID
+
 
 class DepartureSearchActivity : AppCompatActivity() {
 
@@ -39,69 +40,117 @@ class DepartureSearchActivity : AppCompatActivity() {
     private lateinit var textToSpeech: TextToSpeech
 
     private lateinit var searchResults: MutableList<ServiceItem>
-    private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: SearchResultsAdapter
-    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val context: Context = this
+
         if(!this::textToSpeech.isInitialized) {
-            textToSpeech = TextToSpeech(this) {}
+            textToSpeech = TextToSpeech(context) {}
         }
 
         setContentView(R.layout.activity_departure_search)
         setSupportActionBar(toolbar)
 
         searchResults = mutableListOf()
-        viewManager = LinearLayoutManager(this)
         viewAdapter = SearchResultsAdapter(searchResults)
-        recyclerView = search_results.apply {
 
-            // use a linear layout manager
-            layoutManager = viewManager
-
-            // specify an viewAdapter (see also next example)
+        search_results.apply {
+            layoutManager = LinearLayoutManager(context)
             adapter = viewAdapter
         }
 
-        floating_search_button.setOnClickListener { view ->
-            startSearchForDepartures(view)
+        search_results_refresh_layout.apply {
+            setOnRefreshListener {
+                startSearchForDepartures()
+            }
         }
 
-        val crsCodes = StationCodes.stationCodes.map(StationCode::crsCode)
+        val stationNames: List<String> = StationCodes.stationCodes.map(StationCode::stationName).sorted()
 
         // TODO - Implement our own Adapter so we can store StationCode values and render with both name and code
-        // TODO - Also look into supporting a filter/search option to help pick
+        // TODO - Refactor into something more useful
+        // TODO - Look into search by both CRS Code and Station Name
+        val spinnerSelectedView = object: ArrayAdapter<String>(
+            context, android.R.layout.simple_dropdown_item_1line, stationNames
+        ), ISpinnerSelectedView {
+            private val layoutInflater = LayoutInflater.from(context)
+            override fun getSelectedView(position: Int): View {
+                val view = layoutInflater.inflate(android.R.layout.simple_dropdown_item_1line, null) as TextView
+                view.text = getItem(position)
+                return view
+            }
+            override fun getNoSelectionView(): View {
+                return layoutInflater.inflate(android.R.layout.simple_dropdown_item_1line, null)
+            }
+        }
 
-        search_criteria_from_spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, crsCodes)
-        search_criteria_from_spinner.setSelection(crsCodes.indexOf("MHS")) // TODO - Retrieve from save
+        search_criteria_from_auto_complete.apply {
+            setAdapter(spinnerSelectedView)
+            selectedItem = "Meadowhall"
+            setStatusListener(object : IStatusListener {
+                override fun spinnerIsOpening() {
+                    search_criteria_to_auto_complete.hideEdit()
+                }
+                override fun spinnerIsClosing() {
+                }
+            })
+        }
 
-        search_criteria_to_spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, crsCodes)
-        search_criteria_to_spinner.setSelection(crsCodes.indexOf("SHF")) // TODO - Retrieve from save
+        search_criteria_to_auto_complete.apply {
+            setAdapter(spinnerSelectedView)
+            selectedItem = "Sheffield"
+            setStatusListener(object : IStatusListener {
+                override fun spinnerIsOpening() {
+                    search_criteria_from_auto_complete.hideEdit()
+                }
+                override fun spinnerIsClosing() {
+                }
+            })
+        }
 
-        // Toggle the from and to search selections
-        search_criteria_switch_destination.setOnClickListener {
-            val fromPosition = search_criteria_from_spinner.selectedItemPosition
-            val toPosition = search_criteria_to_spinner.selectedItemPosition
-            search_criteria_from_spinner.setSelection(toPosition, true)
-            search_criteria_to_spinner.setSelection(fromPosition, true)
+        // TODO - Look for a better solution
+        search_results_refresh_layout.setOnTouchListener { _, event ->
+            if (!search_criteria_from_auto_complete.isInsideSearchEditText(event)) {
+                search_criteria_from_auto_complete.hideEdit()
+            }
+            if (!search_criteria_to_auto_complete.isInsideSearchEditText(event)) {
+                search_criteria_to_auto_complete.hideEdit()
+            }
+            false
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    // TODO - Look for a better solution
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!search_criteria_from_auto_complete.isInsideSearchEditText(event)) {
+            search_criteria_from_auto_complete.hideEdit()
+        }
+        if (!search_criteria_to_auto_complete.isInsideSearchEditText(event)) {
+            search_criteria_to_auto_complete.hideEdit()
+        }
+        return super.onTouchEvent(event)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_toolbar, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.app_bar_settings -> {
+        R.id.app_bar_preferences -> {
             startActivity(Intent(this, SettingsActivity::class.java))
             true
         }
         R.id.app_bar_search -> {
-            startSearchForDepartures(recyclerView)
+            startSearchForDepartures()
+            true
+        }
+        R.id.app_bar_toggle -> {
+            toggleSearchCriteria()
             true
         }
         else -> {
@@ -109,19 +158,30 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun startSearchForDepartures(view: View) {
+    // Toggle the from and to search selections
+    private fun toggleSearchCriteria() {
+        val fromPosition = search_criteria_from_auto_complete.selectedPosition
+        val toPosition = search_criteria_to_auto_complete.selectedPosition
+        search_criteria_from_auto_complete.setSelectedItem(toPosition)
+        search_criteria_to_auto_complete.setSelectedItem(fromPosition)
+    }
+
+    private fun startSearchForDepartures() {
+
+        search_results_refresh_layout.isRefreshing = true
+
         when(val nreApiKey = Settings.NreApiKey.getSetting(this)) {
             is String -> searchForDepartures(nreApiKey.let(::AccessToken))
             else -> {
-                Snackbar.make(view, "No NRE API Key set in the settings.", 5000).show()
+                Snackbar.make(search_results, "No NRE API Key set in the settings.", 5000).show()
             }
         }
     }
 
     private fun searchForDepartures(nreApiKey: AccessToken) = GlobalScope.launch {
 
-        val from = StationCodes.firstByCode(search_criteria_from_spinner.selectedItem as String)
-        val to = StationCodes.firstByCode(search_criteria_to_spinner.selectedItem as String)
+        val from = StationCodes.firstByName(search_criteria_from_auto_complete.selectedItem as String)
+        val to = StationCodes.firstByName(search_criteria_to_auto_complete.selectedItem as String)
 
         val searchType = Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)
 
@@ -144,8 +204,10 @@ class DepartureSearchActivity : AppCompatActivity() {
             speakSearchResult(result.first())
         } else {
             // TODO - Better error messaging required
-            Snackbar.make(recyclerView, "Unable to get a result", 10000).show()
+            Snackbar.make(search_results, "Unable to get a result", 10000).show()
         }
+
+        search_results_refresh_layout.isRefreshing = false
     }
 
     private fun updateSearchResults(searchType: SearchType, serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
@@ -171,23 +233,24 @@ class DepartureSearchActivity : AppCompatActivity() {
         if(Settings.EnableSpeakingFirstResult.getSetting(this)) {
 
             val platform = service.platform
-            val destination = service.destination?.first()?.locationName
+            val destinationName = service.destination?.first()?.locationName
             val departureTime = service.std
-            val estimatedDepartureTime = service.etd
 
-            val actualDepartureTime = when(estimatedDepartureTime) {
-                null -> "no departure time"
-                "On time" -> "is on time"
-                "Delayed" -> "is delayed"
-                else -> "is expected at $estimatedDepartureTime"
+            val actualDepartureTime = when(service.etd) {
+                null -> applicationContext.getString(R.string.search_result_etd_other, departureTime)
+                "On time" -> applicationContext.getString(R.string.search_result_etd_on_time)
+                "Delayed" -> applicationContext.getString(R.string.search_result_etd_delayed)
+                else -> applicationContext.getString(R.string.search_result_etd_other, service.etd)
             }
 
-            val speechText = "The $departureTime to $destination on platform $platform $actualDepartureTime"
+            val speechText = applicationContext.getString(
+                R.string.search_result_ticker_line, departureTime, destinationName, platform, actualDepartureTime
+            )
 
             // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
             val utteranceId = UUID.randomUUID().toString()
 
-            textToSpeech.language = Locale.UK
+            textToSpeech.language = applicationContext.getCurrentLocale()
 
             // TODO - Check error/success response for queueing speech request
             textToSpeech.speak(speechText, TextToSpeech.QUEUE_FLUSH, null, utteranceId)

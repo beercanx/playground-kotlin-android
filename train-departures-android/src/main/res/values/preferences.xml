@@ -2,7 +2,8 @@
     <string name="pref_title_nre_api_key_title">National Rail Enquiries API Key</string>
     <string name="pref_enable_speaking_first_result_title">Read out the first result</string>
     <string name="pref_enable_coloured_avatars_title">Colour code platform number</string>
-    <string name="pref_which_search_type_title">Which type of searching to do?</string>
+    <string name="pref_enable_coloured_departure_times_title">Colour code departure times</string>
+    <string name="pref_which_search_type_title">Use which search type</string>
 
     <string-array name="pref_which_search_type_labels">
         <item>Single departure</item>

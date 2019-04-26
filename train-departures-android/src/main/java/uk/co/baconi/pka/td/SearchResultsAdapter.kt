@@ -39,26 +39,71 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: SearchResultsViewHolder, position: Int) {
 
+        val context = holder.itemView.context
+
         val service = searchResults[position]
         val platform = service.platform
         val destination = service.destination?.first()
         val destinationName = destination?.locationName
         val destinationCrs = destination?.crs
-        val departureTime = service.std
-        val estimatedDepartureTime = service.etd
 
-        val actualDepartureTime = when(estimatedDepartureTime) {
-            null -> "no departure time"
-            "On time" -> "is on time"
-            "Delayed" -> "is delayed"
-            else -> "is expected at $estimatedDepartureTime"
+        val (departureTimeText: String?, statusColourId: Int, actualDepartureTime: String) = when(service.etd) {
+            null -> { // Not present
+                Triple(
+                    service.std,
+                    R.color.search_result_departure_time_etd_unknown,
+                    context.getString(R.string.search_result_etd_other, service.std)
+                )
+            }
+            "On time" -> {
+                Triple(
+                    service.std,
+                    R.color.search_result_departure_time_on_time,
+                    context.getString(R.string.search_result_etd_on_time)
+                )
+            }
+            "Delayed" -> {
+                Triple(
+                    context.getString(R.string.search_result_delayed),
+                    R.color.search_result_departure_time_delayed,
+                    context.getString(R.string.search_result_etd_delayed)
+                )
+            }
+            else -> { // Estimated
+                Triple(
+                    service.etd,
+                    R.color.search_result_departure_time_estimated,
+                    context.getString(R.string.search_result_etd_other, service.etd)
+                )
+            }
         }
 
-        // TODO - Dynamically change colour depending on display text
+        val statusColour = context.getColorCompat(statusColourId)
+        val defaultStatusColour = context.getColorCompat(R.color.search_result_departure_time_default)
+
+        // TODO - Make up mind on colour by platform or status
+        // TODO - Make up mind on coloring just text or background or both
         holder.avatar.text = platform
-        holder.destination.text = "$destinationName ($destinationCrs)"
-        holder.tickerLine.text = "The $departureTime to $destinationName on platform $platform $actualDepartureTime"
-        holder.departureTime.text = departureTime
+        if(Settings.EnableColouredAvatars.getSetting(context)) {
+            holder.avatar.setTextColor(statusColour)
+        } else {
+            holder.avatar.setTextColor(defaultStatusColour)
+        }
+
+        holder.destination.text = context.getString(
+            R.string.search_result_destination, destinationName, destinationCrs
+        )
+
+        holder.tickerLine.text = context.getString(
+            R.string.search_result_ticker_line, service.std, destinationName, platform, actualDepartureTime
+        )
+
+        holder.departureTime.text = departureTimeText
+        if(Settings.EnableColouredDepartureTimes.getSetting(context)) {
+            holder.departureTime.setTextColor(statusColour)
+        } else {
+            holder.departureTime.setTextColor(defaultStatusColour)
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

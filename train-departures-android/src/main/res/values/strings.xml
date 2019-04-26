@@ -1,11 +1,23 @@
 <resources>
     <string name="app_name">Train Departures</string>
-    <string name="title_activity_departure_search">DepartureSearchActivity</string>
-    
+
+    <string name="title_activity_departure_search">@string/app_name</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="settings">Settings</string>
-    <string name="search">Search</string>
+
+    <string name="menu_toolbar_preferences">Settings</string>
+    <string name="menu_toolbar_search">Search</string>
+    <string name="menu_toolbar_toggle">Toggle search criteria</string>
+
     <string name="search_criteria_from_label">From:</string>
     <string name="search_criteria_to_label">To:</string>
+
+    <string name="search_result_delayed">delayed</string>
+
+    <string name="search_result_etd_on_time">is on time</string>
+    <string name="search_result_etd_delayed">is delayed</string>
+    <string name="search_result_etd_other">is expected at %1$s</string>
+
+    <string name="search_result_destination">%1$s (%2$s)</string>
+    <string name="search_result_ticker_line">The %1$s to %2$s on platform %3$s %4$s</string>
 
 </resources>
