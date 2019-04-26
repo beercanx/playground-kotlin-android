@@ -1,6 +1,5 @@
 package uk.co.baconi.pka.td
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -28,10 +27,6 @@ import uk.co.baconi.pka.tdb.openldbws.responses.DepartureItem
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
 import java.util.UUID
-import java.util.Locale
-import android.support.v4.os.ConfigurationCompat.getLocales
-import android.os.Build
-
 
 
 class DepartureSearchActivity : AppCompatActivity() {
@@ -69,8 +64,8 @@ class DepartureSearchActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
 
-        floating_search_button.setOnClickListener { view ->
-            startSearchForDepartures(view)
+        search_results_refresh_layout.setOnRefreshListener {
+            startSearchForDepartures(recyclerView)
         }
 
         val crsCodes = StationCodes.stationCodes.map(StationCode::crsCode).sorted()
@@ -83,14 +78,6 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         search_criteria_to_spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, crsCodes)
         search_criteria_to_spinner.setSelection(crsCodes.indexOf("SHF")) // TODO - Retrieve from save
-
-        // Toggle the from and to search selections
-        search_criteria_switch_destination.setOnClickListener {
-            val fromPosition = search_criteria_from_spinner.selectedItemPosition
-            val toPosition = search_criteria_to_spinner.selectedItemPosition
-            search_criteria_from_spinner.setSelection(toPosition, true)
-            search_criteria_to_spinner.setSelection(fromPosition, true)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -100,11 +87,16 @@ class DepartureSearchActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.app_bar_settings -> {
+        R.id.app_bar_preferences -> {
             startActivity(Intent(this, SettingsActivity::class.java))
             true
         }
         R.id.app_bar_search -> {
+            startSearchForDepartures(recyclerView)
+            true
+        }
+        R.id.app_bar_toggle -> {
+            toggleSearchCriteria()
             startSearchForDepartures(recyclerView)
             true
         }
@@ -113,7 +105,18 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
     }
 
+    // Toggle the from and to search selections
+    private fun toggleSearchCriteria() {
+        val fromPosition = search_criteria_from_spinner.selectedItemPosition
+        val toPosition = search_criteria_to_spinner.selectedItemPosition
+        search_criteria_from_spinner.setSelection(toPosition, true)
+        search_criteria_to_spinner.setSelection(fromPosition, true)
+    }
+
     private fun startSearchForDepartures(view: View) {
+
+        search_results_refresh_layout.isRefreshing = true
+
         when(val nreApiKey = Settings.NreApiKey.getSetting(this)) {
             is String -> searchForDepartures(nreApiKey.let(::AccessToken))
             else -> {
@@ -168,6 +171,8 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
 
         viewAdapter.notifyDataSetChanged()
+
+        search_results_refresh_layout.isRefreshing = false
     }
 
     private fun speakSearchResult(service: ServiceItem) {
