@@ -7,6 +7,10 @@
 Test project for Kotlin and Android  
 
 ![Powered by National Rail Enquiries](docs/NRE_Powered_logo_small.png "Powered by National Rail Enquiries")
+ 
+## Screenshots
+![Search Results](docs/screenshots/search_results_2019-04-26.png "Search Results") 
+![Settings](docs/screenshots/settings_2019-04-26.png "Settings")
 
 ## Sources
  - https://github.com/JetBrains/kotlinconf-app
@@ -14,3 +18,4 @@ Test project for Kotlin and Android
  - https://developer.android.com/kotlin/ktx#ktx
  - https://docs.travis-ci.com/user/languages/android/
  - http://www.nationalrail.co.uk/46391.aspx
+
