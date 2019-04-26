@@ -16,11 +16,11 @@
         android:gravity="center"
         android:padding="2dp"
         android:textAllCaps="true"
-        android:textColor="@android:color/darker_gray"
         android:textStyle="bold"
         app:autoSizeTextType="uniform"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:textColor="@color/search_result_departure_time_on_time"
         tools:text="1B" />
 
     <TextView
@@ -50,14 +50,15 @@
         app:layout_constraintTop_toBottomOf="@+id/search_result_departure_time"
         tools:text="The 13:30 to Sheffield on platform 1B is on time" />
 
-  <TextView
-      android:id="@+id/search_result_departure_time"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textStyle="bold"
-      tools:text="@tools:sample/date/hhmm"
-      app:layout_constraintTop_toTopOf="@+id/search_result_avatar"
-      app:layout_constraintEnd_toEndOf="parent"
-      android:layout_marginEnd="8dp" />
+    <TextView
+        android:id="@+id/search_result_departure_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/search_result_avatar"
+        tools:textColor="@color/search_result_departure_time_on_time"
+        tools:text="@tools:sample/date/hhmm" />
 
 </android.support.constraint.ConstraintLayout>

@@ -73,7 +73,7 @@ class DepartureSearchActivity : AppCompatActivity() {
             startSearchForDepartures(view)
         }
 
-        val crsCodes = StationCodes.stationCodes.map(StationCode::crsCode)
+        val crsCodes = StationCodes.stationCodes.map(StationCode::crsCode).sorted()
 
         // TODO - Implement our own Adapter so we can store StationCode values and render with both name and code
         // TODO - Also look into supporting a filter/search option to help pick
@@ -179,7 +179,7 @@ class DepartureSearchActivity : AppCompatActivity() {
             val departureTime = service.std
 
             val actualDepartureTime = when(service.etd) {
-                null -> applicationContext.getString(R.string.search_result_etd_null)
+                null -> applicationContext.getString(R.string.search_result_etd_other, departureTime)
                 "On time" -> applicationContext.getString(R.string.search_result_etd_on_time)
                 "Delayed" -> applicationContext.getString(R.string.search_result_etd_delayed)
                 else -> applicationContext.getString(R.string.search_result_etd_other, service.etd)
@@ -192,21 +192,13 @@ class DepartureSearchActivity : AppCompatActivity() {
             // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
             val utteranceId = UUID.randomUUID().toString()
 
-            textToSpeech.language = getCurrentLocale(applicationContext)
+            textToSpeech.language = applicationContext.getCurrentLocale()
 
             // TODO - Check error/success response for queueing speech request
             textToSpeech.speak(speechText, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
 
         } else {
             Log.d(TAG, "Speaking results is disabled")
-        }
-    }
-
-    private fun getCurrentLocale(context: Context): Locale {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            context.resources.configuration.locales.get(0)
-        } else {
-            context.resources.configuration.locale
         }
     }
 }

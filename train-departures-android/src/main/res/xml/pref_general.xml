@@ -13,14 +13,22 @@
 
     <SwitchPreference
         android:key="enable_coloured_avatars"
+        android:defaultValue="true"
         android:title="@string/pref_enable_coloured_avatars_title" />
 
     <SwitchPreference
+        android:key="enable_coloured_departure_times"
+        android:defaultValue="true"
+        android:title="@string/pref_enable_coloured_departure_times_title" />
+
+    <SwitchPreference
         android:key="enable_speaking_first_result"
+        android:defaultValue="true"
         android:title="@string/pref_enable_speaking_first_result_title" />
 
     <ListPreference
         android:key="which_search_type"
+        android:defaultValue="MULTIPLE_RESULTS"
         android:title="@string/pref_which_search_type_title"
         android:entries="@array/pref_which_search_type_labels"
         android:entryValues="@array/pref_which_search_type_values"/>
