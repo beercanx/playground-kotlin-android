@@ -7,13 +7,9 @@ import android.speech.tts.TextToSpeech
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
-import android.widget.TextView
-import gr.escsoft.michaelprimez.searchablespinner.interfaces.ISpinnerSelectedView
-import gr.escsoft.michaelprimez.searchablespinner.interfaces.IStatusListener
 
 import kotlinx.android.synthetic.main.activity_departure_search.*
 import kotlinx.android.synthetic.main.content_departure_search.*
@@ -42,6 +38,9 @@ class DepartureSearchActivity : AppCompatActivity() {
     private lateinit var searchResults: MutableList<ServiceItem>
     private lateinit var viewAdapter: SearchResultsAdapter
 
+    private lateinit var spinnerAdapter: ArrayAdapter<String>
+    private lateinit var stationNames: List<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -68,70 +67,22 @@ class DepartureSearchActivity : AppCompatActivity() {
             }
         }
 
-        val stationNames: List<String> = StationCodes.stationCodes.map(StationCode::stationName).sorted()
+        stationNames = StationCodes.stationCodes.map(StationCode::stationName).sorted()
 
         // TODO - Implement our own Adapter so we can store StationCode values and render with both name and code
         // TODO - Refactor into something more useful
         // TODO - Look into search by both CRS Code and Station Name
-        val spinnerSelectedView = object: ArrayAdapter<String>(
-            context, android.R.layout.simple_dropdown_item_1line, stationNames
-        ), ISpinnerSelectedView {
-            private val layoutInflater = LayoutInflater.from(context)
-            override fun getSelectedView(position: Int): View {
-                val view = layoutInflater.inflate(android.R.layout.simple_dropdown_item_1line, null) as TextView
-                view.text = getItem(position)
-                return view
-            }
-            override fun getNoSelectionView(): View {
-                return layoutInflater.inflate(android.R.layout.simple_dropdown_item_1line, null)
-            }
-        }
+        spinnerAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, stationNames)
 
         search_criteria_from_auto_complete.apply {
-            setAdapter(spinnerSelectedView)
-            selectedItem = "Meadowhall"
-            setStatusListener(object : IStatusListener {
-                override fun spinnerIsOpening() {
-                    search_criteria_to_auto_complete.hideEdit()
-                }
-                override fun spinnerIsClosing() {
-                }
-            })
+            adapter = spinnerAdapter
+            setSelection(stationNames.indexOf("Meadowhall"))
         }
 
         search_criteria_to_auto_complete.apply {
-            setAdapter(spinnerSelectedView)
-            selectedItem = "Sheffield"
-            setStatusListener(object : IStatusListener {
-                override fun spinnerIsOpening() {
-                    search_criteria_from_auto_complete.hideEdit()
-                }
-                override fun spinnerIsClosing() {
-                }
-            })
+            adapter = spinnerAdapter
+            setSelection(stationNames.indexOf("Sheffield"))
         }
-
-        // TODO - Look for a better solution
-        search_results_refresh_layout.setOnTouchListener { _, event ->
-            if (!search_criteria_from_auto_complete.isInsideSearchEditText(event)) {
-                search_criteria_from_auto_complete.hideEdit()
-            }
-            if (!search_criteria_to_auto_complete.isInsideSearchEditText(event)) {
-                search_criteria_to_auto_complete.hideEdit()
-            }
-            false
-        }
-    }
-
-    // TODO - Look for a better solution
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (!search_criteria_from_auto_complete.isInsideSearchEditText(event)) {
-            search_criteria_from_auto_complete.hideEdit()
-        }
-        if (!search_criteria_to_auto_complete.isInsideSearchEditText(event)) {
-            search_criteria_to_auto_complete.hideEdit()
-        }
-        return super.onTouchEvent(event)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -160,10 +111,10 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     // Toggle the from and to search selections
     private fun toggleSearchCriteria() {
-        val fromPosition = search_criteria_from_auto_complete.selectedPosition
-        val toPosition = search_criteria_to_auto_complete.selectedPosition
-        search_criteria_from_auto_complete.setSelectedItem(toPosition)
-        search_criteria_to_auto_complete.setSelectedItem(fromPosition)
+        val fromPosition = search_criteria_from_auto_complete.selectedItemPosition
+        val toPosition = search_criteria_to_auto_complete.selectedItemPosition
+        search_criteria_from_auto_complete.setSelection(toPosition)
+        search_criteria_to_auto_complete.setSelection(fromPosition)
     }
 
     private fun startSearchForDepartures() {
@@ -204,7 +155,7 @@ class DepartureSearchActivity : AppCompatActivity() {
             speakSearchResult(result.first())
         } else {
             // TODO - Better error messaging required
-            Snackbar.make(search_results, "Unable to get a result", 10000).show()
+            Snackbar.make(search_results, "Unable to get a result from [${from.stationName}] to [${to.stationName}]", 10000).show()
         }
 
         search_results_refresh_layout.isRefreshing = false
