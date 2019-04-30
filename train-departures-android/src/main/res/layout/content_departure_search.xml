@@ -34,15 +34,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/search_criteria_from_auto_complete" />
 
-        <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+        <Spinner
             android:id="@+id/search_criteria_from_auto_complete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
-            app:KeepLastSearch="true"
-            app:RevealViewBackgroundColor="@android:color/transparent"
-            app:ShowBorders="true"
             app:layout_constraintBottom_toTopOf="@+id/search_criteria_to_auto_complete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/search_criteria_from_label"
@@ -64,16 +61,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/search_criteria_to_auto_complete" />
 
-        <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+        <Spinner
             android:id="@+id/search_criteria_to_auto_complete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="8dp"
-            app:KeepLastSearch="true"
-            app:RevealViewBackgroundColor="@android:color/transparent"
-            app:ShowBorders="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/search_criteria_from_label"
