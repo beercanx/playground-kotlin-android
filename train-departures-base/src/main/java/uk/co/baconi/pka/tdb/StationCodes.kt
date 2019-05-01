@@ -3,12 +3,14 @@ package uk.co.baconi.pka.tdb
 /**
  * Source: http://www.nationalrail.co.uk/static/documents/content/station_codes.csv
  */
-data class StationCode(val stationName: String, val crsCode: String)
+data class StationCode(val stationName: String, val crsCode: String) : Comparable<StationCode> {
+    override fun compareTo(other: StationCode): Int  = stationName.compareTo(other.stationName)
+}
 
 object StationCodes {
 
     val stationCodes: List<StationCode>
-        get() = readFromResource("station_codes.csv")
+        get() = readFromResource("station_codes.csv").sorted()
 
     fun firstByName(name: String) = stationCodes.first(byName(name))
 

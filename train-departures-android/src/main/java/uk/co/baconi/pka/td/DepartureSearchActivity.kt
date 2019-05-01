@@ -38,8 +38,7 @@ class DepartureSearchActivity : AppCompatActivity() {
     private lateinit var searchResults: MutableList<ServiceItem>
     private lateinit var viewAdapter: SearchResultsAdapter
 
-    private lateinit var spinnerAdapter: ArrayAdapter<String>
-    private lateinit var stationNames: List<String>
+    private lateinit var spinnerAdapter: SearchCriteriaAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,21 +66,19 @@ class DepartureSearchActivity : AppCompatActivity() {
             }
         }
 
-        stationNames = StationCodes.stationCodes.map(StationCode::stationName).sorted()
-
         // TODO - Implement our own Adapter so we can store StationCode values and render with both name and code
         // TODO - Refactor into something more useful
         // TODO - Look into search by both CRS Code and Station Name
-        spinnerAdapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, stationNames)
+        spinnerAdapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
 
         search_criteria_from_auto_complete.apply {
             adapter = spinnerAdapter
-            setSelection(stationNames.indexOf("Meadowhall"))
+            setSelection(spinnerAdapter.getPosition(StationCodes.firstByName("Meadowhall")))
         }
 
         search_criteria_to_auto_complete.apply {
             adapter = spinnerAdapter
-            setSelection(stationNames.indexOf("Sheffield"))
+            setSelection(spinnerAdapter.getPosition(StationCodes.firstByName("Sheffield")))
         }
     }
 
@@ -131,8 +128,8 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     private fun searchForDepartures(nreApiKey: AccessToken) = GlobalScope.launch {
 
-        val from = StationCodes.firstByName(search_criteria_from_auto_complete.selectedItem as String)
-        val to = StationCodes.firstByName(search_criteria_to_auto_complete.selectedItem as String)
+        val from = search_criteria_from_auto_complete.selectedItem as StationCode
+        val to = search_criteria_to_auto_complete.selectedItem as StationCode
 
         val searchType = Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)
 
