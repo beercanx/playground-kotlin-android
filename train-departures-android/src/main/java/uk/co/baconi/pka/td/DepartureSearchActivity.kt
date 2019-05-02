@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.*
-import android.widget.ArrayAdapter
 
 import kotlinx.android.synthetic.main.activity_departure_search.*
 import kotlinx.android.synthetic.main.content_departure_search.*
@@ -152,14 +151,14 @@ class DepartureSearchActivity : AppCompatActivity() {
             // TODO - Better error messaging required
             Snackbar.make(search_results, "Unable to get a result from [${from.stationName}] to [${to.stationName}]", 10000).show()
         }
-
-        search_results_refresh_layout.isRefreshing = false
     }
 
     private fun updateSearchResults(serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
         searchResults.clear()
         searchResults.addAll(serviceItems)
         viewAdapter.notifyDataSetChanged()
+
+        search_results_refresh_layout.isRefreshing = false
     }
 
     private fun speakSearchResult(service: ServiceItem) {
