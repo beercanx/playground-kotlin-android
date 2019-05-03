@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.*
-import android.widget.ArrayAdapter
 
 import kotlinx.android.synthetic.main.activity_departure_search.*
 import kotlinx.android.synthetic.main.content_departure_search.*
@@ -131,9 +130,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         val from = search_criteria_from_auto_complete.selectedItem as StationCode
         val to = search_criteria_to_auto_complete.selectedItem as StationCode
 
-        val searchType = Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)
-
-        val result: List<ServiceItem>? = when(searchType) {
+        val result: List<ServiceItem>? = when(Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)) {
             SearchType.SINGLE_RESULT -> {
                 Actions.getFastestDepartures(nreApiKey, from, to)
                     ?.departuresBoard
@@ -148,52 +145,27 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
 
         if(result is List<ServiceItem>) {
-            updateSearchResults(searchType, result)
+            updateSearchResults(result)
             speakSearchResult(result.first())
         } else {
             // TODO - Better error messaging required
             Snackbar.make(search_results, "Unable to get a result from [${from.stationName}] to [${to.stationName}]", 10000).show()
         }
-
-        search_results_refresh_layout.isRefreshing = false
     }
 
-    private fun updateSearchResults(searchType: SearchType, serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
-
-        when(searchType) {
-            SearchType.SINGLE_RESULT -> {
-                if(searchResults.size >= 4) {
-                    searchResults.clear()
-                }
-                searchResults.add(0, serviceItems.first())
-            }
-            SearchType.MULTIPLE_RESULTS -> {
-                searchResults.clear()
-                searchResults.addAll(serviceItems)
-            }
-        }
-
+    private fun updateSearchResults(serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
+        searchResults.clear()
+        searchResults.addAll(serviceItems)
         viewAdapter.notifyDataSetChanged()
+
+        search_results_refresh_layout.isRefreshing = false
     }
 
     private fun speakSearchResult(service: ServiceItem) {
 
         if(Settings.EnableSpeakingFirstResult.getSetting(this)) {
 
-            val platform = service.platform
-            val destinationName = service.destination?.first()?.locationName
-            val departureTime = service.std
-
-            val actualDepartureTime = when(service.etd) {
-                null -> applicationContext.getString(R.string.search_result_etd_other, departureTime)
-                "On time" -> applicationContext.getString(R.string.search_result_etd_on_time)
-                "Delayed" -> applicationContext.getString(R.string.search_result_etd_delayed)
-                else -> applicationContext.getString(R.string.search_result_etd_other, service.etd)
-            }
-
-            val speechText = applicationContext.getString(
-                R.string.search_result_ticker_line, departureTime, destinationName, platform, actualDepartureTime
-            )
+            val speechText = service.tickerLine(this)
 
             // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
             val utteranceId = UUID.randomUUID().toString()
