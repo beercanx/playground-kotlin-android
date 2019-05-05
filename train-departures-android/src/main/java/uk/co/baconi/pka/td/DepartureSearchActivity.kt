@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.*
+import android.widget.Spinner
 
 import kotlinx.android.synthetic.main.activity_departure_search.*
 import kotlinx.android.synthetic.main.content_departure_search.*
@@ -37,8 +38,6 @@ class DepartureSearchActivity : AppCompatActivity() {
     private lateinit var searchResults: MutableList<ServiceItem>
     private lateinit var viewAdapter: SearchResultsAdapter
 
-    private lateinit var spinnerAdapter: SearchCriteriaAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,20 +64,21 @@ class DepartureSearchActivity : AppCompatActivity() {
             }
         }
 
-        // TODO - Implement our own Adapter so we can store StationCode values and render with both name and code
-        // TODO - Refactor into something more useful
         // TODO - Look into search by both CRS Code and Station Name
-        spinnerAdapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
 
         search_criteria_from_auto_complete.apply {
-            adapter = spinnerAdapter
-            setSelection(spinnerAdapter.getPosition(StationCodes.firstByName("Meadowhall")))
+            adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
+            setSelectionByStationName("Meadowhall")
         }
 
         search_criteria_to_auto_complete.apply {
-            adapter = spinnerAdapter
-            setSelection(spinnerAdapter.getPosition(StationCodes.firstByName("Sheffield")))
+            adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
+            setSelectionByStationName("Sheffield")
         }
+    }
+
+    private fun Spinner.setSelectionByStationName(name: String) {
+        setSelection(StationCodes.stationCodes.indexOfFirst(StationCodes.byName(name)))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
