@@ -47,33 +47,30 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
         val destinationName = destination?.locationName
         val destinationCrs = destination?.crs
 
-        val (departureTimeText: String?, statusColourId: Int, actualDepartureTime: String) = when(service.etd) {
+        val (departureTimeText: String?, statusColourId: Int) = when(service.etd) {
             null -> { // Not present
-                Triple(
+                Pair(
                     service.std,
-                    R.color.search_result_departure_time_etd_unknown,
-                    context.getString(R.string.search_result_etd_other, service.std)
+                    R.color.search_result_departure_time_etd_unknown
+
                 )
             }
             "On time" -> {
-                Triple(
+                Pair(
                     service.std,
-                    R.color.search_result_departure_time_on_time,
-                    context.getString(R.string.search_result_etd_on_time)
+                    R.color.search_result_departure_time_on_time
                 )
             }
             "Delayed" -> {
-                Triple(
+                Pair(
                     context.getString(R.string.search_result_delayed),
-                    R.color.search_result_departure_time_delayed,
-                    context.getString(R.string.search_result_etd_delayed)
+                    R.color.search_result_departure_time_delayed
                 )
             }
             else -> { // Estimated
-                Triple(
+                Pair(
                     service.etd,
-                    R.color.search_result_departure_time_estimated,
-                    context.getString(R.string.search_result_etd_other, service.etd)
+                    R.color.search_result_departure_time_estimated
                 )
             }
         }
@@ -94,9 +91,7 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
             R.string.search_result_destination, destinationName, destinationCrs
         )
 
-        holder.tickerLine.text = context.getString(
-            R.string.search_result_ticker_line, service.std, destinationName, platform, actualDepartureTime
-        )
+        holder.tickerLine.text = service.tickerLine(context)
 
         holder.departureTime.text = departureTimeText
         if(Settings.EnableColouredDepartureTimes.getSetting(context)) {

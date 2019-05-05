@@ -13,11 +13,14 @@
 
     <string name="search_result_delayed">delayed</string>
 
-    <string name="search_result_etd_on_time">is on time</string>
-    <string name="search_result_etd_delayed">is delayed</string>
-    <string name="search_result_etd_other">is expected at %1$s</string>
-
     <string name="search_result_destination">%1$s (%2$s)</string>
-    <string name="search_result_ticker_line">The %1$s to %2$s on platform %3$s %4$s</string>
+
+    <string name="search_result_ticker_line_etd_on_time">The %1$s to %2$s on platform %3$s is on time.</string>
+    <string name="search_result_ticker_line_etd_delayed">The %1$s to %2$s on platform %3$s is delayed.</string>
+    <string name="search_result_ticker_line_etd_other">The %1$s to %2$s on platform %3$s is expected at %4$s.</string>
+
+    <string name="search_result_ticker_line_no_platform_etd_on_time">The %1$s to %2$s is on time.</string>
+    <string name="search_result_ticker_line_no_platform_etd_delayed">The %1$s to %2$s is delayed.</string>
+    <string name="search_result_ticker_line_no_platform_etd_other">The %1$s to %2$s is expected at %3$s.</string>
 
 </resources>
