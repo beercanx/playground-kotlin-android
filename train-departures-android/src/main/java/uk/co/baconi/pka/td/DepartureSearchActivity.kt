@@ -2,6 +2,7 @@ package uk.co.baconi.pka.td
 
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.support.design.widget.Snackbar
@@ -23,8 +24,7 @@ import uk.co.baconi.pka.tdb.StationCode
 import uk.co.baconi.pka.tdb.StationCodes
 import uk.co.baconi.pka.tdb.openldbws.responses.DepartureItem
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
-
-import java.util.UUID
+import java.util.*
 
 
 class DepartureSearchActivity : AppCompatActivity() {
@@ -44,7 +44,19 @@ class DepartureSearchActivity : AppCompatActivity() {
         val context: Context = this
 
         if(!this::textToSpeech.isInitialized) {
-            textToSpeech = TextToSpeech(context) {}
+
+            textToSpeech = TextToSpeech(context) {
+
+                // On Init Listener
+
+                textToSpeech.language = applicationContext.getCurrentLocale()
+
+                val audioAttributes = AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build()
+
+                textToSpeech.setAudioAttributes(audioAttributes)
+            }
         }
 
         setContentView(R.layout.activity_departure_search)
@@ -169,8 +181,6 @@ class DepartureSearchActivity : AppCompatActivity() {
 
             // Can be used to detect errors during synthesis via setOnUtteranceProgressListener
             val utteranceId = UUID.randomUUID().toString()
-
-            textToSpeech.language = applicationContext.getCurrentLocale()
 
             // TODO - Check error/success response for queueing speech request
             textToSpeech.speak(speechText, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
