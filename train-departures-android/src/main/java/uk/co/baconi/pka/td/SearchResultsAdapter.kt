@@ -67,6 +67,12 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
                     R.color.search_result_departure_time_delayed
                 )
             }
+            "Cancelled" -> {
+                Pair(
+                    context.getString(R.string.search_result_delayed),
+                    R.color.search_result_departure_time_cancelled
+                )
+            }
             else -> { // Estimated
                 Pair(
                     service.etd,
