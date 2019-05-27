@@ -4,6 +4,7 @@
     <string name="pref_enable_coloured_avatars_title">Colour code platform number</string>
     <string name="pref_enable_coloured_departure_times_title">Colour code departure times</string>
     <string name="pref_which_search_type_title">Use which search type</string>
+    <string name="pref_which_speech_type_title">Use which speech type</string>
 
     <string-array name="pref_which_search_type_labels">
         <item>Single departure</item>
@@ -14,4 +15,15 @@
         <item>SINGLE_RESULT</item>
         <item>MULTIPLE_RESULTS</item>
     </string-array>
+
+    <string-array name="pref_which_speech_type_labels">
+        <item>Pause Media</item>
+        <item>Quieten Media</item>
+    </string-array>
+
+    <string-array name="pref_which_speech_type_values">
+        <item>PAUSE_OTHER_SOUNDS</item>
+        <item>DIM_OTHER_SOUNDS</item>
+    </string-array>
+
 </resources>

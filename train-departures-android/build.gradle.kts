@@ -19,6 +19,11 @@ android {
         isCheckReleaseBuilds = false
     }
     buildTypes {
+        getByName("debug") {
+            isMinifyEnabled = true // runProguard
+            isZipAlignEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
         getByName("release") {
             isMinifyEnabled = true // runProguard
             isZipAlignEnabled = true
