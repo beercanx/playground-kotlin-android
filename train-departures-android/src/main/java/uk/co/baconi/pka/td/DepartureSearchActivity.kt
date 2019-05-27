@@ -3,8 +3,10 @@ package uk.co.baconi.pka.td
 import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -25,6 +27,8 @@ import uk.co.baconi.pka.tdb.StationCodes
 import uk.co.baconi.pka.tdb.openldbws.responses.DepartureItem
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 import java.util.*
+import android.media.AudioManager
+import android.os.Build
 
 
 class DepartureSearchActivity : AppCompatActivity() {
@@ -46,16 +50,57 @@ class DepartureSearchActivity : AppCompatActivity() {
         if(!this::textToSpeech.isInitialized) {
 
             textToSpeech = TextToSpeech(context) {
-
-                // On Init Listener
-
                 textToSpeech.language = applicationContext.getCurrentLocale()
+            }
 
-                val audioAttributes = AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                    .build()
+            val audioAttributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                //.setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
+                //.setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+                .build()
 
-                textToSpeech.setAudioAttributes(audioAttributes)
+            textToSpeech.setAudioAttributes(audioAttributes)
+
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+            // TODO - Work out how we do it for older devices
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                textToSpeech.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+
+                    val focusRequests = mutableMapOf<String, AudioFocusRequest>()
+
+                    override fun onStart(utteranceId: String) {
+
+                        val focusGain = when(Settings.WhichSpeechType.getSetting(context)) {
+                            SpeechType.PAUSE_OTHER_SOUNDS -> AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE
+                            SpeechType.DIM_OTHER_SOUNDS -> AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
+                        }
+
+                        val audioFocusRequest = AudioFocusRequest
+                            .Builder(focusGain)
+                            .build()
+
+                        focusRequests[utteranceId] = audioFocusRequest
+
+                        audioManager.requestAudioFocus(audioFocusRequest)
+                    }
+
+                    override fun onDone(utteranceId: String) {
+                        val focusRequest = focusRequests[utteranceId]
+                        if(focusRequest != null) {
+                            audioManager.abandonAudioFocusRequest(focusRequest)
+                        }
+                    }
+
+                    override fun onStop(utteranceId: String, interrupted: Boolean) {
+                        onDone(utteranceId)
+                    }
+
+                    override fun onError(utteranceId: String) {
+                        onDone(utteranceId)
+                    }
+                })
             }
         }
 
@@ -86,6 +131,13 @@ class DepartureSearchActivity : AppCompatActivity() {
         search_criteria_to_auto_complete.apply {
             adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
             setSelectionByStationName("Sheffield")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(this::textToSpeech.isInitialized) {
+            textToSpeech.shutdown()
         }
     }
 
