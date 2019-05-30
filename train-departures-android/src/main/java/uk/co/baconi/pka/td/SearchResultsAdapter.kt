@@ -69,7 +69,7 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
             }
             "Cancelled" -> {
                 Pair(
-                    context.getString(R.string.search_result_delayed),
+                    context.getString(R.string.search_result_cancelled),
                     R.color.search_result_departure_time_cancelled
                 )
             }
