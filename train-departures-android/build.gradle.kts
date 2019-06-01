@@ -41,14 +41,13 @@ dependencies {
     implementation(project(":train-departures-base"))
 
     implementation(kotlin("stdlib-jdk7"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1")
 
-    val androidSupportVersion = "28.0.0"
-    implementation("com.android.support:appcompat-v7:$androidSupportVersion")
-    implementation("com.android.support:design:$androidSupportVersion")
-    implementation("com.android.support:support-v4:$androidSupportVersion")
-    implementation("com.android.support:recyclerview-v7:$androidSupportVersion")
-    implementation("com.android.support:support-annotations:$androidSupportVersion")
+    implementation("com.android.support:appcompat-v7:28.0.0")
+    implementation("com.android.support:design:28.0.0")
+    implementation("com.android.support:support-v4:28.0.0")
+    implementation("com.android.support:recyclerview-v7:28.0.0")
+    implementation("com.android.support:support-annotations:28.0.0")
 
     implementation("com.android.support.constraint:constraint-layout:1.1.3")
 
