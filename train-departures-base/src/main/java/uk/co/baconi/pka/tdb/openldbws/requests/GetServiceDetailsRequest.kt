@@ -1,8 +1,10 @@
 package uk.co.baconi.pka.tdb.openldbws.requests
 
 import uk.co.baconi.pka.tdb.AccessToken
-import uk.co.baconi.pka.tdb.StationCode
-import uk.co.baconi.pka.tdb.xml.*
+import uk.co.baconi.pka.tdb.xml.XmlParser
+import uk.co.baconi.pka.tdb.xml.build
+import uk.co.baconi.pka.tdb.xml.soapRequest
+import uk.co.baconi.pka.tdb.xml.tag
 
 class GetServiceDetailsRequest(
     private val accessToken: AccessToken,

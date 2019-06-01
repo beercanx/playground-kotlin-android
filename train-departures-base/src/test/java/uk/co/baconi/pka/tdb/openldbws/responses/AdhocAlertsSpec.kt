@@ -1,11 +1,8 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import io.kotlintest.matchers.beEmpty
-import io.kotlintest.matchers.beInstanceOf
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.sequences.containExactly
 import io.kotlintest.should
-import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import uk.co.baconi.pka.tdb.xml.XmlParser
 
