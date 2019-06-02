@@ -40,6 +40,9 @@ dependencies {
 
     implementation(project(":train-departures-base"))
 
+    // https://github.com/arrow-kt/arrow
+    implementation("io.arrow-kt:arrow-core:0.8.2") // TODO - Work out why its having to be manually added
+
     implementation(kotlin("stdlib-jdk7"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1")
 

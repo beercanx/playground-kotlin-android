@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
+import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
@@ -11,15 +13,14 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Spinner
-
 import kotlinx.android.synthetic.main.activity_departure_search.*
 import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.StationCode
@@ -27,8 +28,6 @@ import uk.co.baconi.pka.tdb.StationCodes
 import uk.co.baconi.pka.tdb.openldbws.responses.DepartureItem
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 import java.util.*
-import android.media.AudioManager
-import android.os.Build
 
 
 class DepartureSearchActivity : AppCompatActivity() {
@@ -181,11 +180,8 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         search_results_refresh_layout.isRefreshing = true
 
-        when(val nreApiKey = Settings.NreApiKey.getSetting(this)) {
-            is String -> searchForDepartures(nreApiKey.let(::AccessToken))
-            else -> {
-                Snackbar.make(search_results, "No NRE API Key set in the settings.", 5000).show()
-            }
+        provideAccessToken(search_results) { accessToken ->
+            searchForDepartures(accessToken)
         }
     }
 

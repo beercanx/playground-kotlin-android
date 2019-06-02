@@ -10,8 +10,9 @@ import io.ktor.http.content.TextContent
 import io.ktor.http.headersOf
 import uk.co.baconi.pka.tdb.openldbws.requests.*
 import uk.co.baconi.pka.tdb.openldbws.responses.*
-import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsResponse
-import uk.co.baconi.pka.tdb.xml.*
+import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsResult
+import uk.co.baconi.pka.tdb.xml.SoapFailure
+import uk.co.baconi.pka.tdb.xml.XmlParser
 
 object Actions {
 
@@ -29,9 +30,9 @@ object Actions {
         return getBody(GetDepartureBoardRequest(accessToken, from, to))?.departureBoardResponse
     }
 
-    suspend fun getServiceDetails(accessToken: AccessToken, serviceId: String): Try<ServiceDetailsResponse> {
+    suspend fun getServiceDetails(accessToken: AccessToken, serviceId: String): Try<ServiceDetailsResult> {
         return getBodyT(GetServiceDetailsRequest(accessToken, serviceId)) {
-            serviceDetailsResponse
+            serviceDetailsResponse?.serviceDetailsResult
         }
     }
 
