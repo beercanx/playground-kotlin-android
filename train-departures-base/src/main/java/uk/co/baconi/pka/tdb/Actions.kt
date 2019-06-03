@@ -14,23 +14,58 @@ import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsRes
 import uk.co.baconi.pka.tdb.xml.SoapFailure
 import uk.co.baconi.pka.tdb.xml.XmlParser
 
-object Actions {
+// TODO - Work out if this is a sensible pattern for Android
+class Actions(
+    private val accessToken: AccessToken,
+    private val httpClient: HttpClient = HttpClient(Android)
+) {
 
-    private const val TAG = "Actions"
+    companion object {
 
-    suspend fun getFastestDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDeparturesResponse? {
+        private const val TAG = "Actions"
+
+        suspend fun getFastestDepartures(
+            accessToken: AccessToken,
+            from: StationCode,
+            to: StationCode
+        ): BaseDeparturesResponse? {
+            return Actions(accessToken).getFastestDepartures(from, to)
+        }
+
+        suspend fun getNextDepartures(
+            accessToken: AccessToken,
+            from: StationCode,
+            to: StationCode
+        ): BaseDeparturesResponse? {
+            return Actions(accessToken).getNextDepartures(from, to)
+        }
+
+        suspend fun getDepartureBoard(
+            accessToken: AccessToken,
+            from: StationCode,
+            to: StationCode
+        ): BaseDepartureBoardResponse? {
+            return Actions(accessToken).getDepartureBoard(from, to)
+        }
+
+        suspend fun getServiceDetails(accessToken: AccessToken, serviceId: String): Try<ServiceDetailsResult> {
+            return Actions(accessToken).getServiceDetails(serviceId)
+        }
+    }
+
+    suspend fun getFastestDepartures(from: StationCode, to: StationCode): BaseDeparturesResponse? {
         return getBody(GetFastestDeparturesRequest(accessToken, from, to))?.departuresResponse
     }
 
-    suspend fun getNextDepartures(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDeparturesResponse? {
+    suspend fun getNextDepartures(from: StationCode, to: StationCode): BaseDeparturesResponse? {
         return getBody(GetNextDeparturesRequest(accessToken, from, to))?.departuresResponse
     }
 
-    suspend fun getDepartureBoard(accessToken: AccessToken, from: StationCode, to: StationCode): BaseDepartureBoardResponse? {
+    suspend fun getDepartureBoard(from: StationCode, to: StationCode): BaseDepartureBoardResponse? {
         return getBody(GetDepartureBoardRequest(accessToken, from, to))?.departureBoardResponse
     }
 
-    suspend fun getServiceDetails(accessToken: AccessToken, serviceId: String): Try<ServiceDetailsResult> {
+    suspend fun getServiceDetails(serviceId: String): Try<ServiceDetailsResult> {
         return getBodyT(GetServiceDetailsRequest(accessToken, serviceId)) {
             serviceDetailsResponse?.serviceDetailsResult
         }
@@ -40,12 +75,12 @@ object Actions {
         val response = performSoapRequest<String>(request)
         val parser = XmlParser.fromReader(response.reader())
         val result = Envelope.fromXml(parser)
-        when(result.body) {
-            is BodySuccess -> when(val extracted = extract(result.body)) {
+        when (result.body) {
+            is BodySuccess -> when (val extracted = extract(result.body)) {
                 is A -> extracted
                 else -> throw SoapFailure("Unable to extract [${A::class.java}] from the body.")
             }
-            is BodyFailure ->  when(result.body.fault) {
+            is BodyFailure -> when (result.body.fault) {
                 is Fault -> {
                     val message = "Decoded response that contained a failure body: ${result.body.fault}"
                     Log.e(TAG, message)
@@ -70,9 +105,9 @@ object Actions {
         val response = performSoapRequest<String>(request)
         val parser = XmlParser.fromReader(response.reader())
         val result = Envelope.fromXml(parser)
-        when(result.body) {
+        when (result.body) {
             is BodySuccess -> result.body
-            is BodyFailure ->  when(result.body.fault) {
+            is BodyFailure -> when (result.body.fault) {
                 is Fault -> {
                     Log.e(TAG, "Decoded response that contained a failure body: ${result.body.fault}")
                     null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
@@ -93,8 +128,8 @@ object Actions {
     }
 
     // TODO - Look at supporting input streams and passing directly to XmlParser
-    private suspend inline fun <reified T> performSoapRequest(request: Request): T = HttpClient(Android).use { client ->
-        client.post("https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx") {
+    private suspend inline fun <reified T> performSoapRequest(request: Request): T  {
+        return httpClient.post("https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx") {
             headersOf("SOAPAction", request.action)
             body = TextContent(request.body, ContentType.parse(request.contentType))
         }
