@@ -48,5 +48,6 @@
     <string name="service_details_std_label">Scheduled Departure:</string>
     <string name="service_details_etd_label">Estimated Departure:</string>
     <string name="service_details_atd_label">Actual Departure:</string>
+    <string name="service_details_adhoc_alerts_label">Adhoc Alerts:</string>
 
 </resources>

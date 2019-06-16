@@ -1,309 +1,313 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/service_details_refresh_layout"
+    android:id="@+id/inner_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_constraintTop_toTopOf="parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity"
     tools:showIn="@layout/activity_service_details">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/inner_constraint_layout"
+    <TableLayout
+        android:id="@+id/service_details_table_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+        <TableRow android:id="@+id/generated_at_row">
+            <TextView
+                android:text="@string/service_details_generated_at_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/generated_at_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="2019-06-01T11:34:21.116824+01:00" />
+        </TableRow>
+        <TableRow android:id="@+id/service_type_row">
+            <TextView
+                android:text="@string/service_details_type_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/service_type_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="train" />
+        </TableRow>
+        <TableRow android:id="@+id/location_row">
+            <TextView
+                android:text="@string/service_details_location_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/location_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="Sheffield" />
+        </TableRow>
+        <TableRow android:id="@+id/crs_row">
+            <TextView
+                android:text="@string/service_details_crs_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/crs_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="SHF" />
+        </TableRow>
+        <TableRow android:id="@+id/operator_row">
+            <TextView
+                android:text="@string/service_details_operator_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/operator_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="Northern" />
+        </TableRow>
+        <TableRow android:id="@+id/operator_code_row">
+            <TextView
+                android:text="@string/service_details_operator_code_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/operator_code_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="NT" />
+        </TableRow>
+        <TableRow android:id="@+id/rsid_row">
+            <TextView
+                android:text="@string/service_details_rsid_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/rsid_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="NT379000" />
+        </TableRow>
+        <TableRow android:id="@+id/cancelled_row">
+            <TextView
+                android:text="@string/service_details_cancelled_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/cancelled_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="false" />
+        </TableRow>
+        <TableRow android:id="@+id/cancel_reason_row">
+            <TextView
+                android:text="@string/service_details_cancel_reason_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
 
-        <TableLayout
-            android:id="@+id/service_details_table_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:stretchColumns="1">
-            <TableRow android:id="@+id/generated_at_row">
-                <TextView
-                    android:text="@string/service_details_generated_at_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/generated_at_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="2019-06-01T11:34:21.116824+01:00" />
-            </TableRow>
-            <TableRow android:id="@+id/service_type_row">
-                <TextView
-                    android:text="@string/service_details_type_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/service_type_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="train" />
-            </TableRow>
-            <TableRow android:id="@+id/location_row">
-                <TextView
-                    android:text="@string/service_details_location_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/location_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="Sheffield" />
-            </TableRow>
-            <TableRow android:id="@+id/crs_row">
-                <TextView
-                    android:text="@string/service_details_crs_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/crs_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="SHF" />
-            </TableRow>
-            <TableRow android:id="@+id/operator_row">
-                <TextView
-                    android:text="@string/service_details_operator_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/operator_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="Northern" />
-            </TableRow>
-            <TableRow android:id="@+id/operator_code_row">
-                <TextView
-                    android:text="@string/service_details_operator_code_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/operator_code_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="NT" />
-            </TableRow>
-            <TableRow android:id="@+id/rsid_row">
-                <TextView
-                    android:text="@string/service_details_rsid_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/rsid_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="NT379000" />
-            </TableRow>
-            <TableRow android:id="@+id/cancelled_row">
-                <TextView
-                    android:text="@string/service_details_cancelled_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/cancelled_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="false" />
-            </TableRow>
-            <TableRow android:id="@+id/cancel_reason_row">
-                <TextView
-                    android:text="@string/service_details_cancel_reason_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
+            <TextView
+                android:id="@+id/cancel_reason_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="This train has been cancelled because of a shortage of train drivers" />
+        </TableRow>
+        <TableRow android:id="@+id/delay_reason_row">
+            <TextView
+                android:text="@string/service_details_delay_reason_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/delay_reason_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="" /> <!-- TODO - Find example -->
+        </TableRow>
+        <TableRow android:id="@+id/overdue_message_row">
+            <TextView
+                android:text="@string/service_details_overdue_message_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/overdue_message_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="" /> <!-- TODO - Find example -->
+        </TableRow>
+        <TableRow android:id="@+id/length_row">
+            <TextView
+                android:text="@string/service_details_length_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/length_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="1" />
+        </TableRow>
+        <TableRow android:id="@+id/detach_front_row">
+            <TextView
+                android:text="@string/service_details_detach_front_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/detach_front_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="false" />
+        </TableRow>
+        <TableRow android:id="@+id/reverse_formation_row">
+            <TextView
+                android:text="@string/service_details_reverse_formation_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/reverse_formation_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="false" />
+        </TableRow>
+        <TableRow android:id="@+id/platform_row">
+            <TextView
+                android:text="@string/service_details_platform_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/platform_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="1a" />
+        </TableRow>
+        <TableRow android:id="@+id/sta_row">
+            <TextView
+                android:text="@string/service_details_sta_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/sta_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="17:50" />
+        </TableRow>
+        <TableRow android:id="@+id/eta_row">
+            <TextView
+                android:text="@string/service_details_eta_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/eta_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="Cancelled" />
+        </TableRow>
+        <TableRow android:id="@+id/ata_row">
+            <TextView
+                android:text="@string/service_details_ata_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/ata_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="17:51" />
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/cancel_reason_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="This train has been cancelled because of a shortage of train drivers" />
-            </TableRow>
-            <TableRow android:id="@+id/delay_reason_row">
-                <TextView
-                    android:text="@string/service_details_delay_reason_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/delay_reason_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="" /> <!-- TODO - Find example -->
-            </TableRow>
-            <TableRow android:id="@+id/overdue_message_row">
-                <TextView
-                    android:text="@string/service_details_overdue_message_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/overdue_message_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="" /> <!-- TODO - Find example -->
-            </TableRow>
-            <TableRow android:id="@+id/length_row">
-                <TextView
-                    android:text="@string/service_details_length_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/length_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="1" />
-            </TableRow>
-            <TableRow android:id="@+id/detach_front_row">
-                <TextView
-                    android:text="@string/service_details_detach_front_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/detach_front_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="false" />
-            </TableRow>
-            <TableRow android:id="@+id/reverse_formation_row">
-                <TextView
-                    android:text="@string/service_details_reverse_formation_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/reverse_formation_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="false" />
-            </TableRow>
-            <TableRow android:id="@+id/platform_row">
-                <TextView
-                    android:text="@string/service_details_platform_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/platform_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="1a" />
-            </TableRow>
-            <TableRow android:id="@+id/sta_row">
-                <TextView
-                    android:text="@string/service_details_sta_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/sta_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="17:50" />
-            </TableRow>
-            <TableRow android:id="@+id/eta_row">
-                <TextView
-                    android:text="@string/service_details_eta_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/eta_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="Cancelled" />
-            </TableRow>
-            <TableRow android:id="@+id/ata_row">
-                <TextView
-                    android:text="@string/service_details_ata_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/ata_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="17:51" />
-            </TableRow>
+        <TableRow android:id="@+id/std_row">
+            <TextView
+                android:text="@string/service_details_std_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/std_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="17:51" />
+        </TableRow>
+        <TableRow android:id="@+id/etd_row">
+            <TextView
+                android:text="@string/service_details_etd_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/etd_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="Cancelled" />
+        </TableRow>
+        <TableRow android:id="@+id/atd_row">
+            <TextView
+                android:text="@string/service_details_atd_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/atd_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="17:52" />
+        </TableRow>
+        <TableRow android:id="@+id/adhoc_alerts_row">
+            <TextView
+                android:text="@string/service_details_adhoc_alerts_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/adhoc_alerts_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="Some example adhoc message\nSome example adhoc message\nSome example adhoc message" />
+        </TableRow>
 
-            <TableRow android:id="@+id/std_row">
-                <TextView
-                    android:text="@string/service_details_std_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/std_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="17:51" />
-            </TableRow>
-            <TableRow android:id="@+id/etd_row">
-                <TextView
-                    android:text="@string/service_details_etd_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/etd_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="Cancelled" />
-            </TableRow>
-            <TableRow android:id="@+id/atd_row">
-                <TextView
-                    android:text="@string/service_details_atd_label"
-                    android:textStyle="bold"
-                    android:padding="3dip" />
-                <TextView
-                    android:id="@+id/atd_value"
-                    android:layout_width="0dp"
-                    android:textIsSelectable="true"
-                    android:gravity="end"
-                    android:padding="3dip"
-                    tools:text="17:52" />
-            </TableRow>
-
-            <!-- TODO - More -->
-
-            <!--val adhocAlerts: List<String>? = null,-->
-            <!--val formation: FormationData? = null,-->
-            <!--val previousCallingPoints: List<CallingPoints>? = null,-->
-            <!--val subsequentCallingPoints: List<CallingPoints>? = null-->
-        </TableLayout>
-    </android.support.constraint.ConstraintLayout>
-
-</android.support.v4.widget.SwipeRefreshLayout>
+        <!-- TODO - More -->
+        <!--val formation: FormationData? = null,-->
+        <!--val previousCallingPoints: List<CallingPoints>? = null,-->
+        <!--val subsequentCallingPoints: List<CallingPoints>? = null-->
+    </TableLayout>
+</android.support.constraint.ConstraintLayout>

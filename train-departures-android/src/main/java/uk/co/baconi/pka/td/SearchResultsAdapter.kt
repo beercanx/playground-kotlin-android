@@ -1,7 +1,6 @@
 package uk.co.baconi.pka.td
 
 import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,9 @@ import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity.Companion.SERVICE_ID
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
-class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
+class SearchResultsAdapter(
+    private val searchResults: MutableList<ServiceItem>
+) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and

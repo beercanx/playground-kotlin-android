@@ -32,7 +32,7 @@ class ServiceDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_service_details)
         setSupportActionBar(toolbar)
 
-        provideAccessToken(service_details_refresh_layout) { accessToken ->
+        provideAccessToken(inner_constraint_layout) { accessToken ->
             val serviceId = intent.getStringExtra(SERVICE_ID)
             searchForServiceDetails(accessToken, serviceId)
         }
@@ -48,7 +48,7 @@ class ServiceDetailsActivity : AppCompatActivity() {
             is Failure -> {
                 Log.e(TAG, "Unable to get service details", results.exception)
                 Snackbar.make(
-                    service_details_refresh_layout,
+                    inner_constraint_layout,
                     "Problem getting service details: ${results.exception.javaClass}",
                     5000
                 ).show()
@@ -78,19 +78,27 @@ class ServiceDetailsActivity : AppCompatActivity() {
         updateRow(std_row, std_value, result.std)
         updateRow(etd_row, etd_value, result.etd)
         updateRow(atd_row, atd_value, result.atd)
+        updateRow(adhoc_alerts_row, result.adhocAlerts) { messages ->
+            adhoc_alerts_value.text = messages.joinToString("\n")
+        }
 
         // TODO - Update more
     }
 
     private inline fun <reified A> updateRow(row: TableRow, cell: TextView, value: A?) {
-        when (value) {
-            is String -> {
-                row.visibility = View.VISIBLE
-                cell.text = value
+        updateRow(row, value) { nullSafeValue ->
+            cell.text = when(nullSafeValue) {
+                is String -> nullSafeValue
+                else -> nullSafeValue.toString()
             }
+        }
+    }
+
+    private inline fun <reified A> updateRow(row: TableRow, value: A?, update: (A) -> Unit) {
+        when (value) {
             is A -> {
                 row.visibility = View.VISIBLE
-                cell.text = value.toString()
+                update(value)
             }
             else -> row.visibility = View.GONE
         }
