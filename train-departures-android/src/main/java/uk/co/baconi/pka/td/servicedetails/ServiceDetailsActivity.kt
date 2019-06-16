@@ -4,9 +4,14 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.widget.TableRow
+import android.widget.TextView
 import arrow.core.Try.Failure
 import arrow.core.Try.Success
 import kotlinx.android.synthetic.main.activity_service_details.*
+import kotlinx.android.synthetic.main.content_service_details.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import uk.co.baconi.pka.td.R
@@ -27,7 +32,7 @@ class ServiceDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_service_details)
         setSupportActionBar(toolbar)
 
-        provideAccessToken(search_results_refresh_layout) { accessToken ->
+        provideAccessToken(service_details_refresh_layout) { accessToken ->
             val serviceId = intent.getStringExtra(SERVICE_ID)
             searchForServiceDetails(accessToken, serviceId)
         }
@@ -38,23 +43,56 @@ class ServiceDetailsActivity : AppCompatActivity() {
     private fun searchForServiceDetails(accessToken: AccessToken, serviceId: String) = GlobalScope.launch {
         when(val results = Actions.getServiceDetails(accessToken, serviceId)) {
             is Success<ServiceDetailsResult> -> {
-
-                // TODO - updateView(results.value)
-
-                Snackbar.make(
-                    search_results_refresh_layout,
-                    "Got result for ${results.value.locationName} at ${results.value.platform}",
-                    5000
-                ).show()
+                updateView(results.value)
             }
             is Failure -> {
                 Log.e(TAG, "Unable to get service details", results.exception)
                 Snackbar.make(
-                    search_results_refresh_layout,
+                    service_details_refresh_layout,
                     "Problem getting service details: ${results.exception.javaClass}",
                     5000
                 ).show()
             }
+        }
+    }
+
+    private fun updateView(result: ServiceDetailsResult) = GlobalScope.launch(Dispatchers.Main) {
+        updateRow(generated_at_row, generated_at_value, result.generatedAt)
+        updateRow(service_type_row, service_type_value, result.serviceType)
+        updateRow(location_row, location_value, result.locationName)
+        updateRow(crs_row, crs_value, result.crs)
+        updateRow(operator_row, operator_value, result.operator)
+        updateRow(operator_code_row, operator_code_value, result.operatorCode)
+        updateRow(rsid_row, rsid_value, result.rsid)
+        updateRow(cancelled_row, cancelled_value, result.isCancelled)
+        updateRow(cancel_reason_row, cancel_reason_value, result.cancelReason)
+        updateRow(delay_reason_row, delay_reason_value, result.delayReason)
+        updateRow(overdue_message_row, overdue_message_value, result.overdueMessage)
+        updateRow(length_row, length_value, result.length)
+        updateRow(detach_front_row, detach_front_value, result.detachFront)
+        updateRow(reverse_formation_row, reverse_formation_value, result.isReverseFormation)
+        updateRow(platform_row, platform_value, result.platform)
+        updateRow(sta_row, sta_value, result.sta)
+        updateRow(eta_row, eta_value, result.eta)
+        updateRow(ata_row, ata_value, result.ata)
+        updateRow(std_row, std_value, result.std)
+        updateRow(etd_row, etd_value, result.etd)
+        updateRow(atd_row, atd_value, result.atd)
+
+        // TODO - Update more
+    }
+
+    private inline fun <reified A> updateRow(row: TableRow, cell: TextView, value: A?) {
+        when (value) {
+            is String -> {
+                row.visibility = View.VISIBLE
+                cell.text = value
+            }
+            is A -> {
+                row.visibility = View.VISIBLE
+                cell.text = value.toString()
+            }
+            else -> row.visibility = View.GONE
         }
     }
 }
