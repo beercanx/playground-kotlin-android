@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.widget.ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/inner_constraint_layout"
+    android:id="@+id/service_details_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_constraintTop_toTopOf="parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity"
     tools:showIn="@layout/activity_service_details">
@@ -323,4 +322,4 @@
         <!--val previousCallingPoints: List<CallingPoints>? = null,-->
         <!--val subsequentCallingPoints: List<CallingPoints>? = null-->
     </TableLayout>
-</android.support.constraint.ConstraintLayout>
+</android.widget.ScrollView>
