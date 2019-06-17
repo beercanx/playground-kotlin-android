@@ -32,6 +32,10 @@ class ServiceDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_service_details)
         setSupportActionBar(toolbar)
 
+        // Initialise with nothing
+        updateView()
+        updateErrorView()
+
         provideAccessToken(service_details_scroll_view) { accessToken ->
             val serviceId = intent.getStringExtra(SERVICE_ID)
             searchForServiceDetails(accessToken, serviceId)
