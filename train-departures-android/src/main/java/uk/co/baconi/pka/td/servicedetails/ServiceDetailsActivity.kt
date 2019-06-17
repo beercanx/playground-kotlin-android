@@ -78,9 +78,14 @@ class ServiceDetailsActivity : AppCompatActivity() {
         updateRow(std_row, std_value, result.std)
         updateRow(etd_row, etd_value, result.etd)
         updateRow(atd_row, atd_value, result.atd)
+
+        // TODO - Improve if we ever start getting this data
         updateRow(adhoc_alerts_row, result.adhocAlerts) { messages ->
             adhoc_alerts_value.text = messages.joinToString("\n")
         }
+
+        // TODO - Improve if we ever start getting this data
+        updateRow(formation_row, formation_value, result.formation)
 
         // TODO - Update more
     }

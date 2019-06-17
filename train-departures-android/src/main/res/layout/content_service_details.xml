@@ -305,8 +305,21 @@
                 tools:text="Some example adhoc message\nSome example adhoc message\nSome example adhoc message" />
         </TableRow>
 
+        <TableRow android:id="@+id/formation_row">
+            <TextView
+                android:text="@string/service_details_formation_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/formation_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="FormationData(avgLoading=100, coaches=[CoachData(coachClass=Standard, loading=50, number=A, toilet=ToiletAvailabilityType(status=InService, type=Standard))])" />
+        </TableRow>
+
         <!-- TODO - More -->
-        <!--val formation: FormationData? = null,-->
         <!--val previousCallingPoints: List<CallingPoints>? = null,-->
         <!--val subsequentCallingPoints: List<CallingPoints>? = null-->
     </TableLayout>
