@@ -78,7 +78,7 @@ class Actions(
         when (result.body) {
             is BodySuccess -> when (val extracted = extract(result.body)) {
                 is A -> extracted
-                else -> throw SoapFailure("Unable to extract [${A::class.java}] from the body.")
+                else -> throw SoapFailure("Unable to extract [${A::class}] from the body.")
             }
             is BodyFailure -> when (result.body.fault) {
                 is Fault -> {

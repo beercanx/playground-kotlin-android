@@ -8,7 +8,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import arrow.core.Try.Failure
 import arrow.core.Try.Success
-import kotlinx.android.synthetic.main.activity_service_details.*
+import kotlinx.android.synthetic.main.activity_error.*
 import kotlinx.android.synthetic.main.content_service_details.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,6 +19,8 @@ import uk.co.baconi.pka.td.provideAccessToken
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsResult
+import kotlinx.android.synthetic.main.activity_error.toolbar as errorToolBar
+import kotlinx.android.synthetic.main.activity_service_details.toolbar as serviceDetailsToolBar
 
 class ServiceDetailsActivity : AppCompatActivity() {
 
@@ -29,16 +31,16 @@ class ServiceDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_service_details)
-        setSupportActionBar(toolbar)
 
-        // Initialise with nothing
-        updateView()
-        updateErrorView()
-
-        provideAccessToken(service_details_scroll_view) { accessToken ->
-            val serviceId = intent.getStringExtra(SERVICE_ID)
-            searchForServiceDetails(accessToken, serviceId)
+        when(val accessToken = provideAccessToken()) {
+            is Success<AccessToken> -> {
+                val serviceId = intent.getStringExtra(SERVICE_ID)
+                searchForServiceDetails(accessToken.value, serviceId)
+            }
+            is Failure -> {
+                Log.e(TAG, "Unable to get access token", accessToken.exception)
+                displayErrorView(accessToken.exception)
+            }
         }
 
         // TODO - Implement a back other than device back button?
@@ -47,30 +49,32 @@ class ServiceDetailsActivity : AppCompatActivity() {
     private fun searchForServiceDetails(accessToken: AccessToken, serviceId: String) = GlobalScope.launch {
         when(val results = Actions.getServiceDetails(accessToken, serviceId)) {
             is Success<ServiceDetailsResult> -> {
-                // Update with no error
-                updateErrorView()
-
-                // Update with results
-                updateView(results.value)
+                displayServiceDetailsView(results.value)
             }
             is Failure -> {
-                // Update with no result
-                updateView()
-
-                // Update with error
-                updateErrorView(results.exception)
                 Log.e(TAG, "Unable to get service details", results.exception)
+                displayErrorView(results.exception)
             }
         }
     }
 
-    private fun updateErrorView(error: Throwable? = null) = GlobalScope.launch(Dispatchers.Main)  {
+    private fun displayErrorView(error: Throwable? = null) = GlobalScope.launch(Dispatchers.Main)  {
+        // Configure to be error layout
+        setContentView(R.layout.activity_error)
+        setSupportActionBar(errorToolBar)
+
+        // Update error layout
         updateRow(error_class_row, error_class_value, if (error == null) null else error::class)
         updateRow(error_message_row, error_message_value, error?.message)
         updateRow(error_stacktrace_row, error_stacktrace_value, error?.printStackTraceAsString())
     }
 
-    private fun updateView(result: ServiceDetailsResult? = null) = GlobalScope.launch(Dispatchers.Main) {
+    private fun displayServiceDetailsView(result: ServiceDetailsResult? = null) = GlobalScope.launch(Dispatchers.Main) {
+        // Configure to be service details layout
+        setContentView(R.layout.activity_service_details)
+        setSupportActionBar(serviceDetailsToolBar)
+
+        // Update service details layout
         updateRow(generated_at_row, generated_at_value, result?.generatedAt)
         updateRow(service_type_row, service_type_value, result?.serviceType)
         updateRow(location_row, location_value, result?.locationName)

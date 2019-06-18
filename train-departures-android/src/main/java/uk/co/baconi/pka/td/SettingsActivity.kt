@@ -18,7 +18,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        addPreferencesFromResource(R.xml.pref_general)
-
+        addPreferencesFromResource(R.xml.pref_general) // TODO - Migrate to fragment based preferences
     }
 }

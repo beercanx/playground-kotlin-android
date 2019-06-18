@@ -50,8 +50,8 @@
     <string name="service_details_atd_label">Actual Departure:</string>
     <string name="service_details_adhoc_alerts_label">Adhoc Alerts:</string>
     <string name="service_details_formation_label">Formation:</string>
-    <string name="service_details_error_class_label">Error:</string>
-    <string name="service_details_error_message_label">Message:</string>
-    <string name="service_details_error_stacktrace_label">Stacktrace:</string>
+    <string name="error_class_label">Error:</string>
+    <string name="error_message_label">Message:</string>
+    <string name="error_stacktrace_label">Stacktrace:</string>
 
 </resources>
