@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.td
+package uk.co.baconi.pka.td.errors
 
 import java.io.PrintWriter
 import java.io.StringWriter

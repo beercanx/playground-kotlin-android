@@ -9,31 +9,35 @@ import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Spinner
+import arrow.core.Failure
+import arrow.core.Success
+import arrow.core.Try
 import kotlinx.android.synthetic.main.activity_departure_search.*
 import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import uk.co.baconi.pka.td.errors.ErrorView
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.StationCode
 import uk.co.baconi.pka.tdb.StationCodes
-import uk.co.baconi.pka.tdb.openldbws.responses.DepartureItem
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 import java.util.*
 
 
-class DepartureSearchActivity : AppCompatActivity() {
+class DepartureSearchActivity : AppCompatActivity(), ErrorView {
 
     companion object {
         private const val TAG = "DepartureSearchActivity"
+        private const val FROM_NAME = "$TAG.FROM_NAME"
+        private const val TO_NAME = "$TAG.TO_NAME"
     }
 
     private lateinit var textToSpeech: TextToSpeech
@@ -46,6 +50,7 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         val context: Context = this
 
+        // TODO - Extract into component and inject
         if(!this::textToSpeech.isInitialized) {
 
             textToSpeech = TextToSpeech(context) {
@@ -54,8 +59,6 @@ class DepartureSearchActivity : AppCompatActivity() {
 
             val audioAttributes = AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                //.setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
-                //.setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
                 .build()
 
             textToSpeech.setAudioAttributes(audioAttributes)
@@ -103,6 +106,7 @@ class DepartureSearchActivity : AppCompatActivity() {
             }
         }
 
+        // Configure to be search layout
         setContentView(R.layout.activity_departure_search)
         setSupportActionBar(toolbar)
 
@@ -122,14 +126,22 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         // TODO - Look into search by both CRS Code and Station Name
 
+        val fromIntent: String? = intent.getStringExtra(FROM_NAME)
+        val toIntent: String? = intent.getStringExtra(TO_NAME)
+
         search_criteria_from_auto_complete.apply {
             adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
-            setSelectionByStationName("Meadowhall")
+            setSelectionByStationName(fromIntent ?: "Meadowhall")
         }
 
         search_criteria_to_auto_complete.apply {
             adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
-            setSelectionByStationName("Sheffield")
+            setSelectionByStationName(toIntent ?: "Sheffield")
+        }
+
+        // Start a search because we've triggered via the menu
+        if(fromIntent != null && toIntent != null) {
+            startSearchForDepartures()
         }
     }
 
@@ -156,7 +168,15 @@ class DepartureSearchActivity : AppCompatActivity() {
             true
         }
         R.id.app_bar_search -> {
-            startSearchForDepartures()
+            // startSearchForDepartures()
+            startActivity(Intent(this, DepartureSearchActivity::class.java).apply {
+
+                val from = search_criteria_from_auto_complete.selectedItem as StationCode
+                putExtra(FROM_NAME, from.stationName)
+
+                val to = search_criteria_to_auto_complete.selectedItem as StationCode
+                putExtra(TO_NAME, to.stationName)
+            })
             true
         }
         R.id.app_bar_toggle -> {
@@ -178,47 +198,64 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     private fun startSearchForDepartures() {
 
+        // Turn on the spinner
         search_results_refresh_layout.isRefreshing = true
 
-        provideAccessToken(search_results) { accessToken ->
-            searchForDepartures(accessToken)
+        when(val accessToken = provideAccessToken()) {
+            is Try.Success<AccessToken> -> {
+                searchForDepartures(accessToken.value)
+            }
+            is Try.Failure -> {
+                Log.e(TAG, "Unable to get access token", accessToken.exception)
+                handleErrorView(accessToken.exception)
+            }
         }
     }
 
-    private fun searchForDepartures(nreApiKey: AccessToken) = GlobalScope.launch {
+    private fun searchForDepartures(accessToken: AccessToken)  = GlobalScope.launch {
 
         val from = search_criteria_from_auto_complete.selectedItem as StationCode
         val to = search_criteria_to_auto_complete.selectedItem as StationCode
 
-        val result: List<ServiceItem>? = when(Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)) {
+        val action = when(Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)) {
             SearchType.SINGLE_RESULT -> {
-                Actions.getFastestDepartures(nreApiKey, from, to)
-                    ?.departuresBoard
-                    ?.departures
-                    ?.mapNotNull(DepartureItem::service)
+                Actions.Companion::getFastestTrainDeparture
             }
             SearchType.MULTIPLE_RESULTS -> {
-                Actions.getDepartureBoard(nreApiKey, from, to)
-                    ?.stationBoardResult
-                    ?.trainServices
+                Actions.Companion::getTrainDepartures
             }
         }
 
-        if(result is List<ServiceItem>) {
-            updateSearchResults(result)
-            speakSearchResult(result.first())
-        } else {
-            // TODO - Better error messaging required
-            Snackbar.make(search_results, "Unable to get a result from [${from.stationName}] to [${to.stationName}]", 10000).show()
+        when(val results = action.invoke(accessToken, from, to)) {
+            is Success -> {
+                displaySearchResultsView(results.value)
+                speakSearchResult(results.value.first())
+            }
+            is Failure -> {
+                Log.e(TAG, "Unable to search for departures", results.exception)
+                handleErrorView(results.exception)
+            }
         }
     }
 
-    private fun updateSearchResults(serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
+    private fun handleErrorView(error: Throwable?) = GlobalScope.launch(Dispatchers.Main)  {
+
+        // Turn off the spinner
+        search_results_refresh_layout.isRefreshing = false
+
+        // Update the error view
+        displayErrorView(error)
+    }
+
+    private fun displaySearchResultsView(serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
+
+        // Turn off the spinner
+        search_results_refresh_layout.isRefreshing = false
+
+        // Update the search results
         searchResults.clear()
         searchResults.addAll(serviceItems)
         viewAdapter.notifyDataSetChanged()
-
-        search_results_refresh_layout.isRefreshing = false
     }
 
     private fun speakSearchResult(service: ServiceItem) {

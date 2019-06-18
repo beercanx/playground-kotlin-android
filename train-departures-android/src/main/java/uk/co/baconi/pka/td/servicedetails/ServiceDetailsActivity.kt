@@ -3,26 +3,22 @@ package uk.co.baconi.pka.td.servicedetails
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
-import android.widget.TableRow
-import android.widget.TextView
 import arrow.core.Try.Failure
 import arrow.core.Try.Success
-import kotlinx.android.synthetic.main.activity_error.*
+import kotlinx.android.synthetic.main.activity_service_details.*
 import kotlinx.android.synthetic.main.content_service_details.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import uk.co.baconi.pka.td.R
-import uk.co.baconi.pka.td.printStackTraceAsString
+import uk.co.baconi.pka.td.errors.ErrorView
 import uk.co.baconi.pka.td.provideAccessToken
+import uk.co.baconi.pka.td.tables.updateRow
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsResult
-import kotlinx.android.synthetic.main.activity_error.toolbar as errorToolBar
-import kotlinx.android.synthetic.main.activity_service_details.toolbar as serviceDetailsToolBar
 
-class ServiceDetailsActivity : AppCompatActivity() {
+class ServiceDetailsActivity : AppCompatActivity(), ErrorView {
 
     companion object {
         const val TAG = "ServiceDetailsActivity"
@@ -58,21 +54,10 @@ class ServiceDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayErrorView(error: Throwable? = null) = GlobalScope.launch(Dispatchers.Main)  {
-        // Configure to be error layout
-        setContentView(R.layout.activity_error)
-        setSupportActionBar(errorToolBar)
-
-        // Update error layout
-        updateRow(error_class_row, error_class_value, if (error == null) null else error::class)
-        updateRow(error_message_row, error_message_value, error?.message)
-        updateRow(error_stacktrace_row, error_stacktrace_value, error?.printStackTraceAsString())
-    }
-
     private fun displayServiceDetailsView(result: ServiceDetailsResult? = null) = GlobalScope.launch(Dispatchers.Main) {
         // Configure to be service details layout
         setContentView(R.layout.activity_service_details)
-        setSupportActionBar(serviceDetailsToolBar)
+        setSupportActionBar(toolbar)
 
         // Update service details layout
         updateRow(generated_at_row, generated_at_value, result?.generatedAt)
@@ -106,24 +91,5 @@ class ServiceDetailsActivity : AppCompatActivity() {
         updateRow(formation_row, formation_value, result?.formation)
 
         // TODO - Update more
-    }
-
-    private inline fun <reified A> updateRow(row: TableRow, cell: TextView, value: A?) {
-        updateRow(row, value) { nullSafeValue ->
-            cell.text = when(nullSafeValue) {
-                is String -> nullSafeValue
-                else -> nullSafeValue.toString()
-            }
-        }
-    }
-
-    private inline fun <reified A> updateRow(row: TableRow, value: A?, update: (A) -> Unit) {
-        when (value) {
-            is A -> {
-                row.visibility = View.VISIBLE
-                update(value)
-            }
-            else -> row.visibility = View.GONE
-        }
     }
 }

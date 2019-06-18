@@ -8,7 +8,10 @@ import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.content.TextContent
 import io.ktor.http.headersOf
-import uk.co.baconi.pka.tdb.openldbws.requests.*
+import uk.co.baconi.pka.tdb.openldbws.requests.GetDepartureBoardRequest
+import uk.co.baconi.pka.tdb.openldbws.requests.GetFastestDeparturesRequest
+import uk.co.baconi.pka.tdb.openldbws.requests.GetServiceDetailsRequest
+import uk.co.baconi.pka.tdb.openldbws.requests.Request
 import uk.co.baconi.pka.tdb.openldbws.responses.*
 import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsResult
 import uk.co.baconi.pka.tdb.xml.SoapFailure
@@ -24,28 +27,20 @@ class Actions(
 
         private const val TAG = "Actions"
 
-        suspend fun getFastestDepartures(
+        suspend fun getFastestTrainDeparture(
             accessToken: AccessToken,
             from: StationCode,
             to: StationCode
-        ): BaseDeparturesResponse? {
+        ): Try<List<ServiceItem>> {
             return Actions(accessToken).getFastestDepartures(from, to)
         }
 
-        suspend fun getNextDepartures(
+        suspend fun getTrainDepartures(
             accessToken: AccessToken,
             from: StationCode,
             to: StationCode
-        ): BaseDeparturesResponse? {
-            return Actions(accessToken).getNextDepartures(from, to)
-        }
-
-        suspend fun getDepartureBoard(
-            accessToken: AccessToken,
-            from: StationCode,
-            to: StationCode
-        ): BaseDepartureBoardResponse? {
-            return Actions(accessToken).getDepartureBoard(from, to)
+        ): Try<List<ServiceItem>> {
+            return Actions(accessToken).getTrainDepartures(from, to)
         }
 
         suspend fun getServiceDetails(accessToken: AccessToken, serviceId: String): Try<ServiceDetailsResult> {
@@ -53,16 +48,16 @@ class Actions(
         }
     }
 
-    suspend fun getFastestDepartures(from: StationCode, to: StationCode): BaseDeparturesResponse? {
-        return getBody(GetFastestDeparturesRequest(accessToken, from, to))?.departuresResponse
+    suspend fun getFastestDepartures(from: StationCode, to: StationCode): Try<List<ServiceItem>> {
+        return getBodyT(GetFastestDeparturesRequest(accessToken, from, to)){
+            departuresResponse?.departuresBoard?.departures?.mapNotNull(DepartureItem::service)
+        }
     }
 
-    suspend fun getNextDepartures(from: StationCode, to: StationCode): BaseDeparturesResponse? {
-        return getBody(GetNextDeparturesRequest(accessToken, from, to))?.departuresResponse
-    }
-
-    suspend fun getDepartureBoard(from: StationCode, to: StationCode): BaseDepartureBoardResponse? {
-        return getBody(GetDepartureBoardRequest(accessToken, from, to))?.departureBoardResponse
+    suspend fun getTrainDepartures(from: StationCode, to: StationCode): Try<List<ServiceItem>> {
+        return Actions(accessToken).getBodyT(GetDepartureBoardRequest(accessToken, from, to)){
+            departureBoardResponse?.stationBoardResult?.trainServices
+        }
     }
 
     suspend fun getServiceDetails(serviceId: String): Try<ServiceDetailsResult> {
@@ -98,33 +93,6 @@ class Actions(
                 throw SoapFailure(message)
             }
         }
-    }
-
-    @Deprecated("Since 2019/06/01, looking to move to Try with Success/Failure")
-    private suspend fun getBody(request: Request): BodySuccess? = try {
-        val response = performSoapRequest<String>(request)
-        val parser = XmlParser.fromReader(response.reader())
-        val result = Envelope.fromXml(parser)
-        when (result.body) {
-            is BodySuccess -> result.body
-            is BodyFailure -> when (result.body.fault) {
-                is Fault -> {
-                    Log.e(TAG, "Decoded response that contained a failure body: ${result.body.fault}")
-                    null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
-                }
-                else -> {
-                    Log.e(TAG, "Decoded response that contained a no known successful body.")
-                    null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
-                }
-            }
-            null -> {
-                Log.e(TAG, "Decoded response that contained no body.")
-                null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
-            }
-        }
-    } catch (exception: Exception) {
-        Log.e(TAG, "Issues communicating with the OpenLDBWS service.", exception)
-        null // TODO - Reconsider using nulls, probably want to surface in the UI what went wrong
     }
 
     // TODO - Look at supporting input streams and passing directly to XmlParser
