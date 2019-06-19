@@ -18,6 +18,9 @@ android {
     lintOptions {
         isCheckReleaseBuilds = false
     }
+    androidExtensions {
+        isExperimental = true
+    }
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = true // runProguard

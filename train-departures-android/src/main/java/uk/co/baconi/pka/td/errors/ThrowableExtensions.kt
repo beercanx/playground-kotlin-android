@@ -8,3 +8,11 @@ fun Throwable.printStackTraceAsString() : String {
     printStackTrace(PrintWriter(writer))
     return writer.toString()
 }
+
+fun Throwable.toErrorParcel() : ErrorParcel {
+    return ErrorParcel(
+        this::class.toString(),
+        this.message,
+        this.printStackTraceAsString()
+    )
+}

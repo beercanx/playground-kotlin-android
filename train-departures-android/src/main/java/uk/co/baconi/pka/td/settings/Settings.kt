@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.td
+package uk.co.baconi.pka.td.settings
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -15,10 +15,20 @@ sealed class Settings<A>(
     object EnableColouredAvatars : Settings<Boolean>("enable_coloured_avatars", false, SharedPreferences::getBoolean)
     object EnableColouredDepartureTimes : Settings<Boolean>("enable_coloured_departure_times", true, SharedPreferences::getBoolean)
     object EnableSpeakingFirstResult : Settings<Boolean>("enable_speaking_first_result", true, SharedPreferences::getBoolean)
-    object WhichSearchType : Settings<SearchType>("which_search_type", SearchType.MULTIPLE_RESULTS, ::getSearchType)
-    object WhichSpeechType : Settings<SpeechType>("which_speech_type", SpeechType.PAUSE_OTHER_SOUNDS, ::getSpeechType)
+    object WhichSearchType : Settings<SearchType>("which_search_type",
+        SearchType.MULTIPLE_RESULTS,
+        Companion::getSearchType
+    )
+    object WhichSpeechType : Settings<SpeechType>("which_speech_type",
+        SpeechType.PAUSE_OTHER_SOUNDS,
+        Companion::getSpeechType
+    )
 
-    fun getSetting(context: Context): A = getSetting(getPreferenceManager(context))
+    fun getSetting(context: Context): A = getSetting(
+        getPreferenceManager(
+            context
+        )
+    )
     private fun getSetting(sharedPreferences: SharedPreferences): A = provider.invoke(sharedPreferences, key, default)
 
     companion object {

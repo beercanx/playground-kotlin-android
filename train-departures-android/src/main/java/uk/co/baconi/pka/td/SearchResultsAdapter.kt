@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity.Companion.SERVICE_ID
+import uk.co.baconi.pka.td.settings.Settings
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
 class SearchResultsAdapter(

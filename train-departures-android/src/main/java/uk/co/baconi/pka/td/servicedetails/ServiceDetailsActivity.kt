@@ -5,20 +5,20 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import arrow.core.Try.Failure
 import arrow.core.Try.Success
-import kotlinx.android.synthetic.main.activity_service_details.*
+import kotlinx.android.synthetic.main.content_app_bar_layout.*
 import kotlinx.android.synthetic.main.content_service_details.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import uk.co.baconi.pka.td.R
-import uk.co.baconi.pka.td.errors.ErrorView
 import uk.co.baconi.pka.td.provideAccessToken
+import uk.co.baconi.pka.td.startErrorActivity
 import uk.co.baconi.pka.td.tables.updateRow
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsResult
 
-class ServiceDetailsActivity : AppCompatActivity(), ErrorView {
+class ServiceDetailsActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "ServiceDetailsActivity"
@@ -28,6 +28,10 @@ class ServiceDetailsActivity : AppCompatActivity(), ErrorView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Configure to be service details layout
+        setContentView(R.layout.activity_service_details)
+        setSupportActionBar(toolbar)
+
         when(val accessToken = provideAccessToken()) {
             is Success<AccessToken> -> {
                 val serviceId = intent.getStringExtra(SERVICE_ID)
@@ -35,7 +39,7 @@ class ServiceDetailsActivity : AppCompatActivity(), ErrorView {
             }
             is Failure -> {
                 Log.e(TAG, "Unable to get access token", accessToken.exception)
-                displayErrorView(accessToken.exception)
+                startErrorActivity(accessToken.exception)
             }
         }
 
@@ -49,15 +53,12 @@ class ServiceDetailsActivity : AppCompatActivity(), ErrorView {
             }
             is Failure -> {
                 Log.e(TAG, "Unable to get service details", results.exception)
-                displayErrorView(results.exception)
+                startErrorActivity(results.exception)
             }
         }
     }
 
     private fun displayServiceDetailsView(result: ServiceDetailsResult? = null) = GlobalScope.launch(Dispatchers.Main) {
-        // Configure to be service details layout
-        setContentView(R.layout.activity_service_details)
-        setSupportActionBar(toolbar)
 
         // Update service details layout
         updateRow(generated_at_row, generated_at_value, result?.generatedAt)

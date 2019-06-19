@@ -1,7 +1,9 @@
-package uk.co.baconi.pka.td
+package uk.co.baconi.pka.td.settings
 
 import android.os.Bundle
 import android.preference.PreferenceActivity
+import uk.co.baconi.pka.td.AppCompatPreferenceActivity
+import uk.co.baconi.pka.td.R
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On

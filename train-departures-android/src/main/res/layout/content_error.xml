@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/error_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".errors.ErrorActivity"
+    tools:showIn="@layout/activity_error">
+
+    <TableLayout
+        android:id="@+id/error_table_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+
+        <TableRow android:id="@+id/error_class_row">
+            <TextView
+                android:text="@string/error_class_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/error_class_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="kotlin.Throwable" />
+        </TableRow>
+        <TableRow android:id="@+id/error_message_row">
+            <TextView
+                android:text="@string/error_message_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/error_message_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="Something went wrong while doing X!" />
+        </TableRow>
+        <TableRow android:id="@+id/error_stacktrace_row">
+            <TextView
+                android:text="@string/error_stacktrace_label"
+                android:textStyle="bold"
+                android:padding="3dip" />
+            <TextView
+                android:id="@+id/error_stacktrace_value"
+                android:layout_width="0dp"
+                android:textIsSelectable="true"
+                android:gravity="end"
+                android:padding="3dip"
+                tools:text="kotlin.Exception" />
+        </TableRow>
+    </TableLayout>
+</android.widget.ScrollView>

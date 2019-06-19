@@ -18,12 +18,15 @@ import android.widget.Spinner
 import arrow.core.Failure
 import arrow.core.Success
 import arrow.core.Try
-import kotlinx.android.synthetic.main.activity_departure_search.*
+import kotlinx.android.synthetic.main.content_app_bar_layout.*
 import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import uk.co.baconi.pka.td.errors.ErrorView
+import uk.co.baconi.pka.td.settings.SearchType
+import uk.co.baconi.pka.td.settings.Settings
+import uk.co.baconi.pka.td.settings.SettingsActivity
+import uk.co.baconi.pka.td.settings.SpeechType
 import uk.co.baconi.pka.tdb.AccessToken
 import uk.co.baconi.pka.tdb.Actions
 import uk.co.baconi.pka.tdb.StationCode
@@ -32,12 +35,10 @@ import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 import java.util.*
 
 
-class DepartureSearchActivity : AppCompatActivity(), ErrorView {
+class DepartureSearchActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "DepartureSearchActivity"
-        private const val FROM_NAME = "$TAG.FROM_NAME"
-        private const val TO_NAME = "$TAG.TO_NAME"
     }
 
     private lateinit var textToSpeech: TextToSpeech
@@ -47,6 +48,10 @@ class DepartureSearchActivity : AppCompatActivity(), ErrorView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Configure to be search layout
+        setContentView(R.layout.activity_departure_search)
+        setSupportActionBar(toolbar)
 
         val context: Context = this
 
@@ -106,10 +111,6 @@ class DepartureSearchActivity : AppCompatActivity(), ErrorView {
             }
         }
 
-        // Configure to be search layout
-        setContentView(R.layout.activity_departure_search)
-        setSupportActionBar(toolbar)
-
         searchResults = mutableListOf()
         viewAdapter = SearchResultsAdapter(searchResults)
 
@@ -126,22 +127,14 @@ class DepartureSearchActivity : AppCompatActivity(), ErrorView {
 
         // TODO - Look into search by both CRS Code and Station Name
 
-        val fromIntent: String? = intent.getStringExtra(FROM_NAME)
-        val toIntent: String? = intent.getStringExtra(TO_NAME)
-
         search_criteria_from_auto_complete.apply {
             adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
-            setSelectionByStationName(fromIntent ?: "Meadowhall")
+            setSelectionByStationName("Meadowhall")
         }
 
         search_criteria_to_auto_complete.apply {
             adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
-            setSelectionByStationName(toIntent ?: "Sheffield")
-        }
-
-        // Start a search because we've triggered via the menu
-        if(fromIntent != null && toIntent != null) {
-            startSearchForDepartures()
+            setSelectionByStationName("Sheffield")
         }
     }
 
@@ -168,15 +161,7 @@ class DepartureSearchActivity : AppCompatActivity(), ErrorView {
             true
         }
         R.id.app_bar_search -> {
-            // startSearchForDepartures()
-            startActivity(Intent(this, DepartureSearchActivity::class.java).apply {
-
-                val from = search_criteria_from_auto_complete.selectedItem as StationCode
-                putExtra(FROM_NAME, from.stationName)
-
-                val to = search_criteria_to_auto_complete.selectedItem as StationCode
-                putExtra(TO_NAME, to.stationName)
-            })
+             startSearchForDepartures()
             true
         }
         R.id.app_bar_toggle -> {
@@ -207,7 +192,7 @@ class DepartureSearchActivity : AppCompatActivity(), ErrorView {
             }
             is Try.Failure -> {
                 Log.e(TAG, "Unable to get access token", accessToken.exception)
-                handleErrorView(accessToken.exception)
+                handleError(accessToken.exception)
             }
         }
     }
@@ -233,18 +218,20 @@ class DepartureSearchActivity : AppCompatActivity(), ErrorView {
             }
             is Failure -> {
                 Log.e(TAG, "Unable to search for departures", results.exception)
-                handleErrorView(results.exception)
+                handleError(results.exception)
             }
         }
     }
 
-    private fun handleErrorView(error: Throwable?) = GlobalScope.launch(Dispatchers.Main)  {
+    private fun handleError(error: Throwable) {
 
         // Turn off the spinner
-        search_results_refresh_layout.isRefreshing = false
+        GlobalScope.launch(Dispatchers.Main) {
+            search_results_refresh_layout.isRefreshing = false
+        }
 
-        // Update the error view
-        displayErrorView(error)
+        // Start the error activity
+        startErrorActivity(error)
     }
 
     private fun displaySearchResultsView(serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
