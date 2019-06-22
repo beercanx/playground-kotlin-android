@@ -2,7 +2,7 @@ package uk.co.baconi.pka.td
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import arrow.core.Try
 import uk.co.baconi.pka.td.errors.ErrorActivity
 import uk.co.baconi.pka.td.errors.toErrorParcel

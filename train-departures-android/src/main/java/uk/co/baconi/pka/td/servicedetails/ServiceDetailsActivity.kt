@@ -1,8 +1,8 @@
 package uk.co.baconi.pka.td.servicedetails
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import arrow.core.Try.Failure
 import arrow.core.Try.Success
 import kotlinx.android.synthetic.main.content_app_bar_layout.*

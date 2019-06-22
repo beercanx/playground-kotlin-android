@@ -1,7 +1,7 @@
 package uk.co.baconi.pka.td.errors
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.content_app_bar_layout.*
 import kotlinx.android.synthetic.main.content_error.*
 import uk.co.baconi.pka.td.R

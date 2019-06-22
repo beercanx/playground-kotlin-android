@@ -1,43 +1,45 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
+        app:key="nre_api_key"
+        app:title="@string/pref_title_nre_api_key_title"
         android:capitalize="none"
         android:inputType="textNoSuggestions"
-        android:key="nre_api_key"
         android:maxLines="1"
         android:minLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="false"
-        android:maxLength="45"
-        android:title="@string/pref_title_nre_api_key_title" />
+        android:maxLength="45" />
 
-    <SwitchPreference
-        android:key="enable_coloured_avatars"
-        android:defaultValue="true"
-        android:title="@string/pref_enable_coloured_avatars_title" />
+    <androidx.preference.SwitchPreferenceCompat
+        app:key="enable_coloured_avatars"
+        app:title="@string/pref_enable_coloured_avatars_title"
+        app:defaultValue="true" />
 
-    <SwitchPreference
-        android:key="enable_coloured_departure_times"
-        android:defaultValue="true"
-        android:title="@string/pref_enable_coloured_departure_times_title" />
+    <androidx.preference.SwitchPreferenceCompat
+        app:key="enable_coloured_departure_times"
+        app:title="@string/pref_enable_coloured_departure_times_title"
+        app:defaultValue="true" />
 
-    <SwitchPreference
-        android:key="enable_speaking_first_result"
-        android:defaultValue="true"
-        android:title="@string/pref_enable_speaking_first_result_title" />
-
-    <ListPreference
-        android:key="which_search_type"
-        android:defaultValue="MULTIPLE_RESULTS"
-        android:title="@string/pref_which_search_type_title"
-        android:entries="@array/pref_which_search_type_labels"
-        android:entryValues="@array/pref_which_search_type_values"/>
+    <androidx.preference.SwitchPreferenceCompat
+        app:key="enable_speaking_first_result"
+        app:title="@string/pref_enable_speaking_first_result_title"
+        app:defaultValue="true" />
 
     <ListPreference
-        android:key="which_speech_type"
-        android:defaultValue="PAUSE_OTHER_SOUNDS"
-        android:title="@string/pref_which_speech_type_title"
-        android:entries="@array/pref_which_speech_type_labels"
-        android:entryValues="@array/pref_which_speech_type_values"/>
+        app:key="which_search_type"
+        app:title="@string/pref_which_search_type_title"
+        app:defaultValue="MULTIPLE_RESULTS"
+        app:entries="@array/pref_which_search_type_labels"
+        app:entryValues="@array/pref_which_search_type_values"/>
 
-</PreferenceScreen>
+    <ListPreference
+        app:key="which_speech_type"
+        app:title="@string/pref_which_speech_type_title"
+        app:defaultValue="PAUSE_OTHER_SOUNDS"
+        app:entries="@array/pref_which_speech_type_labels"
+        app:entryValues="@array/pref_which_speech_type_values"/>
+
+</androidx.preference.PreferenceScreen>

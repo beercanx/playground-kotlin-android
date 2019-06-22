@@ -8,12 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import arrow.core.Failure
 import arrow.core.Success
 import arrow.core.Try
@@ -32,7 +32,6 @@ import uk.co.baconi.pka.tdb.StationCode
 import uk.co.baconi.pka.tdb.StationCodes
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 import java.util.*
-
 
 class DepartureSearchActivity : AppCompatActivity() {
 
