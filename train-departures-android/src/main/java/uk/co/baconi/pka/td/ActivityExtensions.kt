@@ -1,5 +1,6 @@
 package uk.co.baconi.pka.td
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import arrow.core.Try
@@ -20,10 +21,19 @@ fun AppCompatActivity.provideAccessToken(): Try<AccessToken> = Try {
 }
 
 /**
- * Start an error activity for a given Throwable
+ * Start an activity in a more Kotlin dsl way.
  */
-fun AppCompatActivity.startErrorActivity(throwable: Throwable) {
-    startActivity(Intent(this, ErrorActivity::class.java).apply {
-        putExtra(ErrorActivity.ERROR_PARCEL, throwable.toErrorParcel())
+inline fun <reified A> Context.startActivity(block: Intent.() -> Unit = {}) {
+    startActivity(Intent(this, A::class.java).apply {
+        block()
     })
+}
+
+/**
+ * Start an error activity for a given Throwable.
+ */
+fun Context.startErrorActivity(throwable: Throwable) {
+    startActivity<ErrorActivity> {
+        putExtra(ErrorActivity.ERROR_PARCEL, throwable.toErrorParcel())
+    }
 }

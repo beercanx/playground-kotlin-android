@@ -1,7 +1,6 @@
 package uk.co.baconi.pka.td
 
 import android.content.Context
-import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
@@ -157,7 +156,7 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.app_bar_preferences -> {
-            startActivity(Intent(this, SettingsActivity::class.java))
+            startActivity<SettingsActivity>()
             true
         }
         R.id.app_bar_search -> {

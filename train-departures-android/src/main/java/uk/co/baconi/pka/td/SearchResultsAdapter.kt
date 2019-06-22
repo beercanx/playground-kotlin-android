@@ -1,14 +1,13 @@
 package uk.co.baconi.pka.td
 
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity.Companion.SERVICE_ID
 import uk.co.baconi.pka.td.settings.Settings
+import uk.co.baconi.pka.td.settings.SettingsActivity
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
 class SearchResultsAdapter(
@@ -113,10 +112,9 @@ class SearchResultsAdapter(
         }
 
         holder.layout.setOnClickListener {
-            val intent = Intent(holder.layout.context, ServiceDetailsActivity::class.java).apply {
+            holder.layout.context.startActivity<SettingsActivity> {
                 putExtra(SERVICE_ID, service.serviceID)
             }
-            holder.layout.context.startActivity(intent)
         }
     }
 
