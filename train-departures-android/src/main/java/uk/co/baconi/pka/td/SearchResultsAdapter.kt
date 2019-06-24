@@ -86,8 +86,8 @@ class SearchResultsAdapter(
             }
         }
 
-        val statusColour = context.getColorCompat(statusColourId)
-        val defaultStatusColour = context.getColorCompat(R.color.search_result_departure_time_default)
+        val statusColour = context.getColourCompat(statusColourId)
+        val defaultStatusColour = context.getColourCompat(R.color.search_result_departure_time_default)
 
         // TODO - Make up mind on colour by platform or status
         // TODO - Make up mind on coloring just text or background or both

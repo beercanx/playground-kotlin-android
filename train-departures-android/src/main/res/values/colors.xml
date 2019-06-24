@@ -10,4 +10,9 @@
     <color name="search_result_departure_time_delayed">#FFAB00</color>
     <color name="search_result_departure_time_estimated">#FF6D00</color>
     <color name="search_result_departure_time_cancelled">#D50000</color>
+
+    <color name="service_details_calling_point_previous">#FF8A65</color>
+    <color name="service_details_calling_point_current">#81C784</color>
+    <color name="service_details_calling_point_subsequent">#DCE775</color>
+    <color name="service_details_calling_point_connection">#BA68C8</color>
 </resources>

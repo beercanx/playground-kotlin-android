@@ -13,7 +13,7 @@ fun Context.getCurrentLocale(): Locale {
     }
 }
 
-fun Context.getColorCompat(@ColorRes id: Int): Int {
+fun Context.getColourCompat(@ColorRes id: Int): Int {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         getColor(id)
     } else {
