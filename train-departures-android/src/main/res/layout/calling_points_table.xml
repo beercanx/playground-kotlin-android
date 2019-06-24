@@ -1,0 +1,45 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="1,2">
+
+    <TableRow android:id="@+id/calling_point_origin">
+
+        <TextView
+            android:text="@string/_07_38"
+            android:textStyle="bold" />
+
+        <ImageView android:contentDescription="@string/origin" />
+
+        <TextView android:text="@string/leeds_non_time" />
+
+    </TableRow>
+
+    <TableRow android:id="@+id/calling_point_current">
+
+        <TextView
+            android:text="@string/_08_27"
+            android:textStyle="bold" />
+
+        <ImageView android:contentDescription="@string/current" />
+
+        <TextView android:text="@string/meadowhall_nexp_08_29" />
+
+    </TableRow>
+
+    <TableRow android:id="@+id/calling_point_destination">
+
+        <TextView
+            android:text="@string/_09_48"
+            android:textStyle="bold" />
+
+        <ImageView android:contentDescription="@string/destination" />
+
+        <TextView android:text="@string/lincoln_central_nexp_09_52" />
+
+    </TableRow>
+
+</TableLayout>
