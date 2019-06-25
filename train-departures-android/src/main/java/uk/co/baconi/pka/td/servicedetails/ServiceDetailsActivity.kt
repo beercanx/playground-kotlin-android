@@ -11,6 +11,7 @@ import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updatePadding
 import arrow.core.Try.Failure
 import arrow.core.Try.Success
 import kotlinx.android.synthetic.main.content_app_bar_layout.*
@@ -56,6 +57,8 @@ class ServiceDetailsActivity : AppCompatActivity() {
                 startErrorActivity(accessToken.exception)
             }
         }
+
+        // TODO - Implement a refresh layout to enable reloading with new data (to update the calling points)
 
         // TODO - Implement a back other than device back button?
     }
@@ -140,6 +143,7 @@ class ServiceDetailsActivity : AppCompatActivity() {
                     setGravity(Gravity.FILL_VERTICAL)
                     width = resources.getDimension(R.dimen.service_details_calling_points_image_width).toInt()
                 }
+                updatePadding(top = 15, bottom = 15) // TODO - Work out if this is required, do we need to adjust the drawing instead?
             }
 
             // Create each calling point on a new row

@@ -21,12 +21,15 @@ class CallingPointsDrawable(
 
     private val previousColour: Paint = Paint().apply {
         color = context.getColourCompat(R.color.service_details_calling_point_previous)
+        configureAsStroke()
     }
     private val currentColour: Paint = Paint().apply {
         color = context.getColourCompat(R.color.service_details_calling_point_current)
+        configureAsStroke()
     }
     private val subsequentColour: Paint = Paint().apply {
         color = context.getColourCompat(R.color.service_details_calling_point_subsequent)
+        configureAsStroke()
     }
     private val connectionColour: Paint = Paint().apply {
         color = context.getColourCompat(R.color.service_details_calling_point_connection)
@@ -45,15 +48,26 @@ class CallingPointsDrawable(
 
         val radius: Float = min(singleCellWidth, singleCellHeight) / 2f
 
+        // Update paint colours to know how wide the stroke should be.
+        val strokeWidth = radius / 3f
+        currentColour.strokeWidth = strokeWidth
+        previousColour.strokeWidth = strokeWidth
+        subsequentColour.strokeWidth = strokeWidth
+
         val cellCentreX = singleCellWidth + (singleCellWidth / 2f)
         val cellCentreY = singleCellHeight / 2f
 
-        val lastCellCentreY = cellCentreY + (singleCellHeight * (all.lastIndex * 2f))
+        val calculateCellCentreY = { index: Int -> cellCentreY + (singleCellHeight * (index * 2f)) }
+
+        val lastCellCentreY = calculateCellCentreY(all.lastIndex)
 
         canvas.drawLine(cellCentreX, cellCentreY, cellCentreX, lastCellCentreY, connectionColour)
 
         // TODO - Consider marking start point, based on search details
         // TODO - Consider marking endpoint point, based on search details
+
+        // TODO - Change colouring based on being 'on time', delayed or cancelled
+        // TODO - Fill in the circles once a train as departed that calling point
 
         all.forEachIndexed { index, entry ->
 
@@ -64,7 +78,14 @@ class CallingPointsDrawable(
                 else -> connectionColour
             }
 
-            canvas.drawCircle(cellCentreX, cellCentreY + (singleCellHeight * (index * 2f)), radius, colour)
+            val adjustedCellCentreY = calculateCellCentreY(index)
+
+            val left = cellCentreX - radius
+            val right = cellCentreX + radius
+            val top = adjustedCellCentreY - radius
+            val bottom = adjustedCellCentreY + radius
+
+            canvas.drawArc(left, top, right, bottom, 0f, 360f, false, colour)
         }
     }
 
@@ -79,4 +100,10 @@ class CallingPointsDrawable(
     override fun getOpacity(): Int =
         // Must be PixelFormat.UNKNOWN, TRANSLUCENT, TRANSPARENT, or OPAQUE
         PixelFormat.OPAQUE
+
+    private fun Paint.configureAsStroke() {
+        isAntiAlias = true
+        strokeCap = Paint.Cap.ROUND
+        style = Paint.Style.STROKE
+    }
 }
