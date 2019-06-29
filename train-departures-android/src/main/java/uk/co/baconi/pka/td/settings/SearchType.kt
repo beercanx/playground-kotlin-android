@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.td
+package uk.co.baconi.pka.td.settings
 
 enum class SearchType {
     SINGLE_RESULT,

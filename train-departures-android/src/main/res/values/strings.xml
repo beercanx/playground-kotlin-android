@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Train Departures</string>
 
-    <string name="title_activity_departure_search">@string/app_name</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_departure_search">Train Departures</string>
+    <string name="title_activity_settings">Train Departures - Settings</string>
+    <string name="title_activity_service_details">Train Departures - Service Details</string>
+    <string name="title_activity_error">Train Departures - Error</string>
 
     <string name="menu_toolbar_preferences">Settings</string>
     <string name="menu_toolbar_search">Search</string>
@@ -12,6 +14,7 @@
     <string name="search_criteria_to_label">To:</string>
 
     <string name="search_result_delayed">delayed</string>
+    <string name="search_result_no_report">no report</string>
     <string name="search_result_cancelled">cancelled</string>
 
     <string name="search_result_destination">%1$s (%2$s)</string>
@@ -26,5 +29,35 @@
 
     <string name="search_result_ticker_line_with_platform_cancelled">The %1$s to %2$s on platform %3$s has been cancelled.</string>
     <string name="search_result_ticker_line_no_platform_cancelled">The %1$s to %2$s has been cancelled.</string>
+
+    <string name="service_details_generated_at_label">Generated At:</string>
+    <string name="service_details_type_label">Service Type:</string>
+    <string name="service_details_location_label">Location Name:</string>
+    <string name="service_details_crs_label">CRS:</string>
+    <string name="service_details_operator_label">Operator:</string>
+    <string name="service_details_operator_code_label">Operator Code:</string>
+    <string name="service_details_rsid_label">RSID:</string>
+    <string name="service_details_delay_reason_label">Delay Reason:</string>
+    <string name="service_details_cancel_reason_label">Cancel Reason:</string>
+    <string name="service_details_cancelled_label">Cancelled:</string>
+    <string name="service_details_overdue_message_label">Overdue Message:</string>
+    <string name="service_details_length_label">Length:</string>
+    <string name="service_details_detach_front_label">Detach at front:</string>
+    <string name="service_details_reverse_formation_label">Reverse Formation:</string>
+    <string name="service_details_platform_label">Platform:</string>
+    <string name="service_details_sta_label">Scheduled Arrival:</string>
+    <string name="service_details_eta_label">Estimated Arrival:</string>
+    <string name="service_details_ata_label">Actual Arrival:</string>
+    <string name="service_details_std_label">Scheduled Departure:</string>
+    <string name="service_details_etd_label">Estimated Departure:</string>
+    <string name="service_details_atd_label">Actual Departure:</string>
+    <string name="service_details_adhoc_alerts_label">Adhoc Alerts:</string>
+    <string name="service_details_formation_label">Formation:</string>
+    <string name="service_details_calling_points_image_description">Calling Points</string>
+    <string name="service_details_calling_points_station_and_actual">%1s\n%2s</string>
+
+    <string name="error_class_label">Error:</string>
+    <string name="error_message_label">Message:</string>
+    <string name="error_stacktrace_label">Stacktrace:</string>
 
 </resources>

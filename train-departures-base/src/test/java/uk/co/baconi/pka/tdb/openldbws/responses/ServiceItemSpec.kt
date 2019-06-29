@@ -51,7 +51,7 @@ class ServiceItemSpec : StringSpec({
         "isReverseFormation" to false,
         "cancelReason" to "test-cancelReason-value",
         "delayReason" to "test-delayReason-value"
-    ).forEach { tag, value ->
+    ).forEach { (tag, value) ->
         "Should decode with $tag field present" {
             val field = ServiceItem::class.memberProperties.find { property -> property.name == tag }
             field?.get(underTest(tag, value)) shouldBe value
@@ -63,12 +63,12 @@ class ServiceItemSpec : StringSpec({
         "destination" to "location",
         "currentOrigins" to "location",
         "currentDestinations" to "location"
-    ).forEach { tag, innerTag ->
+    ).forEach { (tag, innerTag) ->
         "Should decode with $tag field present" {
             val field = ServiceItem::class.memberProperties.find { property -> property.name == tag }
             field?.get(underTest(tag, "")) shouldBe beEmpty<ServiceLocation>()
             (field?.get(underTest(tag, "<$innerTag/>")) as List<*>).first() should beInstanceOf<ServiceLocation>()
-            (field.get(underTest(tag, "<$innerTag></$innerTag>")) as List<*>).first() should beInstanceOf<ServiceLocation>()
+            (field?.get(underTest(tag, "<$innerTag></$innerTag>")) as List<*>).first() should beInstanceOf<ServiceLocation>()
         }
     }
 

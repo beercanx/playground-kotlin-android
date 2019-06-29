@@ -1,12 +1,14 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
+import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsResponse
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class BodyFailure(val fault: Fault? = null) : Body()
 data class BodySuccess(
     val departuresResponse: BaseDeparturesResponse? = null,
-    val departureBoardResponse: BaseDepartureBoardResponse? = null
+    val departureBoardResponse: BaseDepartureBoardResponse? = null,
+    val serviceDetailsResponse: ServiceDetailsResponse? = null
 ) : Body()
 
 sealed class Body {
@@ -50,6 +52,9 @@ sealed class Body {
                     )
                     "GetDepBoardWithDetailsResponse" -> result = BodySuccess(
                         departureBoardResponse = BaseDepartureBoardResponse.fromXml(parser, "GetDepBoardWithDetailsResponse")
+                    )
+                    "GetServiceDetailsResponse" -> result = BodySuccess(
+                        serviceDetailsResponse = ServiceDetailsResponse.fromXml(parser)
                     )
                     else -> parser.skip()
                 }

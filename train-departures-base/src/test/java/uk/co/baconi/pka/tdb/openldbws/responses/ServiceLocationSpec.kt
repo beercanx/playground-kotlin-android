@@ -35,7 +35,7 @@ class ServiceLocationSpec : StringSpec({
         "via" to "test-via",
         "futureChangeTo" to "test-futureChangeTo",
         "assocIsCancelled" to false
-    ).forEach { tag, value ->
+    ).forEach { (tag, value) ->
         "Should decode with $tag field present" {
             val field = ServiceLocation::class.memberProperties.find { property -> property.name == tag }
             field?.get(underTest(tag, value)) shouldBe value

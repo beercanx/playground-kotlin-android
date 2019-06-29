@@ -3,7 +3,6 @@ package uk.co.baconi.pka.tdb
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import kotlinx.coroutines.runBlocking
-import java.lang.RuntimeException
 
 class ActionsSpec : StringSpec({
 
@@ -19,7 +18,7 @@ class ActionsSpec : StringSpec({
     // Disabled as this was being used for local testing
     "[Integration Test] Call service and print out the results".config(enabled = false) {
         runBlocking {
-            val result = Actions.getNextDepartures(accessToken, from, to)
+            val result = Actions.getFastestTrainDeparture(accessToken, from, to)
 
             result shouldNotBe null
 

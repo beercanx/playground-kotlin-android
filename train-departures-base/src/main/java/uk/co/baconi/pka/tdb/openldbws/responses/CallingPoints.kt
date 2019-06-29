@@ -1,8 +1,6 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
-import uk.co.baconi.pka.tdb.xml.readAsInt
-import uk.co.baconi.pka.tdb.xml.readAsText
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class CallingPoints(

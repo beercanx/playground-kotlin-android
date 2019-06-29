@@ -48,7 +48,7 @@ class BodySpec : StringSpec({
     listOf(
         "GetNextDeparturesResponse",
         "GetNextDeparturesWithDetailsResponse",
-        //"GetServiceDetailsResponse", // TODO - Implement ability to send request and decode response
+        "GetServiceDetailsResponse",
         "GetFastestDeparturesResponse",
         "GetFastestDeparturesWithDetailsResponse",
         "GetDepartureBoardResponse",

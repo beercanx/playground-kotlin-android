@@ -3,7 +3,6 @@ package uk.co.baconi.pka.tdb.openldbws.responses
 import io.kotlintest.matchers.beInstanceOf
 import io.kotlintest.should
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import uk.co.baconi.pka.tdb.xml.XmlParser
 

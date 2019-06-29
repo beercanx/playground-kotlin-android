@@ -1,20 +1,25 @@
 package uk.co.baconi.pka.td
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity
+import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity.Companion.SERVICE_ID
+import uk.co.baconi.pka.td.settings.Settings
 import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
-class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
+class SearchResultsAdapter(
+    private val searchResults: MutableList<ServiceItem>
+) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder.
     // Each data item is just a string in this case that is shown in a TextView.
     class SearchResultsViewHolder(
-        layout: View,
+        val layout: View,
         val avatar: TextView,
         val destination: TextView,
         val tickerLine: TextView,
@@ -26,7 +31,7 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultsViewHolder {
 
         // create a new view
-        val layout = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item, parent, false)
+        val layout = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_departure_result, parent, false)
 
         val avatar: TextView = layout.findViewById(R.id.search_result_avatar)
         val destination: TextView = layout.findViewById(R.id.search_result_destination)
@@ -52,13 +57,18 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
                 Pair(
                     service.std,
                     R.color.search_result_departure_time_etd_unknown
-
                 )
             }
             "On time" -> {
                 Pair(
                     service.std,
                     R.color.search_result_departure_time_on_time
+                )
+            }
+            "No report" -> {
+                Pair(
+                    context.getString(R.string.search_result_no_report),
+                    R.color.search_result_departure_time_no_report
                 )
             }
             "Delayed" -> {
@@ -81,8 +91,8 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
             }
         }
 
-        val statusColour = context.getColorCompat(statusColourId)
-        val defaultStatusColour = context.getColorCompat(R.color.search_result_departure_time_default)
+        val statusColour = context.getColourCompat(statusColourId)
+        val defaultStatusColour = context.getColourCompat(R.color.search_result_departure_time_default)
 
         // TODO - Make up mind on colour by platform or status
         // TODO - Make up mind on coloring just text or background or both
@@ -104,6 +114,12 @@ class SearchResultsAdapter(private val searchResults: MutableList<ServiceItem>) 
             holder.departureTime.setTextColor(statusColour)
         } else {
             holder.departureTime.setTextColor(defaultStatusColour)
+        }
+
+        holder.layout.setOnClickListener {
+            holder.layout.context.startActivity<ServiceDetailsActivity> {
+                putExtra(SERVICE_ID, service.serviceID)
+            }
         }
     }
 

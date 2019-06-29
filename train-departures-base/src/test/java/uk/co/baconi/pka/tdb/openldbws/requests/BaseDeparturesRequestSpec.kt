@@ -16,7 +16,7 @@ class BaseDeparturesRequestSpec : StringSpec({
         "GetNextDeparturesWithDetails" to GetNextDeparturesWithDetailsRequest(accessToken, from, to),
         "GetFastestDepartures" to GetFastestDeparturesRequest(accessToken, from, to),
         "GetFastestDeparturesWithDetails" to GetFastestDeparturesWithDetailsRequest(accessToken, from, to)
-    ).forEach { type, request ->
+    ).forEach { (type, request) ->
 
         "Should serialise into XML for type [$type]" {
 

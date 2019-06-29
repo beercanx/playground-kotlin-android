@@ -18,6 +18,9 @@ android {
     lintOptions {
         isCheckReleaseBuilds = false
     }
+    androidExtensions {
+        isExperimental = true
+    }
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = true // runProguard
@@ -40,20 +43,23 @@ dependencies {
 
     implementation(project(":train-departures-base"))
 
+    // https://github.com/arrow-kt/arrow
+    implementation("io.arrow-kt:arrow-core:0.8.2") // TODO - Work out why its having to be manually added
+
     implementation(kotlin("stdlib-jdk7"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1")
 
-    val androidSupportVersion = "28.0.0"
-    implementation("com.android.support:appcompat-v7:$androidSupportVersion")
-    implementation("com.android.support:design:$androidSupportVersion")
-    implementation("com.android.support:support-v4:$androidSupportVersion")
-    implementation("com.android.support:recyclerview-v7:$androidSupportVersion")
-    implementation("com.android.support:support-annotations:$androidSupportVersion")
-
-    implementation("com.android.support.constraint:constraint-layout:1.1.3")
+    implementation("androidx.core:core-ktx:1.0.2")
+    implementation("androidx.preference:preference-ktx:1.0.0")
+    implementation("androidx.fragment:fragment-ktx:1.0.0")
+    implementation("androidx.appcompat:appcompat:1.0.2")
+    implementation("com.google.android.material:material:1.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.0.0")
+    implementation("androidx.annotation:annotation:1.1.0")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
 
     testImplementation("junit:junit:4.12")
 
-    androidTestImplementation("com.android.support.test:runner:1.0.2")
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2")
+    androidTestImplementation("androidx.test:runner:1.2.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
 }
