@@ -57,7 +57,6 @@ class SearchResultsAdapter(
                 Pair(
                     service.std,
                     R.color.search_result_departure_time_etd_unknown
-
                 )
             }
             "On time" -> {
@@ -70,7 +69,6 @@ class SearchResultsAdapter(
                 Pair(
                     context.getString(R.string.search_result_no_report),
                     R.color.search_result_departure_time_no_report
-
                 )
             }
             "Delayed" -> {

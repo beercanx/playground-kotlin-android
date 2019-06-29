@@ -2,6 +2,7 @@
   <dictionary name="playground">
     <words>
       <w>adhoc</w>
+      <w>baconi</w>
       <w>cleethorpes</w>
       <w>coroutines</w>
       <w>deserialise</w>
@@ -11,6 +12,7 @@
       <w>multiplatform</w>
       <w>openldbws</w>
       <w>rsid</w>
+      <w>servicedetails</w>
     </words>
   </dictionary>
 </component>
