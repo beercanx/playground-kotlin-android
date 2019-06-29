@@ -14,6 +14,7 @@
     <string name="search_criteria_to_label">To:</string>
 
     <string name="search_result_delayed">delayed</string>
+    <string name="search_result_no_report">no report</string>
     <string name="search_result_cancelled">cancelled</string>
 
     <string name="search_result_destination">%1$s (%2$s)</string>

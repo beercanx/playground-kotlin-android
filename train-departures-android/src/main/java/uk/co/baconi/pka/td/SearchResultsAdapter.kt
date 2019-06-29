@@ -66,6 +66,13 @@ class SearchResultsAdapter(
                     R.color.search_result_departure_time_on_time
                 )
             }
+            "No report" -> {
+                Pair(
+                    context.getString(R.string.search_result_no_report),
+                    R.color.search_result_departure_time_no_report
+
+                )
+            }
             "Delayed" -> {
                 Pair(
                     context.getString(R.string.search_result_delayed),
