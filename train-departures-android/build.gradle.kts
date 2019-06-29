@@ -23,7 +23,7 @@ android {
     }
     buildTypes {
         getByName("debug") {
-            isMinifyEnabled = true // runProguard
+            isMinifyEnabled = false
             isZipAlignEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }

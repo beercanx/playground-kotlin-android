@@ -54,10 +54,15 @@
     <string name="service_details_adhoc_alerts_label">Adhoc Alerts:</string>
     <string name="service_details_formation_label">Formation:</string>
     <string name="service_details_calling_points_image_description">Calling Points</string>
-    <string name="service_details_calling_points_station_and_actual">%1s\n%2s</string>
 
     <string name="error_class_label">Error:</string>
     <string name="error_message_label">Message:</string>
     <string name="error_stacktrace_label">Stacktrace:</string>
+    <string name="service_details_calling_points_time">Time</string>
+    <string name="service_details_calling_points_status">Status</string>
+    <string name="service_details_calling_points_station">Station</string>
+    <string name="service_details_calling_points_schedule">Schedule</string>
+    <string name="service_details_calling_points_status_departed">Departed</string>
+    <string name="service_details_calling_points_status_expected">Expected</string>
 
 </resources>

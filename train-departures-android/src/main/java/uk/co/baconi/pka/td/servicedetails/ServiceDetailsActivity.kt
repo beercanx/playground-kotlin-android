@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
@@ -127,46 +128,85 @@ class ServiceDetailsActivity : AppCompatActivity() {
         service_details_calling_points.apply {
 
             // Set the maximum number of rows
-            rowCount = allCallingPoints.size
+            rowCount = allCallingPoints.size + 1
+
+            addView(::TextView) {
+                text = context.getString(R.string.service_details_calling_points_schedule)
+                setTypeface(typeface, Typeface.BOLD)
+                addGridLayout(row = 0, column = 0)
+            }
+
+            addView(::Space) {
+                addGridLayout(row = 0, column = 1)
+            }
+
+            addView(::TextView) {
+                text = context.getString(R.string.service_details_calling_points_station)
+                setTypeface(typeface, Typeface.BOLD)
+                addGridLayout(row = 0, column = 2)
+            }
+
+            addView(::TextView) {
+                text = context.getString(R.string.service_details_calling_points_status)
+                setTypeface(typeface, Typeface.BOLD)
+                addGridLayout(row = 0, column = 3)
+            }
+
+            addView(::TextView) {
+                text = context.getString(R.string.service_details_calling_points_time)
+                setTypeface(typeface, Typeface.BOLD)
+                addGridLayout(row = 0, column = 4)
+            }
 
             // Create the "tube map" for the calling points
             addView(::ImageView){
-                setImageDrawable(
-                    CallingPointsDrawable(
-                        context, previousCallingPoints, currentCallingPoint, subsequentCallingPoints, allCallingPoints
-                    )
-                )
+                setImageDrawable(CallingPointsDrawable(context, allCallingPoints))
                 contentDescription = resources.getString(R.string.service_details_calling_points_image_description)
-                layoutParams = GridLayout.LayoutParams().apply {
-                    rowSpec = GridLayout.spec(0, rowCount) // Span across every row
-                    columnSpec = GridLayout.spec(1)
+                updatePadding(top = 5, bottom = 5)
+                addGridLayout(column = 1) {
+                    rowSpec = GridLayout.spec(1, allCallingPoints.size) // Span across every row
                     setGravity(Gravity.FILL_VERTICAL)
                     width = resources.getDimension(R.dimen.service_details_calling_points_image_width).toInt()
                 }
-                updatePadding(top = 15, bottom = 15) // TODO - Work out if this is required, do we need to adjust the drawing instead?
             }
 
             // Create each calling point on a new row
             allCallingPoints.forEachIndexed { index, (locationName, _, scheduledTime, estimatedTime, actualTime) ->
 
+                val row = index + 1
+
                 addView(::TextView) {
                     text = scheduledTime
                     setTypeface(typeface, Typeface.BOLD)
-                    layoutParams = GridLayout.LayoutParams().apply {
-                        rowSpec = GridLayout.spec(index)
-                        columnSpec = GridLayout.spec(0)
+                    gravity = Gravity.CENTER_HORIZONTAL
+                    addGridLayout(row, column = 0) {
+                        setGravity(Gravity.FILL)
                     }
                 }
 
-                val actual = estimatedTime ?: actualTime
+                addView(::TextView) {
+                    text = locationName
+                    updatePadding(right = 25)
+                    addGridLayout(row, column = 2) {
+                        setGravity(Gravity.FILL)
+                    }
+                }
 
                 addView(::TextView) {
-                    text = context.getString(
-                        R.string.service_details_calling_points_station_and_actual, locationName, actual
-                    )
-                    layoutParams = GridLayout.LayoutParams().apply {
-                        rowSpec = GridLayout.spec(index)
-                        columnSpec = GridLayout.spec(2)
+                    text = if(estimatedTime == null) {
+                        context.getString(R.string.service_details_calling_points_status_departed)
+                    } else {
+                        context.getString(R.string.service_details_calling_points_status_expected)
+                    }
+                    updatePadding(right = 25)
+                    addGridLayout(row, column = 3) {
+                        setGravity(Gravity.FILL)
+                    }
+                }
+
+                addView(::TextView) {
+                    text = estimatedTime ?: actualTime
+                    addGridLayout(row, column = 4) {
                         setGravity(Gravity.FILL)
                     }
                 }
@@ -174,10 +214,18 @@ class ServiceDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun <A: ViewGroup, B : View> A.addView(factory: (Context) -> B, body: B.() -> Unit) {
+    private fun <A : View> ViewGroup.addView(factory: (Context) -> A, body: A.() -> Unit = {}) {
         val view = factory(context)
         view.body()
         addView(view)
+    }
+
+    private fun View.addGridLayout(row: Int = 0, column: Int = 0, body: GridLayout.LayoutParams.() -> Unit = {}) {
+        layoutParams = GridLayout.LayoutParams().apply {
+            rowSpec = GridLayout.spec(row)
+            columnSpec = GridLayout.spec(column)
+            body()
+        }
     }
 
     private fun ServiceDetailsResult.toCallingPoint(): CallingPoint = CallingPoint(

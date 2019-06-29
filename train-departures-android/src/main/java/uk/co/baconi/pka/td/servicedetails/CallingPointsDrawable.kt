@@ -13,9 +13,6 @@ import kotlin.math.min
 
 class CallingPointsDrawable(
     private val context: Context,
-    private val previous: List<CallingPoint>,
-    private val current: CallingPoint,
-    private val subsequent: List<CallingPoint>,
     private val all: List<CallingPoint>
 ): Drawable() {
 
