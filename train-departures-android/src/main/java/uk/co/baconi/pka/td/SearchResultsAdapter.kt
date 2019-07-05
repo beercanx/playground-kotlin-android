@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import uk.co.baconi.pka.td.DepartureStatus.*
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity.Companion.SERVICE_ID
 import uk.co.baconi.pka.td.settings.Settings
@@ -52,38 +53,38 @@ class SearchResultsAdapter(
         val destinationName = destination?.locationName
         val destinationCrs = destination?.crs
 
-        val (departureTimeText: String?, statusColourId: Int) = when(service.etd) {
+        val (departureTimeText: String?, statusColourId: Int) = when(service.departureStatus) {
             null -> { // Not present
                 Pair(
                     service.std,
                     R.color.search_result_departure_time_etd_unknown
                 )
             }
-            "On time" -> {
+            ON_TIME -> {
                 Pair(
                     service.std,
                     R.color.search_result_departure_time_on_time
                 )
             }
-            "No report" -> {
+            NO_REPORT -> {
                 Pair(
                     context.getString(R.string.search_result_no_report),
                     R.color.search_result_departure_time_no_report
                 )
             }
-            "Delayed" -> {
+            DELAYED -> {
                 Pair(
                     context.getString(R.string.search_result_delayed),
                     R.color.search_result_departure_time_delayed
                 )
             }
-            "Cancelled" -> {
+            CANCELLED -> {
                 Pair(
                     context.getString(R.string.search_result_cancelled),
                     R.color.search_result_departure_time_cancelled
                 )
             }
-            else -> { // Estimated
+            HH_MM -> { // Estimated
                 Pair(
                     service.etd,
                     R.color.search_result_departure_time_estimated
