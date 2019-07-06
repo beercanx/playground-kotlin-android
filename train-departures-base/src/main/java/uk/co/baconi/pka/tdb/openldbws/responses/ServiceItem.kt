@@ -1,10 +1,7 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
-import uk.co.baconi.pka.tdb.xml.readAsBoolean
-import uk.co.baconi.pka.tdb.xml.readAsInt
-import uk.co.baconi.pka.tdb.xml.readAsText
-import uk.co.baconi.pka.tdb.xml.skip
+import uk.co.baconi.pka.tdb.xml.*
 
 /**
  * Covers both ServiceItem and ServiceItemWithCallingPoints (for parents of type WithDetails)
@@ -40,50 +37,36 @@ data class ServiceItem(
 
     companion object {
 
-        internal fun fromXml(parser: XmlPullParser): ServiceItem {
-
-            parser.require(XmlPullParser.START_TAG, null, "service")
-
-            var result = ServiceItem()
-            
-            while (parser.next() != XmlPullParser.END_TAG) {
-                if (parser.eventType != XmlPullParser.START_TAG) {
-                    continue
-                }
-                when (parser.name) {
-                    "sta" -> result = result.copy(sta = parser.readAsText())
-                    "eta" -> result = result.copy(eta = parser.readAsText())
-                    "std" -> result = result.copy(std = parser.readAsText())
-                    "etd" -> result = result.copy(etd = parser.readAsText())
-                    "platform" -> result = result.copy(platform = parser.readAsText())
-                    "operator" -> result = result.copy(operator = parser.readAsText())
-                    "operatorCode" -> result = result.copy(operatorCode = parser.readAsText())
-                    "serviceType" -> result = result.copy(serviceType = parser.readAsText())
-                    "serviceID" -> result = result.copy(serviceID = parser.readAsText())
-                    "rsid" -> result = result.copy(rsid = parser.readAsText())
-                    "isCircularRoute" -> result = result.copy(isCircularRoute = parser.readAsBoolean())
-                    "isCancelled" -> result = result.copy(isCancelled = parser.readAsBoolean())
-                    "filterLocationCancelled" -> result = result.copy(filterLocationCancelled = parser.readAsBoolean())
-                    "length" -> result = result.copy(length = parser.readAsInt())
-                    "detachFront" -> result = result.copy(detachFront = parser.readAsBoolean())
-                    "isReverseFormation" -> result = result.copy(isReverseFormation = parser.readAsBoolean())
-                    "cancelReason" -> result = result.copy(cancelReason = parser.readAsText())
-                    "delayReason" -> result = result.copy(delayReason = parser.readAsText())
-                    "adhocAlerts" -> result = result.copy(adhocAlerts = AdhocAlerts.fromXml(parser))
-                    "formation" -> result = result.copy(formation = FormationData.fromXml(parser))
-                    "origin" -> result = result.copy(origin = ServiceLocations.fromXml(parser, "origin"))
-                    "destination" -> result = result.copy(destination = ServiceLocations.fromXml(parser, "destination"))
-                    "currentOrigins" -> result = result.copy(currentOrigins = ServiceLocations.fromXml(parser, "currentOrigins"))
-                    "currentDestinations" -> result = result.copy(currentDestinations = ServiceLocations.fromXml(parser, "currentDestinations"))
-                    "previousCallingPoints" -> result = result.copy(previousCallingPoints = CallingPoints.fromXml(parser, "previousCallingPoints"))
-                    "subsequentCallingPoints" -> result = result.copy(subsequentCallingPoints = CallingPoints.fromXml(parser, "subsequentCallingPoints"))
-                    else -> parser.skip()
-                }
+        internal fun fromXml(parser: XmlPullParser): ServiceItem = parser.parse("service") { result ->
+            when (parser.name) {
+                "sta" -> result.copy(sta = parser.readAsText())
+                "eta" -> result.copy(eta = parser.readAsText())
+                "std" -> result.copy(std = parser.readAsText())
+                "etd" -> result.copy(etd = parser.readAsText())
+                "platform" -> result.copy(platform = parser.readAsText())
+                "operator" -> result.copy(operator = parser.readAsText())
+                "operatorCode" -> result.copy(operatorCode = parser.readAsText())
+                "serviceType" -> result.copy(serviceType = parser.readAsText())
+                "serviceID" -> result.copy(serviceID = parser.readAsText())
+                "rsid" -> result.copy(rsid = parser.readAsText())
+                "isCircularRoute" -> result.copy(isCircularRoute = parser.readAsBoolean())
+                "isCancelled" -> result.copy(isCancelled = parser.readAsBoolean())
+                "filterLocationCancelled" -> result.copy(filterLocationCancelled = parser.readAsBoolean())
+                "length" -> result.copy(length = parser.readAsInt())
+                "detachFront" -> result.copy(detachFront = parser.readAsBoolean())
+                "isReverseFormation" -> result.copy(isReverseFormation = parser.readAsBoolean())
+                "cancelReason" -> result.copy(cancelReason = parser.readAsText())
+                "delayReason" -> result.copy(delayReason = parser.readAsText())
+                "adhocAlerts" -> result.copy(adhocAlerts = AdhocAlerts.fromXml(parser))
+                "formation" -> result.copy(formation = FormationData.fromXml(parser))
+                "origin" -> result.copy(origin = ServiceLocations.fromXml(parser, "origin"))
+                "destination" -> result.copy(destination = ServiceLocations.fromXml(parser, "destination"))
+                "currentOrigins" -> result.copy(currentOrigins = ServiceLocations.fromXml(parser, "currentOrigins"))
+                "currentDestinations" -> result.copy(currentDestinations = ServiceLocations.fromXml(parser, "currentDestinations"))
+                "previousCallingPoints" -> result.copy(previousCallingPoints = CallingPoints.fromXml(parser, "previousCallingPoints"))
+                "subsequentCallingPoints" -> result.copy(subsequentCallingPoints = CallingPoints.fromXml(parser, "subsequentCallingPoints"))
+                else -> parser.skip(result)
             }
-
-            parser.require(XmlPullParser.END_TAG, null, "service")
-
-            return result
         }
     }
 }

@@ -1,10 +1,7 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
-import uk.co.baconi.pka.tdb.xml.readAsBoolean
-import uk.co.baconi.pka.tdb.xml.readAsInt
-import uk.co.baconi.pka.tdb.xml.readAsText
-import uk.co.baconi.pka.tdb.xml.skip
+import uk.co.baconi.pka.tdb.xml.*
 
 data class CallingPoint(
     val locationName: String? = null,
@@ -21,34 +18,20 @@ data class CallingPoint(
 
     companion object {
 
-        internal fun fromXml(parser: XmlPullParser): CallingPoint {
-
-            parser.require(XmlPullParser.START_TAG, null, "callingPoint")
-
-            var result = CallingPoint()
-
-            while (parser.next() != XmlPullParser.END_TAG) {
-                if (parser.eventType != XmlPullParser.START_TAG) {
-                    continue
-                }
-                when (parser.name) {
-                    "locationName" -> result = result.copy(locationName = parser.readAsText())
-                    "crs" -> result = result.copy(crs = parser.readAsText())
-                    "st" -> result = result.copy(scheduledTime = parser.readAsText())
-                    "et" -> result = result.copy(estimatedTime = parser.readAsText())
-                    "at" -> result = result.copy(actualTime = parser.readAsText())
-                    "isCancelled" -> result = result.copy(isCancelled = parser.readAsBoolean())
-                    "length" -> result = result.copy(length = parser.readAsInt())
-                    "detachFront" -> result = result.copy(detachFront = parser.readAsBoolean())
-                    "formation" -> result = result.copy(formation = FormationData.fromXml(parser))
-                    "adhocAlerts" -> result = result.copy(adhocAlerts = AdhocAlerts.fromXml(parser))
-                    else -> parser.skip()
-                }
+        internal fun fromXml(parser: XmlPullParser): CallingPoint = parser.parse("callingPoint") { result ->
+            when (parser.name) {
+                "locationName" -> result.copy(locationName = parser.readAsText())
+                "crs" -> result.copy(crs = parser.readAsText())
+                "st" -> result.copy(scheduledTime = parser.readAsText())
+                "et" -> result.copy(estimatedTime = parser.readAsText())
+                "at" -> result.copy(actualTime = parser.readAsText())
+                "isCancelled" -> result.copy(isCancelled = parser.readAsBoolean())
+                "length" -> result.copy(length = parser.readAsInt())
+                "detachFront" -> result.copy(detachFront = parser.readAsBoolean())
+                "formation" -> result.copy(formation = FormationData.fromXml(parser))
+                "adhocAlerts" -> result.copy(adhocAlerts = AdhocAlerts.fromXml(parser))
+                else -> parser.skip(result)
             }
-
-            parser.require(XmlPullParser.END_TAG, null, "callingPoint")
-
-            return result
         }
     }
 }

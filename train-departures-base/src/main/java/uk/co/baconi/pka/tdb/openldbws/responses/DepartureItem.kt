@@ -1,31 +1,23 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
+import uk.co.baconi.pka.tdb.xml.parse
 import uk.co.baconi.pka.tdb.xml.skip
 
 data class DepartureItem(val crs: String? = null, val service: ServiceItem? = null) {
 
     companion object {
 
-        internal fun fromXml(parser: XmlPullParser): DepartureItem {
-
-            parser.require(XmlPullParser.START_TAG, null, "destination")
-
-            var result = DepartureItem(crs = parser.getAttributeValue(null, "crs"))
-
-            while (parser.next() != XmlPullParser.END_TAG) {
-                if (parser.eventType != XmlPullParser.START_TAG) {
-                    continue
-                }
+        internal fun fromXml(parser: XmlPullParser): DepartureItem =
+            parser.parse("destination", parsingAttributes = extractCrs(parser)) { result ->
                 when (parser.name) {
-                    "service" -> result = result.copy(service = ServiceItem.fromXml(parser))
-                    else -> parser.skip()
+                    "service" -> result.copy(service = ServiceItem.fromXml(parser))
+                    else -> parser.skip(result)
                 }
             }
 
-            parser.require(XmlPullParser.END_TAG, null, "destination")
-
-            return result
+        private fun extractCrs(parser: XmlPullParser) = { result: DepartureItem ->
+            result.copy(crs = parser.getAttributeValue(null, "crs"))
         }
     }
 }

@@ -68,7 +68,7 @@ class ServiceItemSpec : StringSpec({
             val field = ServiceItem::class.memberProperties.find { property -> property.name == tag }
             field?.get(underTest(tag, "")) shouldBe beEmpty<ServiceLocation>()
             (field?.get(underTest(tag, "<$innerTag/>")) as List<*>).first() should beInstanceOf<ServiceLocation>()
-            (field?.get(underTest(tag, "<$innerTag></$innerTag>")) as List<*>).first() should beInstanceOf<ServiceLocation>()
+            (field.get(underTest(tag, "<$innerTag></$innerTag>")) as List<*>).first() should beInstanceOf<ServiceLocation>()
         }
     }
 

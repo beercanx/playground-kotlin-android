@@ -1,28 +1,16 @@
 package uk.co.baconi.pka.tdb.openldbws.responses
 
 import org.xmlpull.v1.XmlPullParser
+import uk.co.baconi.pka.tdb.xml.parse
 import uk.co.baconi.pka.tdb.xml.skip
 
 object ServiceLocations {
 
-    internal fun fromXml(parser: XmlPullParser, type: String): List<ServiceLocation> {
-
-        parser.require(XmlPullParser.START_TAG, null, type)
-
-        val results = mutableListOf<ServiceLocation>()
-
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.eventType != XmlPullParser.START_TAG) {
-                continue
-            }
+    internal fun fromXml(parser: XmlPullParser, type: String): List<ServiceLocation> =
+        parser.parse(type, emptyList()) { result ->
             when (parser.name) {
-                "location" -> ServiceLocation.fromXml(parser).let(results::add)
-                else -> parser.skip()
+                "location" -> ServiceLocation.fromXml(parser).let(result::plus)
+                else -> parser.skip(result)
             }
         }
-
-        parser.require(XmlPullParser.END_TAG, null, type)
-
-        return results.toList()
-    }
 }

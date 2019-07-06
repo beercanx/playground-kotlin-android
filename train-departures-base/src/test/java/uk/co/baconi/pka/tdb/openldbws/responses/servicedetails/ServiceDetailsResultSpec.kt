@@ -89,7 +89,7 @@ class ServiceDetailsResultSpec : StringSpec({
             val field = ServiceDetailsResult::class.memberProperties.find { property -> property.name == tag }
             field?.get(underTest(tag, "")) shouldBe beEmpty<CallingPoints>()
             (field?.get(underTest(tag, "<$innerTag/>")) as List<*>).first() should beInstanceOf<CallingPoints>()
-            (field?.get(underTest(tag, "<$innerTag></$innerTag>")) as List<*>).first() should beInstanceOf<CallingPoints>()
+            (field.get(underTest(tag, "<$innerTag></$innerTag>")) as List<*>).first() should beInstanceOf<CallingPoints>()
         }
     }
 })
