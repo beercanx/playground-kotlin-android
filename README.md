@@ -1,6 +1,7 @@
 # Playground Kotlin + Android
 ![license](https://img.shields.io/github/license/beercan1989/playground-kotlin-android.svg)
-[![build](https://travis-ci.com/beercan1989/playground-kotlin-android.svg?branch=master)](https://travis-ci.com/beercan1989/playground-kotlin-android)
+[![Travis CI](https://travis-ci.com/beercan1989/playground-kotlin-android.svg?branch=master)](https://travis-ci.com/beercan1989/playground-kotlin-android)
+[![Bitrise](https://app.bitrise.io/app/600fc17fdf8f0d46/status.svg?token=K1fbQEnoYufaZn4jVLNMPQ)](https://app.bitrise.io/app/600fc17fdf8f0d46)
 [![release](https://img.shields.io/github/release/beercan1989/playground-kotlin-android.svg)](https://github.com/beercan1989/playground-kotlin-android/releases)
 ![commits since](https://img.shields.io/github/commits-since/beercan1989/playground-kotlin-android/latest.svg)
 
