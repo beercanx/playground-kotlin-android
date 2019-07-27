@@ -32,7 +32,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.1")
 
                 implementation("io.ktor:ktor-client-core:1.1.3")
-                implementation("io.ktor:ktor-client-json:1.1.3") // TODO - Create own XML plugin for ktor client
+                //implementation("io.ktor:ktor-client-json:1.1.3") // TODO - Create own XML plugin for ktor client
             }
         }
 
@@ -50,10 +50,10 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
 
                 implementation("io.ktor:ktor-client-core-jvm:1.1.3")
-                implementation("io.ktor:ktor-client-json-jvm:1.1.3")
+                //implementation("io.ktor:ktor-client-json-jvm:1.1.3") // TODO - Create own XML plugin for ktor client
 
-                // https://ktor.io/clients/http-client/engines.html
-                // implementation("io.ktor:ktor-client-okhttp:1.1.3")
+                // XML - https://developer.android.com/training/basics/network-ops/xml
+                compileOnly("net.sf.kxml:kxml2:2.3.0")
             }
         }
 
