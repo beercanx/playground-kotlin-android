@@ -1,6 +1,7 @@
 package uk.co.baconi.pka.common.openldbws.departures
 
 import uk.co.baconi.pka.common.openldbws.services.Service
+import uk.co.baconi.pka.common.xml.XmlDeserializer
 
 data class DepartureBoard(
     val generatedAt: String? = null,
@@ -15,4 +16,8 @@ data class DepartureBoard(
     val trainServices: List<Service>? = null,
     val busServices: List<Service>? = null,
     val ferryServices: List<Service>? = null
-)
+) {
+    companion object {
+        fun XmlDeserializer.departureBoard(): DepartureBoard = DepartureBoard() // TODO - Implement
+    }
+}

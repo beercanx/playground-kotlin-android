@@ -1,5 +1,7 @@
 package uk.co.baconi.pka.common.openldbws.departures
 
+import uk.co.baconi.pka.common.xml.XmlDeserializer
+
 data class Departures(
     val generatedAt: String? = null,
     val locationName: String? = null,
@@ -11,4 +13,8 @@ data class Departures(
     val platformAvailable: Boolean? = null,
     val areServicesAvailable: Boolean? = null,
     val departures: List<Departure>? = null
-)
+) {
+    companion object {
+        fun XmlDeserializer.departures(): Departures = Departures() // TODO - Implement
+    }
+}
