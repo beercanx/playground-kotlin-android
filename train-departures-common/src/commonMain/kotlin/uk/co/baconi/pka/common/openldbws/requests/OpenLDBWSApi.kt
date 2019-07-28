@@ -9,15 +9,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.content.TextContent
 import uk.co.baconi.pka.common.AccessToken
 import uk.co.baconi.pka.common.openldbws.details.ServiceDetails
-
-//internal expect fun departuresRequest(type: DepartureBoardType, accessToken: AccessToken, serviceID: String): String
-//internal expect fun departuresResponse(type: DepartureBoardType, response: String): Departures
-
-//internal expect fun departureBoardRequest(type: DepartureBoardType, accessToken: AccessToken, serviceID: String): String
-//internal expect fun departureBoardResponse(type: DepartureBoardType, response: String): DepartureBoard
-
-internal expect fun serviceDetailsRequest(accessToken: AccessToken, serviceID: String): String
-internal expect fun serviceDetailsResponse(response: String): ServiceDetails
+import uk.co.baconi.pka.common.openldbws.details.ServiceDetails.Companion.serviceDetails
+import uk.co.baconi.pka.common.soap.body
+import uk.co.baconi.pka.common.soap.envelope
+import uk.co.baconi.pka.common.soap.tag
+import uk.co.baconi.pka.common.xml.*
 
 class OpenLDBWSApi(private val client: HttpClient) {
 
@@ -28,25 +24,61 @@ class OpenLDBWSApi(private val client: HttpClient) {
     //suspend fun getDepartureBoard(accessToken: AccessToken, from: StationCode, to: StationCode, type: DepartureBoardType): DepartureBoard
 
     /**
-     * @throws uk.co.baconi.pka.common.openldbws.faults.Fault
+     *  Example XML request
+     *
+     *  <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+     *                 xmlns:typ="http://thalesgroup.com/RTTI/2013-11-28/Token/types"
+     *                 xmlns:ldb="http://thalesgroup.com/RTTI/2017-10-01/ldb/">
+     *      <soap:Header>
+     *          <typ:AccessToken>
+     *              <typ:TokenValue>${accessToken}</typ:TokenValue>
+     *          </typ:AccessToken>
+     *      </soap:Header>
+     *      <soap:Body>
+     *          <ldb:GetServiceDetailsRequest>
+     *              <ldb:serviceID>${serviceID}</ldb:serviceID>
+     *          </ldb:GetServiceDetailsRequest>
+     *      </soap:Body>
+     *  </soap:Envelope>
+     *
+     *  @throws uk.co.baconi.pka.common.openldbws.faults.Fault
+     *  @throws Exception
      */
     suspend fun getServiceDetails(accessToken: AccessToken, serviceID: String): ServiceDetails = client.post<String> {
         openLDBWSEndpoint()
         soapAction(DetailsType.ServiceDetails)
-        body(serviceDetailsRequest(accessToken, serviceID))
-    }.let { response ->
-        serviceDetailsResponse(response)
+        body {
+            build {
+                soapRequest(accessToken) {
+                    tag("ldb:GetServiceDetailsRequest") {
+                        tag("ldb:serviceID") {
+                            text(serviceID)
+                        }
+                    }
+                }
+            }
+        }
+    }.deserialize {
+        envelope {
+            body("GetServiceDetailsResponse") {
+                tag("GetServiceDetailsResponse", "GetServiceDetailsResult") {
+                    serviceDetails()
+                }
+            }
+        }
     }
 
     private fun HttpRequestBuilder.soapAction(type: RequestType) {
         header("SOAPAction", type.action)
     }
 
-    private fun HttpRequestBuilder.body(request: String) {
-        body = TextContent(request, contentType)
+    private fun HttpRequestBuilder.body(request: XmlSerializer.() -> String) {
+        body = TextContent(XmlSerializer().request(), contentType)
     }
 
     private fun HttpRequestBuilder.openLDBWSEndpoint() {
         url("https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx")
     }
+
+    private fun <T> String.deserialize(process: XmlDeserializer.() -> T) = XmlDeserializer(this).process()
 }

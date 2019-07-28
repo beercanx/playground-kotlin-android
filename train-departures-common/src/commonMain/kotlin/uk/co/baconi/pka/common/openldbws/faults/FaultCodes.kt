@@ -6,4 +6,10 @@ enum class FaultCodes {
     Receiver,
     Client,
     Server;
+
+    companion object {
+        fun lookup(value: String): FaultCodes? = values().find { type ->
+            type.name.equals(value, ignoreCase = true)
+        }
+    }
 }

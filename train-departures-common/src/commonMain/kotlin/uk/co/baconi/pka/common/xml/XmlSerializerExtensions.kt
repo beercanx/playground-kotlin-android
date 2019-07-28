@@ -1,5 +1,6 @@
 package uk.co.baconi.pka.common.xml
 
+import kotlinx.io.core.use
 import uk.co.baconi.pka.common.AccessToken
 
 fun XmlSerializer.tag(name: String, namespace: String? = null, inner: XmlSerializer.() -> Unit = {}) {
@@ -12,7 +13,7 @@ fun XmlSerializer.attribute(name: String, value: String) {
     attribute(null, name, value)
 }
 
-fun XmlSerializer.build(body: XmlSerializer.() -> Unit): String {
+fun XmlSerializer.build(body: XmlSerializer.() -> Unit): String = use {
     startDocument("utf-8", null)
     body()
     endDocument()
