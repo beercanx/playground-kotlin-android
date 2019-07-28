@@ -48,7 +48,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1")
 
     implementation(project(":train-departures-common"))
-    implementation("io.ktor:ktor-client-core-jvm:1.1.3") // TODO - Work out why this has to be imported.
+    implementation("io.ktor:ktor-client-okhttp:1.1.3")
 
     implementation("androidx.core:core-ktx:1.0.2")
     implementation("androidx.preference:preference-ktx:1.0.0")
