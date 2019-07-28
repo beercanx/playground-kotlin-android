@@ -10,7 +10,7 @@ import uk.co.baconi.pka.td.DepartureStatus.*
 import uk.co.baconi.pka.td.R
 import uk.co.baconi.pka.td.departureStatus
 import uk.co.baconi.pka.td.getColourCompat
-import uk.co.baconi.pka.tdb.openldbws.responses.CallingPoint
+import uk.co.baconi.pka.common.openldbws.services.CallingPoint
 import kotlin.math.min
 
 class CallingPointsDrawable(

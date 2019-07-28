@@ -14,23 +14,24 @@ import android.view.MenuItem
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import arrow.core.Failure
-import arrow.core.Success
-import arrow.core.Try
+import io.ktor.client.HttpClient
 import kotlinx.android.synthetic.main.content_app_bar_layout.*
 import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import uk.co.baconi.pka.common.AccessToken
+import uk.co.baconi.pka.common.StationCode
+import uk.co.baconi.pka.common.StationCodes
+import uk.co.baconi.pka.common.openldbws.departures.Departure
+import uk.co.baconi.pka.common.openldbws.requests.DepartureBoardType
+import uk.co.baconi.pka.common.openldbws.requests.DeparturesType
+import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
+import uk.co.baconi.pka.common.openldbws.services.Service
 import uk.co.baconi.pka.td.settings.SearchType
 import uk.co.baconi.pka.td.settings.Settings
 import uk.co.baconi.pka.td.settings.SettingsActivity
 import uk.co.baconi.pka.td.settings.SpeechType
-import uk.co.baconi.pka.tdb.AccessToken
-import uk.co.baconi.pka.tdb.Actions
-import uk.co.baconi.pka.tdb.StationCode
-import uk.co.baconi.pka.tdb.StationCodes
-import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 import java.util.*
 
 class DepartureSearchActivity : AppCompatActivity() {
@@ -39,9 +40,11 @@ class DepartureSearchActivity : AppCompatActivity() {
         private const val TAG = "DepartureSearchActivity"
     }
 
+    private val openLDBWSApi = OpenLDBWSApi(HttpClient())
+
     private lateinit var textToSpeech: TextToSpeech
 
-    private lateinit var searchResults: MutableList<ServiceItem>
+    private lateinit var searchResults: MutableList<Service>
     private lateinit var viewAdapter: SearchResultsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -184,14 +187,13 @@ class DepartureSearchActivity : AppCompatActivity() {
         // Turn on the spinner
         search_results_refresh_layout.isRefreshing = true
 
-        when(val accessToken = provideAccessToken()) {
-            is Try.Success<AccessToken> -> {
-                searchForDepartures(accessToken.value)
-            }
-            is Try.Failure -> {
-                Log.e(TAG, "Unable to get access token", accessToken.exception)
-                handleError(accessToken.exception)
-            }
+        runCatching {
+            provideAccessToken()
+        }.onSuccess { accessToken ->
+            searchForDepartures(accessToken)
+        }.onFailure { exception ->
+            Log.e(TAG, "Unable to get access token", exception)
+            handleError(exception)
         }
     }
 
@@ -200,24 +202,28 @@ class DepartureSearchActivity : AppCompatActivity() {
         val from = search_criteria_from_auto_complete.selectedItem as StationCode
         val to = search_criteria_to_auto_complete.selectedItem as StationCode
 
-        val action = when(Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)) {
-            SearchType.SINGLE_RESULT -> {
-                Actions.Companion::getFastestTrainDeparture
+        runCatching {
+            when(Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)) {
+                SearchType.SINGLE_RESULT -> {
+                    openLDBWSApi
+                        .getDepartures(accessToken, from, to, DeparturesType.FastestDepartures)
+                        .departures
+                        ?.mapNotNull(Departure::service)
+                        ?: emptyList()
+                }
+                SearchType.MULTIPLE_RESULTS -> {
+                    openLDBWSApi
+                        .getDepartureBoard(accessToken, from, to, DepartureBoardType.DepartureBoard)
+                        .trainServices
+                        ?: emptyList()
+                }
             }
-            SearchType.MULTIPLE_RESULTS -> {
-                Actions.Companion::getTrainDepartures
-            }
-        }
-
-        when(val results = action.invoke(accessToken, from, to)) {
-            is Success -> {
-                displaySearchResultsView(results.value)
-                speakSearchResult(results.value.first())
-            }
-            is Failure -> {
-                Log.e(TAG, "Unable to search for departures", results.exception)
-                handleError(results.exception)
-            }
+        }.onSuccess { results ->
+            displaySearchResultsView(results)
+            speakSearchResult(results.first())
+        }.onFailure { exception ->
+            Log.e(TAG, "Unable to search for departures", exception)
+            handleError(exception)
         }
     }
 
@@ -232,7 +238,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         startErrorActivity(error)
     }
 
-    private fun displaySearchResultsView(serviceItems: List<ServiceItem>) = GlobalScope.launch(Dispatchers.Main) {
+    private fun displaySearchResultsView(serviceItems: List<Service>) = GlobalScope.launch(Dispatchers.Main) {
 
         // Turn off the spinner
         search_results_refresh_layout.isRefreshing = false
@@ -243,7 +249,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         viewAdapter.notifyDataSetChanged()
     }
 
-    private fun speakSearchResult(service: ServiceItem) {
+    private fun speakSearchResult(service: Service) {
 
         if(Settings.EnableSpeakingFirstResult.getSetting(this)) {
 

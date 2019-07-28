@@ -1,6 +1,6 @@
 package uk.co.baconi.pka.td.servicedetails
 
-import uk.co.baconi.pka.tdb.openldbws.responses.CallingPoint
+import uk.co.baconi.pka.common.openldbws.services.CallingPoint
 
 val CallingPoint.hasEstimatedTime: Boolean
     get() = this.estimatedTime.isNullOrBlank().not()

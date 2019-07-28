@@ -5,14 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import uk.co.baconi.pka.common.openldbws.services.Service
 import uk.co.baconi.pka.td.DepartureStatus.*
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity.Companion.SERVICE_ID
 import uk.co.baconi.pka.td.settings.Settings
-import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
 class SearchResultsAdapter(
-    private val searchResults: MutableList<ServiceItem>
+    private val searchResults: MutableList<Service>
 ) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
 
     // Provide a reference to the views for each data item
@@ -56,13 +56,13 @@ class SearchResultsAdapter(
         val (departureTimeText: String?, statusColourId: Int) = when(service.departureStatus) {
             null -> { // Not present
                 Pair(
-                    service.std,
+                    service.scheduledDepartureTime,
                     R.color.search_result_departure_time_etd_unknown
                 )
             }
             ON_TIME -> {
                 Pair(
-                    service.std,
+                    service.scheduledDepartureTime,
                     R.color.search_result_departure_time_on_time
                 )
             }
@@ -86,7 +86,7 @@ class SearchResultsAdapter(
             }
             HH_MM -> { // Estimated
                 Pair(
-                    service.etd,
+                    service.estimatedDepartureTime,
                     R.color.search_result_departure_time_estimated
                 )
             }

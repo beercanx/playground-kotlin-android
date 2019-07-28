@@ -17,6 +17,7 @@ android {
     }
     lintOptions {
         isCheckReleaseBuilds = false
+        isAbortOnError = false
     }
     androidExtensions {
         isExperimental = true
@@ -37,17 +38,17 @@ android {
         exclude("META-INF/common.kotlin_module")
         exclude("META-INF/*.kotlin_module")
     }
+
+    // Disabled because adding in an MMP module manages to break the lint tasks
+    tasks["lint"].enabled = false
 }
 
 dependencies {
-
-    implementation(project(":train-departures-base"))
-
-    // https://github.com/arrow-kt/arrow
-    implementation("io.arrow-kt:arrow-core:0.8.2") // TODO - Work out why its having to be manually added
-
     implementation(kotlin("stdlib-jdk7"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1")
+
+    implementation(project(":train-departures-common"))
+    implementation("io.ktor:ktor-client-core-jvm:1.1.3") // TODO - Work out why this has to be imported.
 
     implementation("androidx.core:core-ktx:1.0.2")
     implementation("androidx.preference:preference-ktx:1.0.0")

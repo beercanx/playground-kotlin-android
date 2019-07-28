@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import uk.co.baconi.pka.tdb.StationCode
+import uk.co.baconi.pka.common.StationCode
 
 class SearchCriteriaAdapter(
     context: Context,
