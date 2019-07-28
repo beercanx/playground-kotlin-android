@@ -207,15 +207,12 @@ class DepartureSearchActivity : AppCompatActivity() {
                 SearchType.SINGLE_RESULT -> {
                     openLDBWSApi
                         .getDepartures(accessToken, from, to, DeparturesType.FastestDepartures)
-                        .departures
-                        ?.mapNotNull(Departure::service)
-                        ?: emptyList()
+                        .extractServices()
                 }
                 SearchType.MULTIPLE_RESULTS -> {
                     openLDBWSApi
                         .getDepartureBoard(accessToken, from, to, DepartureBoardType.DepartureBoard)
-                        .trainServices
-                        ?: emptyList()
+                        .extractServices()
                 }
             }
         }.onSuccess { results ->

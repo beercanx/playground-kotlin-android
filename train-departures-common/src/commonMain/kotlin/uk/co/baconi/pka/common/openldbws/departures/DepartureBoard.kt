@@ -17,7 +17,11 @@ data class DepartureBoard(
     val busServices: List<Service>? = null,
     val ferryServices: List<Service>? = null
 ) {
+
     companion object {
         fun XmlDeserializer.departureBoard(): DepartureBoard = DepartureBoard() // TODO - Implement
     }
+
+    fun extractServices(): List<Service> = trainServices ?: emptyList()
+
 }
