@@ -17,18 +17,25 @@ actual class XmlSerializer(
 
     actual constructor() : this(StringWriter(), XmlParserFactory.serializer())
 
-    actual override fun startTag(namespace: String?, name: String): XmlSerializer =
-        serializer.startTag(namespace, name) as XmlSerializer
+    actual override fun startTag(namespace: String?, name: String): XmlSerializer {
+        serializer.startTag(namespace, name)
+        return this
+    }
 
-    actual override fun endTag(namespace: String?, name: String): XmlSerializer =
-        serializer.endTag(namespace, name) as XmlSerializer
+    actual override fun endTag(namespace: String?, name: String): XmlSerializer {
+        serializer.endTag(namespace, name)
+        return this
+    }
 
-    actual override fun attribute(namespace: String?, name: String, value: String): XmlSerializer =
-        serializer.attribute(namespace, name, value) as XmlSerializer
+    actual override fun attribute(namespace: String?, name: String, value: String): XmlSerializer {
+        serializer.attribute(namespace, name, value)
+        return this
+    }
 
-    actual override fun text(text: String): XmlSerializer =
-        serializer.text(text) as XmlSerializer
+    actual override fun text(text: String): XmlSerializer {
+        serializer.text(text)
+        return this
+    }
 
-    actual fun getOutput(): String =
-        writer.toString()
+    actual fun getOutput(): String = writer.toString()
 }
