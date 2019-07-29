@@ -1,7 +1,8 @@
 package uk.co.baconi.pka.common.openldbws.departures
 
 import uk.co.baconi.pka.common.openldbws.services.Service
-import uk.co.baconi.pka.common.xml.XmlDeserializer
+import uk.co.baconi.pka.common.openldbws.services.Service.Companion.services
+import uk.co.baconi.pka.common.xml.*
 
 data class DepartureBoard(
     val generatedAt: String? = null,
@@ -19,7 +20,25 @@ data class DepartureBoard(
 ) {
 
     companion object {
-        fun XmlDeserializer.departureBoard(): DepartureBoard = DepartureBoard() // TODO - Implement
+        fun XmlDeserializer.departureBoard(): DepartureBoard {
+            return parse("GetStationBoardResult") { result ->
+                when (getName()) {
+                    "generatedAt" -> result.copy(generatedAt = readAsText())
+                    "locationName" -> result.copy(locationName = readAsText())
+                    "crs" -> result.copy(crs = readAsText())
+                    "filterLocationName" -> result.copy(filterLocationName = readAsText())
+                    "filtercrs" -> result.copy(filterCrs = readAsText())
+                    "filterType" -> result.copy(filterType = readAsText())
+                    // TODO "nrccMessages" -> result.copy(nrccMessages = NRCCMessages.fromXml(parser))
+                    "platformAvailable" -> result.copy(platformAvailable = readAsBoolean())
+                    "areServicesAvailable" -> result.copy(areServicesAvailable = readAsBoolean())
+                    "trainServices" -> result.copy(trainServices = services("trainServices"))
+                    "busServices" -> result.copy(busServices = services("busServices"))
+                    "ferryServices" -> result.copy(ferryServices = services("ferryServices"))
+                    else -> skip(result)
+                }
+            }
+        }
     }
 
     fun extractServices(): List<Service> = trainServices ?: emptyList()

@@ -4,22 +4,22 @@ import uk.co.baconi.pka.common.reflect.createInstance
 
 inline fun <reified A : Any> XmlDeserializer.parse(
     tag: String,
-    noinline parsingAttributes: (A) -> A = { a -> a },
-    noinline parsingBody: (A) -> A
+    noinline attributes: (A) -> A = { a -> a },
+    noinline body: (A) -> A
 ): A {
-    return parse(tag, A::class.createInstance(), parsingAttributes) { result, _ ->
-        parsingBody(result)
+    return parse(tag, A::class.createInstance(), attributes) { result, _ ->
+        body(result)
     }
 }
 
 fun <A> XmlDeserializer.parse(
     tag: String,
     initial: A,
-    parsingAttributes: (A) -> A = { a -> a },
-    parsingBody: (A) -> A
+    attributes: (A) -> A = { a -> a },
+    body: (A) -> A
 ): A {
-    return parse(tag, initial, parsingAttributes) { result, _ ->
-        parsingBody(result)
+    return parse(tag, initial, attributes) { result, _ ->
+        body(result)
     }
 }
 
@@ -34,25 +34,25 @@ inline fun <reified A : Any> XmlDeserializer.parse(
 fun <A> XmlDeserializer.parse(
     tag: String,
     initial: A,
-    parsingAttributes: (A) -> A = { a -> a },
-    parsingBody: (A, String?) -> A
+    attributes: (A) -> A = { a -> a },
+    body: (A, String?) -> A
 ): A {
 
-    requireStartTag(tag)
+    require(EventType.START_TAG, tag)
 
     var result = initial
     val currentPrefix = getPrefix()
 
-    result = parsingAttributes(result)
+    result = attributes(result)
 
-    while (!nextIs(::isEndTag)) {
-        if (isStartTag()) {
+    while (next() != EventType.END_TAG) {
+        if (getEventType() != EventType.START_TAG) {
             continue
         }
-        result = parsingBody(result, currentPrefix)
+        result = body(result, currentPrefix)
     }
 
-    requireEndTag(tag)
+    require(EventType.END_TAG, tag)
 
     return result
 }
@@ -63,22 +63,22 @@ fun <A> XmlDeserializer.skip(result: A): A {
 }
 
 fun XmlDeserializer.skip() {
-    if (!isStartTag()) {
+    if (getEventType() != EventType.START_TAG) {
         throw IllegalStateException()
     }
     var depth = 1
-    while (depth != 0) {
-        next()
-        when {
-            isEndTag() -> depth--
-            isStartTag() -> depth++
+    loop@ while (depth != 0) {
+        when (next()) {
+            EventType.END_TAG -> depth--
+            EventType.START_TAG -> depth++
+            else -> continue@loop
         }
     }
 }
 
 fun XmlDeserializer.readAsText(): String? {
     var result: String? = null
-    if (nextIs(::isText)) {
+    if (next() == EventType.TEXT) {
         result = getText()
         nextTag()
     }

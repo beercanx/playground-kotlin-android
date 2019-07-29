@@ -10,7 +10,7 @@ data class Fault(val code: FaultCodes? = null, val reason: String? = null) : Exc
 ) {
     companion object {
 
-        fun XmlDeserializer.fault(): Fault = parse("GetServiceDetailsResult") { result, prefix ->
+        fun XmlDeserializer.fault(): Fault = parse("Fault") { result, prefix ->
             when (getName()) {
                 // Fault style 1
                 "Code" -> result.copy(code = code())
