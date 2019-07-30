@@ -2,6 +2,7 @@ package uk.co.baconi.pka.common.openldbws.departures
 
 import uk.co.baconi.pka.common.openldbws.services.Service
 import uk.co.baconi.pka.common.openldbws.services.Service.Companion.services
+import uk.co.baconi.pka.common.soap.nrccMessages
 import uk.co.baconi.pka.common.xml.*
 
 data class DepartureBoard(
@@ -29,7 +30,7 @@ data class DepartureBoard(
                     "filterLocationName" -> result.copy(filterLocationName = readAsText())
                     "filtercrs" -> result.copy(filterCrs = readAsText())
                     "filterType" -> result.copy(filterType = readAsText())
-                    // TODO "nrccMessages" -> result.copy(nrccMessages = NRCCMessages.fromXml(parser))
+                    "nrccMessages" -> result.copy(nrccMessages = nrccMessages())
                     "platformAvailable" -> result.copy(platformAvailable = readAsBoolean())
                     "areServicesAvailable" -> result.copy(areServicesAvailable = readAsBoolean())
                     "trainServices" -> result.copy(trainServices = services("trainServices"))

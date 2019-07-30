@@ -1,6 +1,7 @@
 package uk.co.baconi.pka.common.openldbws.services
 
 import uk.co.baconi.pka.common.openldbws.services.FormationData.Companion.formationData
+import uk.co.baconi.pka.common.soap.adhocAlerts
 import uk.co.baconi.pka.common.xml.*
 
 data class CallingPoint(
@@ -29,7 +30,7 @@ data class CallingPoint(
                 "length" -> result.copy(length = readAsInt())
                 "detachFront" -> result.copy(detachFront = readAsBoolean())
                 "formation" -> result.copy(formation = formationData())
-                // TODO "adhocAlerts" -> result.copy(adhocAlerts = AdhocAlerts.fromXml(parser))
+                "adhocAlerts" -> result.copy(adhocAlerts = adhocAlerts())
                 else -> skip(result)
             }
         }

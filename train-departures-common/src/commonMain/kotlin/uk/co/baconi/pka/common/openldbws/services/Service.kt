@@ -1,7 +1,9 @@
 package uk.co.baconi.pka.common.openldbws.services
 
 import uk.co.baconi.pka.common.openldbws.services.CallingPoints.Companion.callingPoints
+import uk.co.baconi.pka.common.openldbws.services.FormationData.Companion.formationData
 import uk.co.baconi.pka.common.openldbws.services.ServiceLocation.Companion.serviceLocations
+import uk.co.baconi.pka.common.soap.adhocAlerts
 import uk.co.baconi.pka.common.xml.*
 
 /**
@@ -64,12 +66,12 @@ data class Service(
                 "isReverseFormation" -> result.copy(isReverseFormation = readAsBoolean())
                 "cancelReason" -> result.copy(cancelReason = readAsText())
                 "delayReason" -> result.copy(delayReason = readAsText())
-                // TODO "adhocAlerts" -> result.copy(adhocAlerts = AdhocAlerts.fromXml(parser))
-                // TODO "formation" -> result.copy(formation = FormationData.fromXml(parser))
-                 "origin" -> result.copy(origin = serviceLocations("origin"))
-                 "destination" -> result.copy(destination = serviceLocations("destination"))
-                 "currentOrigins" -> result.copy(currentOrigins = serviceLocations("currentOrigins"))
-                 "currentDestinations" -> result.copy(currentDestinations = serviceLocations("currentDestinations"))
+                "adhocAlerts" -> result.copy(adhocAlerts = adhocAlerts())
+                "formation" -> result.copy(formation = formationData())
+                "origin" -> result.copy(origin = serviceLocations("origin"))
+                "destination" -> result.copy(destination = serviceLocations("destination"))
+                "currentOrigins" -> result.copy(currentOrigins = serviceLocations("currentOrigins"))
+                "currentDestinations" -> result.copy(currentDestinations = serviceLocations("currentDestinations"))
                 "previousCallingPoints" -> result.copy(previousCallingPoints = callingPoints("previousCallingPoints"))
                 "subsequentCallingPoints" -> result.copy(subsequentCallingPoints = callingPoints("subsequentCallingPoints"))
                 else -> skip(result)

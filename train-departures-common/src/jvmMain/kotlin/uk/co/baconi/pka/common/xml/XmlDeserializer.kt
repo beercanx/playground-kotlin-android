@@ -35,7 +35,7 @@ actual class XmlDeserializer(private val parser: XmlPullParser, reader: Reader):
         XmlPullParser.PROCESSING_INSTRUCTION -> EventType.PROCESSING_INSTRUCTION
         XmlPullParser.COMMENT -> EventType.COMMENT
         XmlPullParser.DOCDECL -> EventType.DOCDECL
-        else -> throw XmlPullParserException("Unexpected event type: $this")
+        else -> throw XmlPullParserException("Unexpected event type: $this", parser, null)
     }
 
     private fun EventType.int(): Int = when(this) {

@@ -3,6 +3,8 @@ package uk.co.baconi.pka.common.openldbws.details
 import uk.co.baconi.pka.common.openldbws.services.CallingPoints
 import uk.co.baconi.pka.common.openldbws.services.CallingPoints.Companion.callingPoints
 import uk.co.baconi.pka.common.openldbws.services.FormationData
+import uk.co.baconi.pka.common.openldbws.services.FormationData.Companion.formationData
+import uk.co.baconi.pka.common.soap.adhocAlerts
 import uk.co.baconi.pka.common.xml.*
 
 data class ServiceDetails(
@@ -56,8 +58,8 @@ data class ServiceDetails(
                 "std" -> result.copy(scheduledDepartureTime = readAsText())
                 "etd" -> result.copy(estimatedDepartureTime = readAsText())
                 "atd" -> result.copy(actualDepartureTime = readAsText())
-                // TODO "adhocAlerts" -> result.copy(adhocAlerts = AdhocAlerts.fromXml(parser))
-                // TODO "formation" -> result.copy(formation = FormationData.fromXml(parser))
+                "adhocAlerts" -> result.copy(adhocAlerts = adhocAlerts())
+                "formation" -> result.copy(formation = formationData())
                 "previousCallingPoints" -> result.copy(previousCallingPoints = callingPoints("previousCallingPoints"))
                 "subsequentCallingPoints" -> result.copy(subsequentCallingPoints = callingPoints("subsequentCallingPoints"))
                 else -> skip(result)
