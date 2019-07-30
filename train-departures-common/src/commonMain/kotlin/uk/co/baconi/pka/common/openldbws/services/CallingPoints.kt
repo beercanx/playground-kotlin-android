@@ -1,6 +1,7 @@
 package uk.co.baconi.pka.common.openldbws.services
 
 import uk.co.baconi.pka.common.openldbws.services.CallingPoint.Companion.callingPoint
+import uk.co.baconi.pka.common.openldbws.services.CallingPoints.Companion.attributes
 import uk.co.baconi.pka.common.xml.XmlDeserializer
 import uk.co.baconi.pka.common.xml.parse
 import uk.co.baconi.pka.common.xml.skip
@@ -33,11 +34,22 @@ data class CallingPoints(
         }
 
         fun XmlDeserializer.attributes() = { result: CallingPoints ->
-            result.copy(
-                serviceType = getAttributeValue("serviceType"),
-                serviceChangeRequired = getAttributeValue("serviceChangeRequired")?.toBoolean(),
-                associationIsCancelled = getAttributeValue("assocIsCancelled")?.toBoolean()
-            )
+            result.run {
+                when(val serviceType = getAttributeValue("serviceType")) {
+                    is String -> copy(serviceType = serviceType)
+                    else -> this
+                }
+            }.run {
+                when(val serviceChangeRequired = getAttributeValue("serviceChangeRequired")?.toBoolean()) {
+                    is Boolean -> copy(serviceChangeRequired = serviceChangeRequired)
+                    else -> this
+                }
+            }.run {
+                when(val associationIsCancelled = getAttributeValue("assocIsCancelled")?.toBoolean()) {
+                    is Boolean -> copy(associationIsCancelled = associationIsCancelled)
+                    else -> this
+                }
+            }
         }
     }
 }
