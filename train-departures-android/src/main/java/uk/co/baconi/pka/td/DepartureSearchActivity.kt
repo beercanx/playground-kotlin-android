@@ -15,6 +15,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
 import kotlinx.android.synthetic.main.content_app_bar_layout.*
 import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +24,6 @@ import kotlinx.coroutines.launch
 import uk.co.baconi.pka.common.AccessToken
 import uk.co.baconi.pka.common.StationCode
 import uk.co.baconi.pka.common.StationCodes
-import uk.co.baconi.pka.common.openldbws.departures.Departure
 import uk.co.baconi.pka.common.openldbws.requests.DepartureBoardType
 import uk.co.baconi.pka.common.openldbws.requests.DeparturesType
 import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
@@ -40,7 +40,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         private const val TAG = "DepartureSearchActivity"
     }
 
-    private val openLDBWSApi = OpenLDBWSApi(HttpClient())
+    private val openLDBWSApi = OpenLDBWSApi(HttpClient(OkHttp))
 
     private lateinit var textToSpeech: TextToSpeech
 
