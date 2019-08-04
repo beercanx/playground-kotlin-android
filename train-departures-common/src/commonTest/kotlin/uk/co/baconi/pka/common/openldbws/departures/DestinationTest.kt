@@ -1,52 +1,52 @@
 package uk.co.baconi.pka.common.openldbws.departures
 
-import uk.co.baconi.pka.common.openldbws.departures.Departure.Companion.departure
+import uk.co.baconi.pka.common.openldbws.departures.Destination.Companion.destination
 import uk.co.baconi.pka.common.openldbws.services.Service
 import uk.co.baconi.pka.common.xml.XmlDeserializer
 import kotlin.test.Test
 import kotlin.test.expect
 
-class DepartureTest {
+class DestinationTest {
 
     @Test
     fun `Should decode with no csr or service present`() {
 
-        expect(Departure(), "Departure") {
+        expect(Destination(), "Departure") {
             XmlDeserializer("<destination/>")
-                .departure()
+                .destination()
         }
 
-        expect(Departure(), "Departure") {
+        expect(Destination(), "Departure") {
             XmlDeserializer("<destination></destination>")
-                .departure()
+                .destination()
         }
     }
 
     @Test
     fun `Should decode with no service present`() {
 
-        expect(Departure(crs = "test-crs-closed"), "Departure") {
+        expect(Destination(crs = "test-crs-closed"), "Departure") {
             XmlDeserializer("""<destination crs="test-crs-closed"/>""")
-                .departure()
+                .destination()
         }
 
-        expect(Departure(crs = "test-crs-open"), "Departure") {
+        expect(Destination(crs = "test-crs-open"), "Departure") {
             XmlDeserializer("""<destination crs="test-crs-open"></destination>""")
-                .departure()
+                .destination()
         }
     }
 
     @Test
     fun `Should decode with service present`() {
 
-        expect(Departure(service = Service()), "Departure") {
+        expect(Destination(service = Service()), "Departure") {
             XmlDeserializer("<destination><service/></destination>")
-                .departure()
+                .destination()
         }
 
-        expect(Departure(service = Service()), "Departure") {
+        expect(Destination(service = Service()), "Departure") {
             XmlDeserializer("<destination><service></service></destination>")
-                .departure()
+                .destination()
         }
     }
 }

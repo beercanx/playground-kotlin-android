@@ -33,7 +33,7 @@ data class CallingPoints(
             }
         }
 
-        fun XmlDeserializer.attributes() = { result: CallingPoints ->
+        private fun XmlDeserializer.attributes() = { result: CallingPoints ->
             result.run {
                 when(val serviceType = getAttributeValue("serviceType")) {
                     is String -> copy(serviceType = serviceType)
