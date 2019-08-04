@@ -1,5 +1,6 @@
 package uk.co.baconi.pka.common.openldbws.details
 
+import uk.co.baconi.pka.common.BaseDtoTest
 import uk.co.baconi.pka.common.openldbws.details.ServiceDetails.Companion.serviceDetails
 import uk.co.baconi.pka.common.openldbws.services.CallingPoints
 import uk.co.baconi.pka.common.openldbws.services.FormationData
@@ -7,7 +8,10 @@ import uk.co.baconi.pka.common.xml.XmlDeserializer
 import kotlin.test.Test
 import kotlin.test.expect
 
-class ServiceDetailsTest {
+class ServiceDetailsTest : BaseDtoTest<ServiceDetails> {
+
+    override val tag: String = "GetServiceDetailsResult"
+    override fun XmlDeserializer.extractor(): ServiceDetails = serviceDetails()
 
     @Test
     fun `Should decode with no fields present`() {
@@ -102,17 +106,5 @@ class ServiceDetailsTest {
         expect(listOf(CallingPoints()), "subsequentCallingPoints") {
             decodeAndGetField("subsequentCallingPoints", "<callingPointList></callingPointList>", ServiceDetails::subsequentCallingPoints)
         }
-    }
-
-    private fun <A> expectField(tag: String, value: A, extractField: ServiceDetails.() -> A) {
-        expect(value, tag) {
-            decodeAndGetField(tag, value, extractField)
-        }
-    }
-
-    private fun <A, B> decodeAndGetField(tag: String, value: A, extractField: ServiceDetails.() -> B): B {
-        return XmlDeserializer("<GetServiceDetailsResult><$tag>$value</$tag></GetServiceDetailsResult>")
-            .serviceDetails()
-            .extractField()
     }
 }
