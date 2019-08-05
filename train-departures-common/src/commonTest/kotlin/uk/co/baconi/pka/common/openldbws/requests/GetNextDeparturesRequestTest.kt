@@ -14,10 +14,10 @@ import kotlin.test.expect
 
 class GetNextDeparturesRequestTest {
 
+    private val type = DeparturesType.NextDepartures
+
     @Test
     fun `Should be able to deserialise example response of Sheffield to Cleethorpes`() {
-
-        val type = DeparturesType.NextDepartures
 
         val expected = Departures(
             generatedAt = "2019-01-13T13:51:17.106902+00:00",
@@ -70,7 +70,6 @@ class GetNextDeparturesRequestTest {
     }
 
     companion object {
-
         private val SHEFFIELD_TO_CLEETHORPES_NEXT_DEPARTURES = """
                 |<?xml version="1.0" encoding="utf-8"?>
                 |<soap:Envelope
