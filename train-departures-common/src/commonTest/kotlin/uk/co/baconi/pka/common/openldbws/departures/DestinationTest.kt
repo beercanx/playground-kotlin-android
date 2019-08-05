@@ -11,12 +11,12 @@ class DestinationTest {
     @Test
     fun `Should decode with no csr or service present`() {
 
-        expect(Destination(), "Departure") {
+        expect(Destination(), "Destination") {
             XmlDeserializer("<destination/>")
                 .destination()
         }
 
-        expect(Destination(), "Departure") {
+        expect(Destination(), "Destination") {
             XmlDeserializer("<destination></destination>")
                 .destination()
         }
@@ -25,12 +25,12 @@ class DestinationTest {
     @Test
     fun `Should decode with no service present`() {
 
-        expect(Destination(crs = "test-crs-closed"), "Departure") {
+        expect(Destination(crs = "test-crs-closed"), "Destination") {
             XmlDeserializer("""<destination crs="test-crs-closed"/>""")
                 .destination()
         }
 
-        expect(Destination(crs = "test-crs-open"), "Departure") {
+        expect(Destination(crs = "test-crs-open"), "Destination") {
             XmlDeserializer("""<destination crs="test-crs-open"></destination>""")
                 .destination()
         }
@@ -39,12 +39,12 @@ class DestinationTest {
     @Test
     fun `Should decode with service present`() {
 
-        expect(Destination(service = Service()), "Departure") {
+        expect(Destination(service = Service()), "Destination") {
             XmlDeserializer("<destination><service/></destination>")
                 .destination()
         }
 
-        expect(Destination(service = Service()), "Departure") {
+        expect(Destination(service = Service()), "Destination") {
             XmlDeserializer("<destination><service></service></destination>")
                 .destination()
         }
