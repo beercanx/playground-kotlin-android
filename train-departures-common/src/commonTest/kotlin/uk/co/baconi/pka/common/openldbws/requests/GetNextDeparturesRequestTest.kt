@@ -1,20 +1,77 @@
-package uk.co.baconi.pka.tdb.openldbws.responses
+package uk.co.baconi.pka.common.openldbws.requests
 
-import io.kotlintest.assertSoftly
-import io.kotlintest.matchers.beInstanceOf
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.should
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
-import uk.co.baconi.pka.tdb.xml.XmlParser
+import uk.co.baconi.pka.common.openldbws.departures.Departures
+import uk.co.baconi.pka.common.openldbws.departures.Departures.Companion.departures
+import uk.co.baconi.pka.common.openldbws.departures.Destination
+import uk.co.baconi.pka.common.openldbws.services.Service
+import uk.co.baconi.pka.common.openldbws.services.ServiceLocation
+import uk.co.baconi.pka.common.soap.body
+import uk.co.baconi.pka.common.soap.envelope
+import uk.co.baconi.pka.common.soap.tag
+import uk.co.baconi.pka.common.xml.XmlDeserializer
+import kotlin.test.Test
+import kotlin.test.expect
 
-class GetNextDeparturesSpec : StringSpec({
+class GetNextDeparturesRequestTest {
 
-    "Should be able to deserialise example response of Sheffield to Cleethorpes" {
+    @Test
+    fun `Should be able to deserialise example response of Sheffield to Cleethorpes`() {
 
-        val result: Envelope = Envelope.fromXml(
-            XmlParser.fromReader(
-                """
+        val type = DeparturesType.NextDepartures
+
+        val expected = Departures(
+            generatedAt = "2019-01-13T13:51:17.106902+00:00",
+            locationName = "Sheffield",
+            crs = "SHF",
+            platformAvailable = true,
+            nrccMessages = listOf(
+                "Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare."
+            ),
+            destinations = listOf(
+                Destination(
+                    crs = "CLE",
+                    service = Service(
+                        scheduledArrivalTime = "14:08",
+                        estimatedArrivalTime = "On time",
+                        scheduledDepartureTime = "14:29",
+                        estimatedDepartureTime = "On time",
+                        platform = "1B",
+                        operator = "TransPennine Express",
+                        operatorCode = "TP",
+                        serviceType = "train",
+                        serviceID = "8ipq5Cv9fDMbR0rDg6riKA==",
+                        retailServiceId = "TP603200",
+                        origin = listOf(
+                            ServiceLocation(
+                                locationName = "Manchester Airport",
+                                crs = "MIA"
+                            )
+                        ),
+                        destination = listOf(
+                            ServiceLocation(
+                                locationName = "Cleethorpes",
+                                crs = "CLE"
+                            )
+                        )
+                    )
+                )
+            )
+        )
+
+        expect(expected) {
+            XmlDeserializer(SHEFFIELD_TO_CLEETHORPES_NEXT_DEPARTURES).envelope {
+                body(type.responseTag) {
+                    tag(type.responseTag, "DeparturesBoard") {
+                        departures()
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+
+        private val SHEFFIELD_TO_CLEETHORPES_NEXT_DEPARTURES = """
                 |<?xml version="1.0" encoding="utf-8"?>
                 |<soap:Envelope
                 |    xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
@@ -35,7 +92,7 @@ class GetNextDeparturesSpec : StringSpec({
                 |        <lt4:locationName>Sheffield</lt4:locationName>
                 |        <lt4:crs>SHF</lt4:crs>
                 |        <lt4:nrccMessages>
-                |          <lt:message>Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare. More information can be found in &lt;A href="http://nationalrail.co.uk/service_disruptions/210986.aspx "&gt;Latest Travel News.&lt;/A&gt;</lt:message>
+                |          <lt:message>Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare.</lt:message>
                 |        </lt4:nrccMessages>
                 |        <lt4:platformAvailable>true</lt4:platformAvailable>
                 |        <lt7:departures>
@@ -70,55 +127,7 @@ class GetNextDeparturesSpec : StringSpec({
                 |    </GetNextDeparturesResponse>
                 |  </soap:Body>
                 |</soap:Envelope>
-                """.trimMargin().reader()
-            )
-        )
-
-        assertSoftly {
-
-            result.body should beInstanceOf<BodySuccess>()
-
-            val body = result.body as BodySuccess
-
-            val departuresBoard = body.departuresResponse?.departuresBoard
-            departuresBoard?.generatedAt shouldBe "2019-01-13T13:51:17.106902+00:00"
-            departuresBoard?.locationName shouldBe "Sheffield"
-            departuresBoard?.crs shouldBe "SHF"
-            departuresBoard?.platformAvailable shouldBe true
-
-            departuresBoard?.nrccMessages?.first() shouldContain("Disruption between Bristol Temple Meads and Taunton via Weston-super-Mare")
-
-            val departureItems = departuresBoard?.departures
-            departureItems?.size shouldBe 1
-
-            val departureItem = departureItems?.first()
-            departureItem?.crs shouldBe "CLE"
-
-            val service = departureItem?.service
-            service?.sta shouldBe "14:08"
-            service?.eta shouldBe "On time"
-            service?.std shouldBe "14:29"
-            service?.etd shouldBe "On time"
-            service?.platform shouldBe "1B"
-            service?.operator shouldBe "TransPennine Express"
-            service?.operatorCode shouldBe "TP"
-            service?.serviceType shouldBe "train"
-            service?.serviceID shouldBe "8ipq5Cv9fDMbR0rDg6riKA=="
-            service?.rsid shouldBe "TP603200"
-
-            val origins = service?.origin
-            origins?.size shouldBe 1
-
-            val origin = origins?.first()
-            origin?.locationName shouldBe "Manchester Airport"
-            origin?.crs shouldBe "MIA"
-
-            val destinations = service?.destination
-            destinations?.size shouldBe 1
-
-            val destination = destinations?.first()
-            destination?.locationName shouldBe "Cleethorpes"
-            destination?.crs shouldBe "CLE"
-        }
+                """.trimMargin()
     }
-})
+
+}
