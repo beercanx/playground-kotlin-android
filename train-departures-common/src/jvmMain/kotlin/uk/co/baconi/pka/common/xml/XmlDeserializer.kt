@@ -15,7 +15,7 @@ actual class XmlDeserializer(private val parser: XmlPullParser, reader: Reader):
     }
 
     actual fun require(type: EventType, name: String, namespace: String?) = parser.require(type.int(), namespace, name)
-    actual fun getAttributeValue(name: String, namespace: String?): String? = parser.getAttributeValue(name, namespace)
+    actual fun getAttributeValue(name: String, namespace: String?): String? = parser.getAttributeValue(namespace, name)
     actual fun getPrefix(): String? = parser.prefix
     actual fun getName(): String? = parser.name
     actual fun next(): EventType = parser.next().eventType()
