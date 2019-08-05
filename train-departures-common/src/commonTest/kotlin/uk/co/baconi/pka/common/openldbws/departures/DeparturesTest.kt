@@ -9,7 +9,6 @@ import kotlin.test.expect
 class DeparturesTest : BaseDtoTest<Departures> {
 
     override val tag: String = "DeparturesBoard"
-
     override fun XmlDeserializer.extractor(): Departures = departures()
 
     @Test
