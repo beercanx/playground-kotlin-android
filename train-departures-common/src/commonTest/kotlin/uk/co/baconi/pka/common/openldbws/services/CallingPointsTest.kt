@@ -13,12 +13,10 @@ class CallingPointsTest : BaseDtoTest<CallingPoints> {
 
     @Test
     fun `Should decode with no fields present`() {
-
         expect(CallingPoints()) {
             XmlDeserializer("<callingPointList/>")
                 .callingPoints()
         }
-
         expect(CallingPoints()) {
             XmlDeserializer("<callingPointList></callingPointList>")
                 .callingPoints()

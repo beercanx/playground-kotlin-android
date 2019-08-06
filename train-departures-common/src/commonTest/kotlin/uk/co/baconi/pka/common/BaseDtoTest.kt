@@ -21,4 +21,9 @@ interface BaseDtoTest<DTO> {
             .extractField()
     }
 
+    infix fun <A> A.shouldBe(any: A?) {
+        expect(any) {
+            this
+        }
+    }
 }
