@@ -10,4 +10,6 @@ interface BaseTest {
         }
     }
 
+   fun String.trimFlat() = trimIndent().lines().joinToString("", transform = String::trim)
+
 }

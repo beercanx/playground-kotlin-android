@@ -150,14 +150,23 @@ class OpenLDBWSApi(private val client: HttpClient) {
             tag("ldb:crs") {
                 text(from.crsCode)
             }
-            tag("ldb:filterCrs") {
-                text(to.crsCode)
+            if(type is DeparturesType) {
+                tag("ldb:filterList") {
+                    tag("ldb:crs") {
+                        text(to.crsCode)
+                    }
+                }
             }
-            tag("ldb:filterType") {
-                text("to")
-            }
-            tag("ldb:numRows") {
-                text("8") // TODO - Probably look at making this dynamic based on devices screen size.
+            if(type is DepartureBoardType) {
+                tag("ldb:filterCrs") {
+                    text(to.crsCode)
+                }
+                tag("ldb:filterType") {
+                    text("to")
+                }
+                tag("ldb:numRows") {
+                    text("8") // TODO - Probably look at making this dynamic based on devices screen size.
+                }
             }
             tag("ldb:timeOffset") {
                 text("0")
