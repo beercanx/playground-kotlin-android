@@ -15,8 +15,8 @@ interface BaseDtoTest<DTO> {
         }
     }
 
-    fun <A, B> decodeAndGetField(tag: String, value: A, extractField: DTO.() -> B): B {
-        return XmlDeserializer("<${this.tag}><$tag>$value</$tag></${this.tag}>")
+    fun <A, B> decodeAndGetField(name: String, value: A, extractField: DTO.() -> B): B {
+        return XmlDeserializer("<$tag><$name>$value</$name></$tag>")
             .extractor()
             .extractField()
     }
