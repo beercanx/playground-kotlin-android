@@ -1,7 +1,7 @@
 package uk.co.baconi.pka.common.openldbws.services
 
+import uk.co.baconi.pka.common.xml.EventType
 import uk.co.baconi.pka.common.xml.XmlDeserializer
-import uk.co.baconi.pka.common.xml.parse
 import uk.co.baconi.pka.common.xml.readAsText
 
 data class Toilet(
@@ -11,11 +11,18 @@ data class Toilet(
 
     companion object {
 
-        fun XmlDeserializer.toilet(): Toilet = parse("toilet") { result ->
-            result.copy(
+        fun XmlDeserializer.toilet(): Toilet {
+
+            require(EventType.START_TAG, "toilet")
+
+            val result = Toilet(
                 status = getAttributeValue("status")?.let(ToiletStatus.Companion::lookup),
                 type = readAsText()
             )
+
+            require(EventType.END_TAG, "toilet")
+
+            return result
         }
     }
 }
