@@ -1,7 +1,8 @@
-package uk.co.baconi.pka.common.openldbws.requests
+package uk.co.baconi.pka.common.openldbws.requests.examples
 
 import uk.co.baconi.pka.common.openldbws.details.ServiceDetails
 import uk.co.baconi.pka.common.openldbws.details.ServiceDetails.Companion.serviceDetails
+import uk.co.baconi.pka.common.openldbws.requests.DetailsType
 import uk.co.baconi.pka.common.openldbws.services.CallingPoint
 import uk.co.baconi.pka.common.openldbws.services.CallingPoints
 import uk.co.baconi.pka.common.soap.body

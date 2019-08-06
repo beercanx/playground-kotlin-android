@@ -1,8 +1,9 @@
-package uk.co.baconi.pka.common.openldbws.requests
+package uk.co.baconi.pka.common.openldbws.requests.examples
 
 import uk.co.baconi.pka.common.openldbws.departures.Departures
 import uk.co.baconi.pka.common.openldbws.departures.Departures.Companion.departures
 import uk.co.baconi.pka.common.openldbws.departures.Destination
+import uk.co.baconi.pka.common.openldbws.requests.DeparturesType
 import uk.co.baconi.pka.common.openldbws.services.Service
 import uk.co.baconi.pka.common.openldbws.services.ServiceLocation
 import uk.co.baconi.pka.common.soap.body
