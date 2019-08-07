@@ -27,11 +27,11 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation(kotlin("reflect")) // Including to update as Ktor includes it
+                implementation(kotlin("reflect"))
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.2")
 
-                implementation("io.ktor:ktor-client-core:1.2.2")
+                implementation("io.ktor:ktor-client-core:1.1.3")
             }
         }
 
@@ -50,7 +50,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2")
 
                 implementation("io.ktor:ktor-client-core-jvm:1.1.3")
-                implementation("io.ktor:ktor-client-okhttp:1.1.3")
 
                 // XML - https://developer.android.com/training/basics/network-ops/xml
                 compileOnly("net.sf.kxml:kxml2:2.3.0")
@@ -79,10 +78,10 @@ kotlin {
         // TODO - Add iOS support at some point
         //iosMain {
         //    dependencies {
-        //        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.2.1")
+        //        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.2.2")
         //
-        //        implementation("io.ktor:ktor-client-core-native:1.2.2")
-        //        implementation("io.ktor:ktor-client-ios:1.2.2")
+        //        implementation("io.ktor:ktor-client-core-native:1.1.3")
+        //        implementation("io.ktor:ktor-client-ios:1.1.3")
         //    }
         //}
     }

@@ -45,9 +45,10 @@ android {
 
 dependencies {
     implementation(kotlin("stdlib-jdk7"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1")
 
     implementation(project(":train-departures-common"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.2")
 
     implementation("io.ktor:ktor-client-okhttp:1.1.3")
 
