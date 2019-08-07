@@ -13,22 +13,21 @@ import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
-import arrow.core.Try.Failure
-import arrow.core.Try.Success
+import io.ktor.client.HttpClient
 import kotlinx.android.synthetic.main.content_app_bar_layout.*
 import kotlinx.android.synthetic.main.content_service_details.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import uk.co.baconi.pka.common.AccessToken
+import uk.co.baconi.pka.common.openldbws.details.ServiceDetails
+import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
+import uk.co.baconi.pka.common.openldbws.services.CallingPoint
+import uk.co.baconi.pka.common.openldbws.services.CallingPoints
 import uk.co.baconi.pka.td.R
 import uk.co.baconi.pka.td.provideAccessToken
 import uk.co.baconi.pka.td.startErrorActivity
 import uk.co.baconi.pka.td.tables.updateRow
-import uk.co.baconi.pka.tdb.AccessToken
-import uk.co.baconi.pka.tdb.Actions
-import uk.co.baconi.pka.tdb.openldbws.responses.CallingPoint
-import uk.co.baconi.pka.tdb.openldbws.responses.CallingPoints
-import uk.co.baconi.pka.tdb.openldbws.responses.servicedetails.ServiceDetailsResult
 
 class ServiceDetailsActivity : AppCompatActivity() {
 
@@ -41,6 +40,8 @@ class ServiceDetailsActivity : AppCompatActivity() {
         }
     }
 
+    private val openLDBWSApi = OpenLDBWSApi(HttpClient())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,15 +49,14 @@ class ServiceDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_service_details)
         setSupportActionBar(toolbar)
 
-        when(val accessToken = provideAccessToken()) {
-            is Success<AccessToken> -> {
-                val serviceId = intent.getStringExtra(SERVICE_ID)
-                searchForServiceDetails(accessToken.value, serviceId)
-            }
-            is Failure -> {
-                Log.e(TAG, "Unable to get access token", accessToken.exception)
-                startErrorActivity(accessToken.exception)
-            }
+        runCatching {
+            provideAccessToken()
+        }.onSuccess { accessToken ->
+            val serviceId = intent.getStringExtra(SERVICE_ID)
+            searchForServiceDetails(accessToken, serviceId)
+        }.onFailure { exception ->
+            Log.e(TAG, "Unable to get access token", exception)
+            startErrorActivity(exception)
         }
 
         // TODO - Implement a refresh layout to enable reloading with new data (to update the calling points)
@@ -65,18 +65,17 @@ class ServiceDetailsActivity : AppCompatActivity() {
     }
 
     private fun searchForServiceDetails(accessToken: AccessToken, serviceId: String) = GlobalScope.launch {
-        when(val results = Actions.getServiceDetails(accessToken, serviceId)) {
-            is Success<ServiceDetailsResult> -> {
-                displayServiceDetailsView(results.value)
-            }
-            is Failure -> {
-                Log.e(TAG, "Unable to get service details", results.exception)
-                startErrorActivity(results.exception)
-            }
+        runCatching {
+            openLDBWSApi.getServiceDetails(accessToken, serviceId)
+        }.onSuccess { results ->
+            displayServiceDetailsView(results)
+        }.onFailure { exception ->
+            Log.e(TAG, "Unable to get service details", exception)
+            startErrorActivity(exception)
         }
     }
 
-    private fun displayServiceDetailsView(result: ServiceDetailsResult) = GlobalScope.launch(Dispatchers.Main) {
+    private fun displayServiceDetailsView(result: ServiceDetails) = GlobalScope.launch(Dispatchers.Main) {
 
         // Update service details layout
         updateRow(generated_at_row, generated_at_value, result.generatedAt)
@@ -94,12 +93,12 @@ class ServiceDetailsActivity : AppCompatActivity() {
         updateRow(detach_front_row, detach_front_value, result.detachFront)
         updateRow(reverse_formation_row, reverse_formation_value, result.isReverseFormation)
         updateRow(platform_row, platform_value, result.platform)
-        updateRow(sta_row, sta_value, result.sta)
-        updateRow(eta_row, eta_value, result.eta)
-        updateRow(ata_row, ata_value, result.ata)
-        updateRow(std_row, std_value, result.std)
-        updateRow(etd_row, etd_value, result.etd)
-        updateRow(atd_row, atd_value, result.atd)
+        updateRow(sta_row, sta_value, result.scheduledArrivalTime)
+        updateRow(eta_row, eta_value, result.estimatedArrivalTime)
+        updateRow(ata_row, ata_value, result.actualArrivalTime)
+        updateRow(std_row, std_value, result.scheduledDepartureTime)
+        updateRow(etd_row, etd_value, result.estimatedDepartureTime)
+        updateRow(atd_row, atd_value, result.actualDepartureTime)
 
         // TODO - Improve if we ever start getting this data
         updateRow(adhoc_alerts_row, result.adhocAlerts) { messages ->
@@ -228,12 +227,12 @@ class ServiceDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun ServiceDetailsResult.toCallingPoint(): CallingPoint = CallingPoint(
+    private fun ServiceDetails.toCallingPoint(): CallingPoint = CallingPoint(
         locationName = locationName,
         crs = crs,
-        scheduledTime = std,
-        estimatedTime = etd,
-        actualTime = atd,
+        scheduledTime = scheduledDepartureTime,
+        estimatedTime = estimatedDepartureTime,
+        actualTime = actualDepartureTime,
         isCancelled = isCancelled,
         length = length,
         detachFront = detachFront,

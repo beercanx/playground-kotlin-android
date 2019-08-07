@@ -6,9 +6,11 @@ import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
+import uk.co.baconi.pka.td.DepartureStatus.*
 import uk.co.baconi.pka.td.R
+import uk.co.baconi.pka.td.departureStatus
 import uk.co.baconi.pka.td.getColourCompat
-import uk.co.baconi.pka.tdb.openldbws.responses.CallingPoint
+import uk.co.baconi.pka.common.openldbws.services.CallingPoint
 import kotlin.math.min
 
 class CallingPointsDrawable(
@@ -77,13 +79,13 @@ class CallingPointsDrawable(
         all.forEachIndexed { index, entry ->
 
             // TODO - Extract something that also works with the SearchResultsAdapter
-            val paint = when(entry.estimatedTime ?: entry.actualTime) {
+            val paint = when(entry.departureStatus) {
                 null -> unknownPaint
-                "No report" -> noReportPaint
-                "On time" -> onTimePaint
-                "Delayed" -> delayedPaint
-                "Cancelled" -> cancelledPaint
-                else -> estimatedPaint
+                NO_REPORT -> noReportPaint
+                ON_TIME -> onTimePaint
+                DELAYED -> delayedPaint
+                CANCELLED -> cancelledPaint
+                HH_MM -> estimatedPaint
             }
 
             val adjustedCellCentreY = calculateCellCentreY(index)

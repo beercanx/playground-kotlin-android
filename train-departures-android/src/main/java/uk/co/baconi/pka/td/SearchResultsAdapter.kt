@@ -5,13 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import uk.co.baconi.pka.common.openldbws.services.Service
+import uk.co.baconi.pka.td.DepartureStatus.*
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity
 import uk.co.baconi.pka.td.servicedetails.ServiceDetailsActivity.Companion.SERVICE_ID
 import uk.co.baconi.pka.td.settings.Settings
-import uk.co.baconi.pka.tdb.openldbws.responses.ServiceItem
 
 class SearchResultsAdapter(
-    private val searchResults: MutableList<ServiceItem>
+    private val searchResults: MutableList<Service>
 ) : RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder>() {
 
     // Provide a reference to the views for each data item
@@ -52,40 +53,40 @@ class SearchResultsAdapter(
         val destinationName = destination?.locationName
         val destinationCrs = destination?.crs
 
-        val (departureTimeText: String?, statusColourId: Int) = when(service.etd) {
+        val (departureTimeText: String?, statusColourId: Int) = when(service.departureStatus) {
             null -> { // Not present
                 Pair(
-                    service.std,
+                    service.scheduledDepartureTime,
                     R.color.search_result_departure_time_etd_unknown
                 )
             }
-            "On time" -> {
+            ON_TIME -> {
                 Pair(
-                    service.std,
+                    service.scheduledDepartureTime,
                     R.color.search_result_departure_time_on_time
                 )
             }
-            "No report" -> {
+            NO_REPORT -> {
                 Pair(
                     context.getString(R.string.search_result_no_report),
                     R.color.search_result_departure_time_no_report
                 )
             }
-            "Delayed" -> {
+            DELAYED -> {
                 Pair(
                     context.getString(R.string.search_result_delayed),
                     R.color.search_result_departure_time_delayed
                 )
             }
-            "Cancelled" -> {
+            CANCELLED -> {
                 Pair(
                     context.getString(R.string.search_result_cancelled),
                     R.color.search_result_departure_time_cancelled
                 )
             }
-            else -> { // Estimated
+            HH_MM -> { // Estimated
                 Pair(
-                    service.etd,
+                    service.estimatedDepartureTime,
                     R.color.search_result_departure_time_estimated
                 )
             }
