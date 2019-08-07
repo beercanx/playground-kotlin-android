@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.common.openldbws.requests.examples
+package uk.co.baconi.pka.common.openldbws.responses
 
 import uk.co.baconi.pka.common.openldbws.details.ServiceDetails
 import uk.co.baconi.pka.common.openldbws.details.ServiceDetails.Companion.serviceDetails
@@ -12,7 +12,7 @@ import uk.co.baconi.pka.common.xml.XmlDeserializer
 import kotlin.test.Test
 import kotlin.test.expect
 
-class GetServiceDetailsRequestTest {
+class GetServiceDetailsResponseTest {
 
     private val type = DetailsType.ServiceDetails
 
