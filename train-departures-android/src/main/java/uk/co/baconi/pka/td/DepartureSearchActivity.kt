@@ -130,12 +130,14 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         search_criteria_from_auto_complete.apply {
             adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
-            setSelectionByStationName("Meadowhall")
+            setSelectionByStationName("Meadowhall") // TODO - Load from storage
+            // TODO - add a listener to save changes to the selection
         }
 
         search_criteria_to_auto_complete.apply {
             adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
-            setSelectionByStationName("Sheffield")
+            setSelectionByStationName("Sheffield") // TODO - Load from storage
+            // TODO - add a listener to save changes to the selection
         }
     }
 
