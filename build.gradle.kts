@@ -19,3 +19,7 @@ allprojects {
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }
+
+tasks.wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
