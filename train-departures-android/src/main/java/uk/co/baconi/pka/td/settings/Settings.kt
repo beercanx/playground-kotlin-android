@@ -6,8 +6,8 @@ import android.preference.PreferenceManager
 import kotlin.reflect.KFunction3
 
 sealed class Settings<A>(
-    private val key: String,
-    private val default: A,
+    val key: String,
+    val default: A,
     private val provider: KFunction3<SharedPreferences, String, A, A>
 ) {
 
