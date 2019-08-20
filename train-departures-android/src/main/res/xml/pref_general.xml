@@ -15,31 +15,24 @@
 
     <androidx.preference.SwitchPreferenceCompat
         app:key="enable_coloured_avatars"
-        app:title="@string/pref_enable_coloured_avatars_title"
-        app:defaultValue="true" />
+        app:title="@string/pref_enable_coloured_avatars_title" />
 
     <androidx.preference.SwitchPreferenceCompat
         app:key="enable_coloured_departure_times"
-        app:title="@string/pref_enable_coloured_departure_times_title"
-        app:defaultValue="true" />
+        app:title="@string/pref_enable_coloured_departure_times_title" />
 
     <androidx.preference.SwitchPreferenceCompat
         app:key="enable_speaking_first_result"
-        app:title="@string/pref_enable_speaking_first_result_title"
-        app:defaultValue="true" />
+        app:title="@string/pref_enable_speaking_first_result_title" />
 
     <ListPreference
         app:key="which_search_type"
         app:title="@string/pref_which_search_type_title"
-        app:defaultValue="MULTIPLE_RESULTS"
-        app:entries="@array/pref_which_search_type_labels"
-        app:entryValues="@array/pref_which_search_type_values"/>
+        android:summary="@string/pref_which_search_type_summary" />
 
     <ListPreference
         app:key="which_speech_type"
         app:title="@string/pref_which_speech_type_title"
-        app:defaultValue="PAUSE_OTHER_SOUNDS"
-        app:entries="@array/pref_which_speech_type_labels"
-        app:entryValues="@array/pref_which_speech_type_values"/>
+        android:summary="@string/pref_which_speech_type_summary" />
 
 </androidx.preference.PreferenceScreen>
