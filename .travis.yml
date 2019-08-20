@@ -34,7 +34,7 @@ deploy:
   file:
     - train-departures-common/build/libs/train-departures-common-jvm.jar
     - train-departures-common/build/libs/train-departures-common-metadata.jar
-    - train-departures-common/train-departures-common-metadata-sources.jar
+    - train-departures-common/build/libs/train-departures-common-metadata-sources.jar
     - train-departures-android/build/outputs/apk/debug/train-departures-android-debug.apk
     - train-departures-android/build/outputs/apk/release/train-departures-android-release-unsigned.apk
   skip_cleanup: true
