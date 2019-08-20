@@ -1,17 +1,13 @@
 package uk.co.baconi.pka.td
 
 import android.content.Context
-import android.media.AudioAttributes
-import android.media.AudioFocusRequest
-import android.media.AudioManager
-import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Spinner
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.ktor.client.HttpClient
@@ -28,10 +24,13 @@ import uk.co.baconi.pka.common.openldbws.requests.DepartureBoardType
 import uk.co.baconi.pka.common.openldbws.requests.DeparturesType
 import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
 import uk.co.baconi.pka.common.openldbws.services.Service
+import uk.co.baconi.pka.td.depatures.OnStationSelectedListener
 import uk.co.baconi.pka.td.settings.SearchType
 import uk.co.baconi.pka.td.settings.Settings
 import uk.co.baconi.pka.td.settings.SettingsActivity
-import uk.co.baconi.pka.td.settings.SpeechType
+import uk.co.baconi.pka.td.tts.configureContentType
+import uk.co.baconi.pka.td.tts.configureFocusGain
+import uk.co.baconi.pka.td.tts.createTextToSpeech
 import java.util.*
 
 class DepartureSearchActivity : AppCompatActivity() {
@@ -54,61 +53,11 @@ class DepartureSearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_departure_search)
         setSupportActionBar(toolbar)
 
-        val context: Context = this
-
         // TODO - Extract into component and inject
         if(!this::textToSpeech.isInitialized) {
-
-            textToSpeech = TextToSpeech(context) {
-                textToSpeech.language = applicationContext.getCurrentLocale()
-            }
-
-            val audioAttributes = AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                .build()
-
-            textToSpeech.setAudioAttributes(audioAttributes)
-
-            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-
-            // TODO - Work out how we do it for older devices
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                textToSpeech.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-
-                    val focusRequests = mutableMapOf<String, AudioFocusRequest>()
-
-                    override fun onStart(utteranceId: String) {
-
-                        val focusGain = when(Settings.WhichSpeechType.getSetting(context)) {
-                            SpeechType.PAUSE_OTHER_SOUNDS -> AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE
-                            SpeechType.DIM_OTHER_SOUNDS -> AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
-                        }
-
-                        val audioFocusRequest = AudioFocusRequest
-                            .Builder(focusGain)
-                            .build()
-
-                        focusRequests[utteranceId] = audioFocusRequest
-
-                        audioManager.requestAudioFocus(audioFocusRequest)
-                    }
-
-                    override fun onDone(utteranceId: String) {
-                        val focusRequest = focusRequests[utteranceId]
-                        if(focusRequest != null) {
-                            audioManager.abandonAudioFocusRequest(focusRequest)
-                        }
-                    }
-
-                    override fun onStop(utteranceId: String, interrupted: Boolean) {
-                        onDone(utteranceId)
-                    }
-
-                    override fun onError(utteranceId: String) {
-                        onDone(utteranceId)
-                    }
-                })
+            textToSpeech = createTextToSpeech(this@DepartureSearchActivity).apply {
+                configureContentType()
+                configureFocusGain(this@DepartureSearchActivity)
             }
         }
 
@@ -116,7 +65,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         viewAdapter = SearchResultsAdapter(searchResults)
 
         search_results.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(this@DepartureSearchActivity)
             adapter = viewAdapter
         }
 
@@ -129,13 +78,27 @@ class DepartureSearchActivity : AppCompatActivity() {
         // TODO - Look into search by both CRS Code and Station Name
 
         search_criteria_from_auto_complete.apply {
-            adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
-            setSelectionByStationName("Meadowhall")
+            adapter = SearchCriteriaAdapter(this@DepartureSearchActivity, StationCodes.stationCodes)
+            getSavedStationCode(
+                R.string.pref_from_station_code,
+                R.string.pref_from_station_code_default
+            ).also { code ->
+                setSelectionByStationCode(code)
+            }
+            onItemSelectedListener = OnStationSelectedListener(this@DepartureSearchActivity, R.string.pref_from_station_code) // TODO - Load from storage
+            // TODO - add a listener to save changes to the selection
         }
 
         search_criteria_to_auto_complete.apply {
-            adapter = SearchCriteriaAdapter(context, StationCodes.stationCodes)
-            setSelectionByStationName("Sheffield")
+            adapter = SearchCriteriaAdapter(this@DepartureSearchActivity, StationCodes.stationCodes)
+            getSavedStationCode(
+                R.string.pref_to_station_code,
+                R.string.pref_to_station_code_default
+            ).also { code ->
+                setSelectionByStationCode(code)
+            }
+            onItemSelectedListener = OnStationSelectedListener(this@DepartureSearchActivity, R.string.pref_to_station_code) // TODO - Load from storage
+            // TODO - add a listener to save changes to the selection
         }
     }
 
@@ -146,8 +109,13 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun Spinner.setSelectionByStationName(name: String) {
-        setSelection(StationCodes.stationCodes.indexOfFirst(StationCodes.byName(name)))
+    private fun getSavedStationCode(@StringRes type: Int, @StringRes default: Int): String {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        return sharedPref.getString(getString(type), null) ?: getString(default)
+    }
+
+    private fun Spinner.setSelectionByStationCode(code: String) {
+        setSelection(StationCodes.stationCodes.indexOfFirst(StationCodes.byCode(code)))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -217,7 +185,9 @@ class DepartureSearchActivity : AppCompatActivity() {
             }
         }.onSuccess { results ->
             displaySearchResultsView(results)
-            speakSearchResult(results.first())
+            if(results.isNotEmpty()) {
+                speakSearchResult(results.first())
+            }
         }.onFailure { exception ->
             Log.e(TAG, "Unable to search for departures", exception)
             handleError(exception)
