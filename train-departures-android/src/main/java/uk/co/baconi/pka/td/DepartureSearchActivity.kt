@@ -85,8 +85,7 @@ class DepartureSearchActivity : AppCompatActivity() {
             ).also { code ->
                 setSelectionByStationCode(code)
             }
-            onItemSelectedListener = OnStationSelectedListener(this@DepartureSearchActivity, R.string.pref_from_station_code) // TODO - Load from storage
-            // TODO - add a listener to save changes to the selection
+            onItemSelectedListener = OnStationSelectedListener(this@DepartureSearchActivity, R.string.pref_from_station_code)
         }
 
         search_criteria_to_auto_complete.apply {
@@ -97,8 +96,7 @@ class DepartureSearchActivity : AppCompatActivity() {
             ).also { code ->
                 setSelectionByStationCode(code)
             }
-            onItemSelectedListener = OnStationSelectedListener(this@DepartureSearchActivity, R.string.pref_to_station_code) // TODO - Load from storage
-            // TODO - add a listener to save changes to the selection
+            onItemSelectedListener = OnStationSelectedListener(this@DepartureSearchActivity, R.string.pref_to_station_code)
         }
     }
 
