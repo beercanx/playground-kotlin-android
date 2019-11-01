@@ -34,7 +34,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/search_criteria_from_auto_complete" />
 
-        <Spinner
+        <include layout="@layout/search_criteria_station_view_item"
             android:id="@+id/search_criteria_from_auto_complete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/search_criteria_to_auto_complete" />
 
-        <Spinner
+        <include layout="@layout/search_criteria_station_view_item"
             android:id="@+id/search_criteria_to_auto_complete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
