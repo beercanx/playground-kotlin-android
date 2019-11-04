@@ -13,30 +13,50 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".DepartureSearchActivity"
             android:label="@string/title_activity_departure_search"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Enables search dialog -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <!-- Enables the search dialog for finding stations. -->
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_stations" />
         </activity>
+
         <activity
             android:name=".settings.SettingsActivity"
             android:parentActivityName=".DepartureSearchActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".servicedetails.ServiceDetailsActivity"
             android:parentActivityName=".DepartureSearchActivity"
             android:label="@string/title_activity_service_details"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".errors.ErrorActivity"
             android:parentActivityName=".DepartureSearchActivity"
             android:label="@string/title_activity_error"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <provider
+            android:authorities="uk.co.baconi.pka.td.stations"
+            android:name=".stations.StationSuggestionProvider" />
+
     </application>
 
 </manifest>
