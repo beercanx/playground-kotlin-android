@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.common
+package uk.co.baconi.pka.common.stations
 
 // TODO - Consider a better CSV format or better storage mechanism for minimalistic code for reading
 internal actual fun loadStationCodes(): List<StationCode> = StationCodes

@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -19,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import uk.co.baconi.pka.common.AccessToken
-import uk.co.baconi.pka.common.StationCode
+import uk.co.baconi.pka.common.stations.StationCode
 import uk.co.baconi.pka.common.openldbws.requests.DepartureBoardType
 import uk.co.baconi.pka.common.openldbws.requests.DeparturesType
 import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
@@ -78,9 +77,6 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         // TODO - Look into search by both CRS Code and Station Name
         // TODO - Create a pop up search view for a specific fake spinner
-        station_search_layout.isVisible = false
-        station_search_view.isSubmitButtonEnabled = true
-        station_search_view.isQueryRefinementEnabled = true
         setupStationSelectors(search_criteria_from_auto_complete, stationSelections::getStationSelectionFrom, stationSelections::saveStationSelectionFrom)
         setupStationSelectors(search_criteria_to_auto_complete, stationSelections::getStationSelectionTo, stationSelections::saveStationSelectionTo)
         // TODO - Populate search with station suggestions
@@ -128,12 +124,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         val onClickListener = View.OnClickListener {
             Log.d(TAG, "Station selection clicked")
             // TODO - Open and overlay search that only returns on cancelling, aborting or selection from the results.
-            getMenuItem(R.id.app_bar_search).isVisible = false
-            getMenuItem(R.id.app_bar_toggle).isVisible = false
-            departure_search_criteria.isVisible = false
-            search_results_refresh_layout.isVisible = false
-            station_search_layout.isVisible = true
-            // TODO - On Suggestion Click Listener
+            onSearchRequested()
         }
 
         findViewById<TextView>(R.id.search_criteria_station_avatar).setOnClickListener(onClickListener)

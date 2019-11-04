@@ -11,7 +11,7 @@ import io.ktor.http.content.TextContent
 import io.mockk.*
 import uk.co.baconi.pka.common.AccessToken
 import uk.co.baconi.pka.common.BaseTest
-import uk.co.baconi.pka.common.StationCode
+import uk.co.baconi.pka.common.stations.StationCode
 import uk.co.baconi.pka.common.openldbws.departures.DepartureBoard
 import uk.co.baconi.pka.common.openldbws.departures.Departures
 import uk.co.baconi.pka.common.openldbws.details.ServiceDetails

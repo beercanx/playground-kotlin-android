@@ -2,11 +2,9 @@ package uk.co.baconi.pka.td.depatures
 
 import android.app.Activity
 import android.content.Context
-import android.view.View
-import android.widget.AdapterView
 import androidx.annotation.StringRes
-import uk.co.baconi.pka.common.StationCode
-import uk.co.baconi.pka.common.StationCodes
+import uk.co.baconi.pka.common.stations.StationCode
+import uk.co.baconi.pka.common.stations.StationCodes
 import uk.co.baconi.pka.td.R
 
 class StationSelections(private val activity: Activity) {
