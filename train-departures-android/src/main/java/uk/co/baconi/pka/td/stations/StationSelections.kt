@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.td.depatures
+package uk.co.baconi.pka.td.stations
 
 import android.app.Activity
 import android.content.Context

@@ -5,7 +5,6 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.ktor.client.HttpClient
@@ -16,14 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import uk.co.baconi.pka.common.AccessToken
-import uk.co.baconi.pka.common.stations.StationCode
 import uk.co.baconi.pka.common.openldbws.requests.DepartureBoardType
 import uk.co.baconi.pka.common.openldbws.requests.DeparturesType
 import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
 import uk.co.baconi.pka.common.openldbws.services.Service
-import uk.co.baconi.pka.common.stations.StationCodes
-import uk.co.baconi.pka.td.depatures.OnStationSelectedListener
-import uk.co.baconi.pka.td.depatures.StationSelections
+import uk.co.baconi.pka.td.stations.OnStationSelectedListener
+import uk.co.baconi.pka.td.stations.StationCodeAdapter
+import uk.co.baconi.pka.td.stations.StationSelections
 import uk.co.baconi.pka.td.settings.SearchType
 import uk.co.baconi.pka.td.settings.Settings
 import uk.co.baconi.pka.td.settings.SettingsActivity
@@ -76,15 +74,17 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
 
         search_criteria_from_auto_complete.apply {
-            adapter = SearchCriteriaAdapter(this@DepartureSearchActivity, StationCodes.stationCodes)
-            setSelectionByStationCode(stationSelections.getStationSelectionFrom())
-            onItemSelectedListener = OnStationSelectedListener(stationSelections::saveStationSelectionFrom)
+            setAdapter(StationCodeAdapter(this@DepartureSearchActivity))
+            //setSelectionByStationCode(stationSelections.getStationSelectionFrom())
+            onItemSelectedListener =
+                OnStationSelectedListener(stationSelections::saveStationSelectionFrom)
         }
 
         search_criteria_to_auto_complete.apply {
-            adapter = SearchCriteriaAdapter(this@DepartureSearchActivity, StationCodes.stationCodes)
-            setSelectionByStationCode(stationSelections.getStationSelectionTo())
-            onItemSelectedListener = OnStationSelectedListener(stationSelections::saveStationSelectionTo)
+            setAdapter(StationCodeAdapter(this@DepartureSearchActivity))
+            //setSelectionByStationCode(stationSelections.getStationSelectionTo())
+            onItemSelectedListener =
+                OnStationSelectedListener(stationSelections::saveStationSelectionTo)
         }
 
         // TODO - Look into search by both CRS Code and Station Name
@@ -124,19 +124,14 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
     }
 
-    // TODO - Look into auto updating based on changes to properties
-    private fun Spinner.setSelectionByStationCode(stationCode: StationCode) {
-        setSelection(StationCodes.stationCodes.indexOf(stationCode))
-    }
-
-    // Toggle the from and to search selections
+    // TODO - Toggle the from and to search selections
     private fun toggleSearchCriteria() {
-        val fromPosition = stationSelections.getStationSelectionFrom()
-        val toPosition = stationSelections.getStationSelectionTo()
-        stationSelections.saveStationSelectionFrom(toPosition)
-        stationSelections.saveStationSelectionTo(fromPosition)
-        search_criteria_from_auto_complete.setSelectionByStationCode(toPosition)
-        search_criteria_to_auto_complete.setSelectionByStationCode(fromPosition)
+        //val fromPosition = stationSelections.getStationSelectionFrom()
+        //val toPosition = stationSelections.getStationSelectionTo()
+        //stationSelections.saveStationSelectionFrom(toPosition)
+        //stationSelections.saveStationSelectionTo(fromPosition)
+        //search_criteria_from_auto_complete.setSelectionByStationCode(toPosition)
+        //search_criteria_to_auto_complete.setSelectionByStationCode(fromPosition)
     }
 
     private fun startSearchForDepartures() {
@@ -156,8 +151,12 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     private fun searchForDepartures(accessToken: AccessToken) = GlobalScope.launch {
 
-        val from = search_criteria_from_auto_complete.selectedItem as StationCode
-        val to = search_criteria_to_auto_complete.selectedItem as StationCode
+        // TODO - Make work
+        //val from = search_criteria_from_auto_complete.selectedItem as StationCode
+        //val to = search_criteria_to_auto_complete.selectedItem as StationCode
+
+        val from = stationSelections.getStationSelectionFrom()
+        val to = stationSelections.getStationSelectionTo()
 
         runCatching {
             when(Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)) {

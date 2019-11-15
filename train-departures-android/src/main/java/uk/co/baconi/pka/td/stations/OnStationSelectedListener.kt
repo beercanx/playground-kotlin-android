@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.td.depatures
+package uk.co.baconi.pka.td.stations
 
 import android.view.View
 import android.widget.AdapterView
@@ -11,5 +11,6 @@ class OnStationSelectedListener(private val saveSelection: (StationCode) -> Unit
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
+        // Do nothing for now.
     }
 }
