@@ -73,24 +73,19 @@ class DepartureSearchActivity : AppCompatActivity() {
             }
         }
 
+        // TODO - Consider displaying chosen selection as a fake picker and showing lookup on click / interaction
         search_criteria_from_auto_complete.apply {
             setAdapter(StationCodeAdapter(this@DepartureSearchActivity))
-            //setSelectionByStationCode(stationSelections.getStationSelectionFrom())
-            onItemSelectedListener =
-                OnStationSelectedListener(stationSelections::saveStationSelectionFrom)
+            // TODO - setSelectionByStationCode(stationSelections.getStationSelectionFrom())
+            onItemSelectedListener = OnStationSelectedListener(stationSelections::saveStationSelectionFrom)
         }
 
+        // TODO - Consider displaying chosen selection as a fake picker and showing lookup on click / interaction
         search_criteria_to_auto_complete.apply {
             setAdapter(StationCodeAdapter(this@DepartureSearchActivity))
-            //setSelectionByStationCode(stationSelections.getStationSelectionTo())
-            onItemSelectedListener =
-                OnStationSelectedListener(stationSelections::saveStationSelectionTo)
+            // TODO - setSelectionByStationCode(stationSelections.getStationSelectionTo())
+            onItemSelectedListener = OnStationSelectedListener(stationSelections::saveStationSelectionTo)
         }
-
-        // TODO - Look into search by both CRS Code and Station Name
-        // TODO - Create a pop up search view for a specific fake spinner
-        // TODO - Populate search with station suggestions
-        // TODO - Populate search with recent/recommended stations
     }
 
     override fun onDestroy() {
