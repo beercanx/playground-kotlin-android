@@ -5,9 +5,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.TextView
-import androidx.annotation.IdRes
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.ktor.client.HttpClient
@@ -23,6 +21,8 @@ import uk.co.baconi.pka.common.openldbws.requests.DepartureBoardType
 import uk.co.baconi.pka.common.openldbws.requests.DeparturesType
 import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
 import uk.co.baconi.pka.common.openldbws.services.Service
+import uk.co.baconi.pka.common.stations.StationCodes
+import uk.co.baconi.pka.td.depatures.OnStationSelectedListener
 import uk.co.baconi.pka.td.depatures.StationSelections
 import uk.co.baconi.pka.td.settings.SearchType
 import uk.co.baconi.pka.td.settings.Settings
@@ -75,15 +75,22 @@ class DepartureSearchActivity : AppCompatActivity() {
             }
         }
 
+        search_criteria_from_auto_complete.apply {
+            adapter = SearchCriteriaAdapter(this@DepartureSearchActivity, StationCodes.stationCodes)
+            setSelectionByStationCode(stationSelections.getStationSelectionFrom())
+            onItemSelectedListener = OnStationSelectedListener(stationSelections::saveStationSelectionFrom)
+        }
+
+        search_criteria_to_auto_complete.apply {
+            adapter = SearchCriteriaAdapter(this@DepartureSearchActivity, StationCodes.stationCodes)
+            setSelectionByStationCode(stationSelections.getStationSelectionTo())
+            onItemSelectedListener = OnStationSelectedListener(stationSelections::saveStationSelectionTo)
+        }
+
         // TODO - Look into search by both CRS Code and Station Name
         // TODO - Create a pop up search view for a specific fake spinner
-        setupStationSelectors(search_criteria_from_auto_complete, stationSelections::getStationSelectionFrom, stationSelections::saveStationSelectionFrom)
-        setupStationSelectors(search_criteria_to_auto_complete, stationSelections::getStationSelectionTo, stationSelections::saveStationSelectionTo)
         // TODO - Populate search with station suggestions
         // TODO - Populate search with recent/recommended stations
-
-        // TODO - Look into auto updating based on changes to properties
-        updateStationSelections()
     }
 
     override fun onDestroy() {
@@ -117,30 +124,9 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun getMenuItem(@IdRes id: Int): MenuItem = toolbar.menu.findItem(id)
-
-    private fun setupStationSelectors(view: View, get: () -> StationCode, save: (StationCode) -> Unit) = view.apply {
-
-        val onClickListener = View.OnClickListener {
-            Log.d(TAG, "Station selection clicked")
-            // TODO - Open and overlay search that only returns on cancelling, aborting or selection from the results.
-            onSearchRequested()
-        }
-
-        findViewById<TextView>(R.id.search_criteria_station_avatar).setOnClickListener(onClickListener)
-        findViewById<TextView>(R.id.search_criteria_station_name).setOnClickListener(onClickListener)
-    }
-
-    // Update the layouts for station selection
-    private fun updateStationSelections() {
-        updateStationSelection(search_criteria_from_auto_complete, stationSelections.getStationSelectionFrom())
-        updateStationSelection(search_criteria_to_auto_complete, stationSelections.getStationSelectionTo())
-    }
-
-    // Update the layout that fakes a spinner with the latest selection
-    private fun updateStationSelection(view: View, selection: StationCode) = view.apply {
-        findViewById<TextView>(R.id.search_criteria_station_avatar)?.text = selection.crsCode
-        findViewById<TextView>(R.id.search_criteria_station_name)?.text = selection.stationName
+    // TODO - Look into auto updating based on changes to properties
+    private fun Spinner.setSelectionByStationCode(stationCode: StationCode) {
+        setSelection(StationCodes.stationCodes.indexOf(stationCode))
     }
 
     // Toggle the from and to search selections
@@ -149,7 +135,8 @@ class DepartureSearchActivity : AppCompatActivity() {
         val toPosition = stationSelections.getStationSelectionTo()
         stationSelections.saveStationSelectionFrom(toPosition)
         stationSelections.saveStationSelectionTo(fromPosition)
-        updateStationSelections()
+        search_criteria_from_auto_complete.setSelectionByStationCode(toPosition)
+        search_criteria_to_auto_complete.setSelectionByStationCode(fromPosition)
     }
 
     private fun startSearchForDepartures() {
@@ -169,8 +156,8 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     private fun searchForDepartures(accessToken: AccessToken) = GlobalScope.launch {
 
-        val from = stationSelections.getStationSelectionFrom()
-        val to = stationSelections.getStationSelectionTo()
+        val from = search_criteria_from_auto_complete.selectedItem as StationCode
+        val to = search_criteria_to_auto_complete.selectedItem as StationCode
 
         runCatching {
             when(Settings.WhichSearchType.getSetting(this@DepartureSearchActivity)) {
