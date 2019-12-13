@@ -7,19 +7,20 @@
     <include
         android:id="@+id/search_criteria_display"
         layout="@layout/search_criteria_station_view_item"
+        style="@style/Base.Widget.AppCompat.Spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+    <AutoCompleteTextView
         android:id="@+id/search_criteria_auto_complete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Enter station name or CRS code"
         android:completionThreshold="3"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

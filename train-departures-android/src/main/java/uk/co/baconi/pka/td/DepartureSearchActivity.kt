@@ -11,6 +11,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -128,21 +129,31 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         val search = findViewById<AutoCompleteTextView>(R.id.search_criteria_auto_complete).apply {
             setAdapter(StationCodeAdapter(context))
-            setText(get().stationName)
+
+            val close = {
+                this.isInvisible = true
+                display.isInvisible = false
+                clearListSelection()
+                setText("")
+            }
+
             setOnItemClickListener { parent, _, position, _ ->
-                save(parent.getItemAtPosition(position) as StationCode)
-                this.isGone = true
-                display.isGone = false
+                val selected = parent.getItemAtPosition(position) as StationCode
+                save(selected)
+                display.setSelectionByStationCode(selected)
+                close()
+            }
+            setOnDismissListener {
+                close()
             }
         }
 
         // open
         display.setOnClickListener {
-            display.isGone = true
-            search.isGone = false
+            display.isInvisible = true
+            search.isInvisible = false
+            search.requestFocus()
         }
-
-        // TODO - search.on cancel just close
     }
 
     private fun View.setSelectionByStationCode(stationCode: StationCode) {
