@@ -1,5 +1,6 @@
 package uk.co.baconi.pka.td
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -23,9 +24,8 @@ fun AppCompatActivity.provideAccessToken(): AccessToken {
  * Start an activity in a more Kotlin dsl way.
  */
 inline fun <reified A> Context.startActivity(block: Intent.() -> Unit = {}) {
-    startActivity(Intent(this, A::class.java).apply {
-        block()
-    })
+    val intent = Intent(this, A::class.java).apply(block)
+    startActivity(intent)
 }
 
 /**

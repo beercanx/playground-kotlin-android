@@ -9,6 +9,7 @@ class StationCodeFilter(private val adapter: StationCodeAdapter) : Filter() {
     override fun performFiltering(constraint: CharSequence?): FilterResults {
 
         val results: List<StationCode> = if(!constraint.isNullOrBlank()) {
+            // TODO - Consider sorting to improve suggestions
             StationCodes.stationCodes.filter { stationCode ->
                 stationCode.crsCode.contains(constraint, true) || stationCode.stationName.contains(constraint, true)
             }
@@ -24,7 +25,6 @@ class StationCodeFilter(private val adapter: StationCodeAdapter) : Filter() {
 
     @Suppress("UNCHECKED_CAST")
     override fun publishResults(constraint: CharSequence?, results: FilterResults) {
-        // TODO - Consider sorting to improve suggestions
         adapter.clear()
         adapter.addAll(results.values as List<StationCode>)
     }
