@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.common
+package uk.co.baconi.pka.common.stations
 
 import kotlin.test.Test
 import kotlin.test.assertFailsWith

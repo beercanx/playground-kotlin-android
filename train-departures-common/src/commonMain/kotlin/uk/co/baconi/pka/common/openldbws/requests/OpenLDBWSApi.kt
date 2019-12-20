@@ -8,7 +8,7 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.content.TextContent
 import uk.co.baconi.pka.common.AccessToken
-import uk.co.baconi.pka.common.StationCode
+import uk.co.baconi.pka.common.stations.StationCode
 import uk.co.baconi.pka.common.openldbws.departures.DepartureBoard
 import uk.co.baconi.pka.common.openldbws.departures.DepartureBoard.Companion.departureBoard
 import uk.co.baconi.pka.common.openldbws.departures.Departures

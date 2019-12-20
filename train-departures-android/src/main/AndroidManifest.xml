@@ -13,30 +13,41 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".DepartureSearchActivity"
             android:label="@string/title_activity_departure_search"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".settings.SettingsActivity"
             android:parentActivityName=".DepartureSearchActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".servicedetails.ServiceDetailsActivity"
             android:parentActivityName=".DepartureSearchActivity"
             android:label="@string/title_activity_service_details"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".errors.ErrorActivity"
             android:parentActivityName=".DepartureSearchActivity"
             android:label="@string/title_activity_error"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".stations.StationSearchActivity"
+            android:parentActivityName=".DepartureSearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

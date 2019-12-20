@@ -15,29 +15,29 @@ sealed class Settings<A>(
     object EnableColouredAvatars : Settings<Boolean>("enable_coloured_avatars", false, SharedPreferences::getBoolean)
     object EnableColouredDepartureTimes : Settings<Boolean>("enable_coloured_departure_times", true, SharedPreferences::getBoolean)
     object EnableSpeakingFirstResult : Settings<Boolean>("enable_speaking_first_result", true, SharedPreferences::getBoolean)
-    object WhichSearchType : Settings<SearchType>("which_search_type",
-        SearchType.MULTIPLE_RESULTS,
-        Companion::getSearchType
-    )
-    object WhichSpeechType : Settings<SpeechType>("which_speech_type",
-        SpeechType.PAUSE_OTHER_SOUNDS,
-        Companion::getSpeechType
-    )
+    object WhichSearchType : Settings<SearchType>("which_search_type", SearchType.MULTIPLE_RESULTS, Companion::getSearchType)
+    object WhichSpeechType : Settings<SpeechType>("which_speech_type", SpeechType.PAUSE_OTHER_SOUNDS, Companion::getSpeechType)
 
-    fun getSetting(context: Context): A = getSetting(
-        getPreferenceManager(
-            context
-        )
-    )
+    fun getSetting(context: Context): A = getSetting(getPreferenceManager(context))
     private fun getSetting(sharedPreferences: SharedPreferences): A = provider.invoke(sharedPreferences, key, default)
 
     companion object {
         private fun getPreferenceManager(context: Context) = PreferenceManager.getDefaultSharedPreferences(context)
+
         private fun getSearchType(preferences: SharedPreferences, key: String, default: SearchType): SearchType {
-            return preferences.getString(key, null).runCatching(SearchType::valueOf).getOrNull() ?: default
+            return preferences.getString(key, null).enumLookUp(SearchType::valueOf) ?: default
         }
+
         private fun getSpeechType(preferences: SharedPreferences, key: String, default: SpeechType): SpeechType {
-            return preferences.getString(key, null).runCatching(SpeechType::valueOf).getOrNull() ?: default
+            return preferences.getString(key, null).enumLookUp(SpeechType::valueOf) ?: default
+        }
+
+        private fun <E : Enum<E>> String?.enumLookUp(lookup: (String) -> E): E? {
+            return if(this != null) {
+                this.runCatching(lookup).getOrNull()
+            } else {
+                null
+            }
         }
     }
 }

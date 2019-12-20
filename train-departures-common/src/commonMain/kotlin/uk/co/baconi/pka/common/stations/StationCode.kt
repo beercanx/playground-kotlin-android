@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.common
+package uk.co.baconi.pka.common.stations
 
 /**
  * Source: http://www.nationalrail.co.uk/static/documents/content/station_codes.csv

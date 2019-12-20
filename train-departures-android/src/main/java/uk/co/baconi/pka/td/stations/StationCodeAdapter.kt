@@ -1,4 +1,4 @@
-package uk.co.baconi.pka.td
+package uk.co.baconi.pka.td.stations
 
 import android.content.Context
 import android.content.res.Resources
@@ -8,31 +8,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Filter
 import android.widget.TextView
-import uk.co.baconi.pka.common.StationCode
+import uk.co.baconi.pka.common.stations.StationCode
+import uk.co.baconi.pka.td.R
 
-class SearchCriteriaAdapter(
-    context: Context,
-    stationCodes: List<StationCode>,
-    private val viewResource: Int = R.layout.search_criteria_station_view_item
-) : ArrayAdapter<StationCode>(
-    context, viewResource, stationCodes
+class StationCodeAdapter(context: Context) : ArrayAdapter<StationCode>(
+    context, viewResource, mutableListOf()
 ) {
+
+    companion object {
+        private const val viewResource: Int = R.layout.search_criteria_station_view_item
+    }
+
+    private lateinit var filter: Filter
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     private var dropDownInflater: LayoutInflater? = null
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return createViewFromResource(inflater, position, convertView, parent, viewResource)
+        return createViewFromResource(inflater, position, convertView, parent)
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val inflater = dropDownInflater ?: inflater
-        return createViewFromResource(inflater, position, convertView, parent, viewResource)
+        return createViewFromResource(inflater, position, convertView, parent)
     }
 
-    private fun createViewFromResource(inflater: LayoutInflater, position: Int, convertView: View?, parent: ViewGroup, viewResource: Int): View {
+    override fun getFilter(): Filter {
+        if(!this::filter.isInitialized) {
+            filter = StationCodeFilter(this)
+        }
+        return filter
+    }
+
+    private fun createViewFromResource(inflater: LayoutInflater, position: Int, convertView: View?, parent: ViewGroup): View {
 
         val view: View = if (
             convertView?.findViewById<TextView>(R.id.search_criteria_station_avatar) == null ||
