@@ -12,6 +12,7 @@
 
     <string name="search_criteria_from_label">From:</string>
     <string name="search_criteria_to_label">To:</string>
+    <string name="search_criteria_hint">Enter station name or CRS code</string>
 
     <string name="search_result_delayed">delayed</string>
     <string name="search_result_no_report">no report</string>
