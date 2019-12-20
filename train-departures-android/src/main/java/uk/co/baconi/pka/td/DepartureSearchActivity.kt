@@ -196,10 +196,6 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     private fun searchForDepartures(accessToken: AccessToken) = GlobalScope.launch {
 
-        // TODO - Make work
-        //val from = search_criteria_from_auto_complete.selectedItem as StationCode
-        //val to = search_criteria_to_auto_complete.selectedItem as StationCode
-
         val from = stationSelections.getStationSelectionFrom()
         val to = stationSelections.getStationSelectionTo()
 
