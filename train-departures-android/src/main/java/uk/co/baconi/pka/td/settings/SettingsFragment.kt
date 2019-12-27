@@ -18,13 +18,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun <A> configureSwitchPreference(setting: Settings<A>) {
         getPreference<SwitchPreferenceCompat>(setting.key).apply {
-            setDefaultValue(setting.default)
+            setDefaultValue(setting.default) // TODO - Work out why this doesn't work
         }
     }
 
     private fun <A> configureListPreference(setting: Settings<A>, values: Array<A>) where A : Enum<A>, A : DisplayValue {
         getPreference<ListPreference>(setting.key).apply {
-            setDefaultValue(setting.default)
+            setDefaultValue(setting.default) // TODO - Work out why this doesn't work
             entries = values.map { a -> a.display }.map(::getString).toTypedArray()
             entryValues = values.map { a -> a.name }.toTypedArray()
         }
