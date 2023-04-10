@@ -29,7 +29,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.2.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.5")
 
                 implementation("io.ktor:ktor-client-core:1.1.3")
             }
@@ -47,7 +47,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib"))
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
 
                 implementation("io.ktor:ktor-client-core-jvm:1.1.3")
 
