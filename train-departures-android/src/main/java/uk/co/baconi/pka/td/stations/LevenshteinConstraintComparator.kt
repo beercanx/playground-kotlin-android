@@ -15,13 +15,13 @@ class LevenshteinConstraintComparator<A>(
     override fun compare(lhs: A, rhs: A): Int {
 
         val lhsField = if(ignoreCase) {
-            fieldExtractor(lhs).toString().toLowerCase(Locale.getDefault())
+            fieldExtractor(lhs).toString().lowercase(Locale.getDefault())
         } else {
             fieldExtractor(lhs)
         }
 
         val rhsField = if(ignoreCase) {
-            fieldExtractor(rhs).toString().toLowerCase(Locale.getDefault())
+            fieldExtractor(rhs).toString().lowercase(Locale.getDefault())
         } else {
             fieldExtractor(rhs)
         }
@@ -37,7 +37,7 @@ class LevenshteinConstraintComparator<A>(
         val rhsLength = rhs.length
 
         var cost = IntArray(lhsLength + 1) { it }
-        var newCost = IntArray(lhsLength + 1) { 0 }
+        var newCost = IntArray(lhsLength + 1)
 
         for (i in 1..rhsLength) {
             newCost[0] = i

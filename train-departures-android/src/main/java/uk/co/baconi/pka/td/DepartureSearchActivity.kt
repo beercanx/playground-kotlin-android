@@ -6,17 +6,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
-import kotlinx.android.synthetic.main.content_app_bar_layout.*
-import kotlinx.android.synthetic.main.content_departure_search.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,6 +22,7 @@ import uk.co.baconi.pka.common.openldbws.requests.DeparturesType
 import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
 import uk.co.baconi.pka.common.openldbws.services.Service
 import uk.co.baconi.pka.common.stations.StationCode
+import uk.co.baconi.pka.td.databinding.ActivityDepartureSearchBinding
 import uk.co.baconi.pka.td.stations.StationSelections
 import uk.co.baconi.pka.td.settings.SearchType
 import uk.co.baconi.pka.td.settings.Settings
@@ -45,6 +42,8 @@ class DepartureSearchActivity : AppCompatActivity() {
     private val openLDBWSApi = OpenLDBWSApi(HttpClient(OkHttp))
     private val stationSelections = StationSelections(this)
 
+    private lateinit var binding: ActivityDepartureSearchBinding
+
     private lateinit var textToSpeech: TextToSpeech
 
     private lateinit var searchResults: MutableList<Service>
@@ -52,10 +51,10 @@ class DepartureSearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityDepartureSearchBinding.inflate(layoutInflater)
 
-        // Configure to be search layout
-        setContentView(R.layout.activity_departure_search)
-        setSupportActionBar(toolbar)
+        setContentView(binding.root)
+        setSupportActionBar(binding.contentAppBarLayout.toolbar)
 
         // TODO - Extract into component and inject
         if(!this::textToSpeech.isInitialized) {
@@ -68,23 +67,23 @@ class DepartureSearchActivity : AppCompatActivity() {
         searchResults = mutableListOf()
         viewAdapter = SearchResultsAdapter(searchResults)
 
-        search_results.apply {
+        binding.contentDepartureSearch.searchResults.apply {
             layoutManager = LinearLayoutManager(this@DepartureSearchActivity)
             adapter = viewAdapter
         }
 
-        search_results_refresh_layout.apply {
+        binding.contentDepartureSearch.searchResultsRefreshLayout.apply {
             setOnRefreshListener {
                 startSearchForDepartures()
             }
         }
 
-        search_criteria_from.configureSearchCriteria(
+        binding.contentDepartureSearch.searchCriteriaFrom.root.configureSearchCriteria(
             stationSelections::getStationSelectionFrom,
             stationSelections::saveStationSelectionFrom
         )
 
-        search_criteria_to.configureSearchCriteria(
+        binding.contentDepartureSearch.searchCriteriaTo.root.configureSearchCriteria(
             stationSelections::getStationSelectionTo,
             stationSelections::saveStationSelectionTo
         )
@@ -175,14 +174,14 @@ class DepartureSearchActivity : AppCompatActivity() {
         val toPosition = stationSelections.getStationSelectionTo()
         stationSelections.saveStationSelectionFrom(toPosition)
         stationSelections.saveStationSelectionTo(fromPosition)
-        search_criteria_from.setSelectionByStationCode(toPosition)
-        search_criteria_to.setSelectionByStationCode(fromPosition)
+        binding.contentDepartureSearch.searchCriteriaFrom.root.setSelectionByStationCode(toPosition)
+        binding.contentDepartureSearch.searchCriteriaTo.root.setSelectionByStationCode(fromPosition)
     }
 
     private fun startSearchForDepartures() {
 
         // Turn on the spinner
-        search_results_refresh_layout.isRefreshing = true
+        binding.contentDepartureSearch.searchResultsRefreshLayout.isRefreshing = true
 
         runCatching {
             provideAccessToken()
@@ -227,7 +226,7 @@ class DepartureSearchActivity : AppCompatActivity() {
 
         // Turn off the spinner
         GlobalScope.launch(Dispatchers.Main) {
-            search_results_refresh_layout.isRefreshing = false
+            binding.contentDepartureSearch.searchResultsRefreshLayout.isRefreshing = false
         }
 
         // Start the error activity
@@ -237,7 +236,7 @@ class DepartureSearchActivity : AppCompatActivity() {
     private fun displaySearchResultsView(serviceItems: List<Service>) = GlobalScope.launch(Dispatchers.Main) {
 
         // Turn off the spinner
-        search_results_refresh_layout.isRefreshing = false
+        binding.contentDepartureSearch.searchResultsRefreshLayout.isRefreshing = false
 
         // Update the search results
         searchResults.clear()

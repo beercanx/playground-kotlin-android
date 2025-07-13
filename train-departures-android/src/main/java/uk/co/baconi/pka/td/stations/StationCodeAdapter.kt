@@ -14,12 +14,8 @@ import uk.co.baconi.pka.common.stations.StationCode
 import uk.co.baconi.pka.td.R
 
 class StationCodeAdapter(context: Context) : ArrayAdapter<StationCode>(
-    context, viewResource, mutableListOf()
+    context, R.layout.search_criteria_station_view_item, mutableListOf()
 ) {
-
-    companion object {
-        private const val viewResource: Int = R.layout.search_criteria_station_view_item
-    }
 
     private lateinit var filter: Filter
 
@@ -49,7 +45,7 @@ class StationCodeAdapter(context: Context) : ArrayAdapter<StationCode>(
             convertView?.findViewById<TextView>(R.id.search_criteria_station_avatar) == null ||
             convertView.findViewById<TextView>(R.id.search_criteria_station_name) == null
         ) {
-            inflater.inflate(viewResource, parent, false)
+            inflater.inflate(R.layout.search_criteria_station_view_item, parent, false)
         } else {
             convertView
         }

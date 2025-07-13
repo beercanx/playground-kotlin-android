@@ -108,6 +108,7 @@ class CallingPointsDrawable(
         // This method is required
     }
 
+    @Deprecated("Deprecated in Java")
     override fun getOpacity(): Int = PixelFormat.OPAQUE
 
     private fun Paint.configureAsDonut() {

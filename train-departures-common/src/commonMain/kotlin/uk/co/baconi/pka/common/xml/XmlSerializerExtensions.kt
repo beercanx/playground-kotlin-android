@@ -1,6 +1,5 @@
 package uk.co.baconi.pka.common.xml
 
-import kotlinx.io.core.use
 import uk.co.baconi.pka.common.AccessToken
 
 fun XmlSerializer.tag(name: String, namespace: String? = null, inner: XmlSerializer.() -> Unit = {}) {

@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".DepartureSearchActivity">
 
-    <include layout="@layout/content_app_bar_layout" />
+    <include android:id="@+id/content_app_bar_layout" layout="@layout/content_app_bar_layout" />
 
-    <include layout="@layout/content_departure_search" />
+    <include android:id="@+id/content_departure_search" layout="@layout/content_departure_search" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

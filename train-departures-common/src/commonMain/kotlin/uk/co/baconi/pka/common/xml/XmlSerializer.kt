@@ -1,6 +1,6 @@
 package uk.co.baconi.pka.common.xml
 
-import kotlinx.io.core.Closeable
+import java.io.Closeable
 
 expect class XmlSerializer() : Closeable {
     fun startTag(namespace: String?, name: String): XmlSerializer

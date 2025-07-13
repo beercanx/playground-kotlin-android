@@ -1,6 +1,5 @@
 package uk.co.baconi.pka.td
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

@@ -17,6 +17,10 @@ actual class XmlSerializer(
 
     actual constructor() : this(StringWriter(), XmlParserFactory.serializer())
 
+    actual override fun startDocument(encoding: String?, standalone: Boolean?) {
+        serializer.startDocument(encoding, standalone)
+    }
+
     actual override fun startTag(namespace: String?, name: String): XmlSerializer {
         serializer.startTag(namespace, name)
         return this

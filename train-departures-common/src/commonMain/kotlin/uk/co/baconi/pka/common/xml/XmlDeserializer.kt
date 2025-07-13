@@ -1,6 +1,6 @@
 package uk.co.baconi.pka.common.xml
 
-import kotlinx.io.core.Closeable
+import java.io.Closeable
 
 expect class XmlDeserializer(input: String) : Closeable {
     fun require(type: EventType, name: String, namespace: String? = null)
