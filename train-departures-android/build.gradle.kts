@@ -5,19 +5,16 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdk = 35
+    namespace = "uk.co.baconi.pka.td"
     defaultConfig {
         applicationId = "uk.co.baconi.pka.td"
-        minSdkVersion(22)
-        targetSdkVersion(29)
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 22
+        targetSdk = 35
+        versionCode = 2
+        versionName = "1.1"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-    }
-    lintOptions {
-        isCheckReleaseBuilds = false
-        isAbortOnError = false
     }
     androidExtensions {
         isExperimental = true
@@ -25,18 +22,21 @@ android {
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = false
-            isZipAlignEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
         getByName("release") {
             isMinifyEnabled = true // runProguard
-            isZipAlignEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
     packagingOptions {
-        exclude("META-INF/common.kotlin_module")
-        exclude("META-INF/*.kotlin_module")
+        resources {
+            excludes += setOf("META-INF/common.kotlin_module", "META-INF/*.kotlin_module")
+        }
+    }
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
     }
 
     // Disabled because adding in an MMP module manages to break the lint tasks

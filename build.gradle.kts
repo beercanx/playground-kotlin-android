@@ -1,25 +1,23 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenLocal()
+        mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.2.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72")
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenLocal()
+        mavenCentral()
     }
 }
 
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
-}
-
-tasks.wrapper {
-    distributionType = Wrapper.DistributionType.ALL
 }
