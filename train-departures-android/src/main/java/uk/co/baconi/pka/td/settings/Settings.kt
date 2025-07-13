@@ -33,11 +33,7 @@ sealed class Settings<A>(
         }
 
         private fun <E : Enum<E>> String?.enumLookUp(lookup: (String) -> E): E? {
-            return if(this != null) {
-                this.runCatching(lookup).getOrNull()
-            } else {
-                null
-            }
+            return this?.runCatching(lookup)?.getOrNull()
         }
     }
 }

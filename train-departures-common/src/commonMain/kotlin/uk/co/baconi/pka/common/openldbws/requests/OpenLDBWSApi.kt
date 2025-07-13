@@ -5,8 +5,10 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.content.TextContent
+import io.ktor.utils.io.InternalAPI
 import uk.co.baconi.pka.common.AccessToken
 import uk.co.baconi.pka.common.stations.StationCode
 import uk.co.baconi.pka.common.openldbws.departures.DepartureBoard
@@ -20,6 +22,7 @@ import uk.co.baconi.pka.common.soap.envelope
 import uk.co.baconi.pka.common.soap.tag
 import uk.co.baconi.pka.common.xml.*
 
+@OptIn(InternalAPI::class)
 class OpenLDBWSApi(private val client: HttpClient) {
 
     private val contentType = ContentType.parse("text/xml;charset=UTF-8")
@@ -182,7 +185,7 @@ class OpenLDBWSApi(private val client: HttpClient) {
         type: RequestType,
         request: XmlSerializer.() -> Unit,
         response: XmlDeserializer.() -> T
-    ): T = client.post<String> {
+    ): T = client.post {
         openLDBWSEndpoint()
         soapAction(type)
         body {
@@ -192,7 +195,7 @@ class OpenLDBWSApi(private val client: HttpClient) {
                 }
             }
         }
-    }.deserialize {
+    }.bodyAsText().deserialize {
         envelope {
             response()
         }

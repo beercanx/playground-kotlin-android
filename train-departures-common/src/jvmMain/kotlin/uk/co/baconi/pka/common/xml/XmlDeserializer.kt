@@ -1,8 +1,8 @@
 package uk.co.baconi.pka.common.xml
 
-import kotlinx.io.core.Closeable
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
+import java.io.Closeable
 import java.io.Reader
 
 actual class XmlDeserializer(private val parser: XmlPullParser, reader: Reader): Closeable by reader {

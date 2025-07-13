@@ -12,30 +12,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
         configureSwitchPreference(EnableColouredAvatars)
         configureSwitchPreference(EnableColouredDepartureTimes)
         configureSwitchPreference(EnableSpeakingFirstResult)
-        configureListPreference(WhichSearchType, SearchType.values())
-        configureListPreference(WhichSpeechType, SpeechType.values())
+        configureListPreference(WhichSearchType, SearchType.entries.toTypedArray())
+        configureListPreference(WhichSpeechType, SpeechType.entries.toTypedArray())
     }
 
     private fun <A> configureSwitchPreference(setting: Settings<A>) {
-        getPreference<SwitchPreferenceCompat>(setting.key).apply {
+        preferenceScreen.get<SwitchPreferenceCompat>(setting.key)?.apply {
             setDefaultValue(setting.default) // TODO - Work out why this doesn't work
         }
     }
 
     private fun <A> configureListPreference(setting: Settings<A>, values: Array<A>) where A : Enum<A>, A : DisplayValue {
-        getPreference<ListPreference>(setting.key).apply {
+        preferenceScreen.get<ListPreference>(setting.key)?.apply {
             setDefaultValue(setting.default) // TODO - Work out why this doesn't work
             entries = values.map { a -> a.display }.map(::getString).toTypedArray()
             entryValues = values.map { a -> a.name }.toTypedArray()
-        }
-    }
-
-    private inline fun <reified A : Preference> getPreference(key: String) : A {
-        val preference = preferenceScreen[key]
-        if(preference is A) {
-            return preference
-        } else {
-            TODO("Work out why preference [$key] isn't a [${A::class}]")
         }
     }
 }

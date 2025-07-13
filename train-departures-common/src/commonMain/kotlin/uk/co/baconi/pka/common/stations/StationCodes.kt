@@ -14,11 +14,11 @@ object StationCodes {
     /**
      * Returns predicate to filter by Station Name
      */
-    fun byName(name: String): (StationCode) -> Boolean = { sc -> sc.stationName.toUpperCase().contains(name.toUpperCase()) }
+    fun byName(name: String): (StationCode) -> Boolean = { sc -> sc.stationName.uppercase().contains(name.uppercase()) }
 
     /**
      * Returns predicate to filter by CRS Code
      */
-    fun byCode(code: String): (StationCode) -> Boolean = { sc -> sc.crsCode.toUpperCase().contains(code.toUpperCase()) }
+    fun byCode(code: String): (StationCode) -> Boolean = { sc -> sc.crsCode.uppercase().contains(code.uppercase()) }
 
 }

@@ -1,10 +1,9 @@
 package uk.co.baconi.pka.common.openldbws.requests
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.HttpClientCall
-import io.ktor.client.call.call
-import io.ktor.client.call.receive
-import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respondOk
+import io.ktor.client.request.HttpRequestData
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
@@ -21,10 +20,6 @@ import kotlin.test.Test
 
 class OpenLDBWSApiTest : BaseTest {
 
-    private val mockHttpClient = mockk<HttpClient>(relaxed = true)
-    private val mockHttpClientCall = mockk<HttpClientCall>(relaxed = true)
-    private val underTest = OpenLDBWSApi(mockHttpClient)
-
     private val accessToken = AccessToken("access-token")
     private val from = StationCode(stationName = "Meadowhall", crsCode = "MHS")
     private val to = StationCode(stationName = "Sheffield", crsCode = "SHF")
@@ -32,11 +27,11 @@ class OpenLDBWSApiTest : BaseTest {
     @Test
     fun `Should support getting departures`() = runTest {
 
-        val httpRequestBuilderSlot = slot<HttpRequestBuilder>()
+        val httpRequestDataSlot = slot<HttpRequestData>()
 
-        mockkStatic("io.ktor.client.call.UtilsKt")
-        coEvery { mockHttpClient.call(capture(httpRequestBuilderSlot)) } returns mockHttpClientCall
-        coEvery { mockHttpClientCall.receive<String>() } returns """
+        val mockEngine = MockEngine { request ->
+            httpRequestDataSlot.captured = request
+            respondOk("""
             |<?xml version="1.0" encoding="utf-8"?>
             |<soap:Envelope
             |   xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
@@ -48,17 +43,19 @@ class OpenLDBWSApiTest : BaseTest {
             |       </GetNextDeparturesResponse>
             |   </soap:Body>
             |</soap:Envelope>
-        """.trimMargin()
+        """.trimMargin())
+        }
 
+        val underTest = OpenLDBWSApi(HttpClient(mockEngine))
         underTest.getDepartures(accessToken, from, to, DeparturesType.NextDepartures) shouldBe Departures()
 
-        val httpRequestBuilder = httpRequestBuilderSlot.captured
-        httpRequestBuilder.method shouldBe HttpMethod.Post
-        httpRequestBuilder.url.buildString() shouldBe "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx"
-        httpRequestBuilder.headers["SOAPAction"] shouldBe "http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDepartures"
-        httpRequestBuilder.body::class shouldBe TextContent::class
-        (httpRequestBuilder.body as TextContent).contentType shouldBe ContentType.Text.Xml.withParameter("charset", "UTF-8")
-        (httpRequestBuilder.body as TextContent).text shouldBe """
+        val httpRequestData = httpRequestDataSlot.captured
+        httpRequestData.method shouldBe HttpMethod.Post
+        httpRequestData.url.toString() shouldBe "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx"
+        httpRequestData.headers["SOAPAction"] shouldBe "http://thalesgroup.com/RTTI/2015-05-14/ldb/GetNextDepartures"
+        httpRequestData.body::class shouldBe TextContent::class
+        (httpRequestData.body as TextContent).contentType shouldBe ContentType.Text.Xml.withParameter("charset", "UTF-8")
+        (httpRequestData.body as TextContent).text shouldBe """
             <?xml version='1.0' encoding='utf-8' ?>
             <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://thalesgroup.com/RTTI/2013-11-28/Token/types" xmlns:ldb="http://thalesgroup.com/RTTI/2017-10-01/ldb/">
                 <soap:Header>
@@ -83,11 +80,11 @@ class OpenLDBWSApiTest : BaseTest {
     @Test
     fun `Should support getting a departure board`() = runTest {
 
-        val httpRequestBuilderSlot = slot<HttpRequestBuilder>()
+        val httpRequestDataSlot = slot<HttpRequestData>()
 
-        mockkStatic("io.ktor.client.call.UtilsKt")
-        coEvery { mockHttpClient.call(capture(httpRequestBuilderSlot)) } returns mockHttpClientCall
-        coEvery { mockHttpClientCall.receive<String>() } returns """
+        val mockEngine = MockEngine { request ->
+            httpRequestDataSlot.captured = request
+            respondOk("""
             |<?xml version="1.0" encoding="utf-8"?>
             |<soap:Envelope
             |   xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
@@ -99,17 +96,19 @@ class OpenLDBWSApiTest : BaseTest {
             |       </GetDepartureBoardResponse>
             |   </soap:Body>
             |</soap:Envelope>
-        """.trimMargin()
+        """.trimMargin())
+        }
 
+        val underTest = OpenLDBWSApi(HttpClient(mockEngine))
         underTest.getDepartureBoard(accessToken, from, to, DepartureBoardType.DepartureBoard) shouldBe DepartureBoard()
 
-        val httpRequestBuilder = httpRequestBuilderSlot.captured
-        httpRequestBuilder.method shouldBe HttpMethod.Post
-        httpRequestBuilder.url.buildString() shouldBe "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx"
-        httpRequestBuilder.headers["SOAPAction"] shouldBe "http://thalesgroup.com/RTTI/2012-01-13/ldb/GetDepartureBoard"
-        httpRequestBuilder.body::class shouldBe TextContent::class
-        (httpRequestBuilder.body as TextContent).contentType shouldBe ContentType.Text.Xml.withParameter("charset", "UTF-8")
-        (httpRequestBuilder.body as TextContent).text shouldBe """
+        val httpRequestData = httpRequestDataSlot.captured
+        httpRequestData.method shouldBe HttpMethod.Post
+        httpRequestData.url.toString() shouldBe "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx"
+        httpRequestData.headers["SOAPAction"] shouldBe "http://thalesgroup.com/RTTI/2012-01-13/ldb/GetDepartureBoard"
+        httpRequestData.body::class shouldBe TextContent::class
+        (httpRequestData.body as TextContent).contentType shouldBe ContentType.Text.Xml.withParameter("charset", "UTF-8")
+        (httpRequestData.body as TextContent).text shouldBe """
             <?xml version='1.0' encoding='utf-8' ?>
             <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://thalesgroup.com/RTTI/2013-11-28/Token/types" xmlns:ldb="http://thalesgroup.com/RTTI/2017-10-01/ldb/">
                 <soap:Header>
@@ -134,11 +133,11 @@ class OpenLDBWSApiTest : BaseTest {
     @Test
     fun `Should support getting service details`() = runTest {
 
-        val httpRequestBuilderSlot = slot<HttpRequestBuilder>()
+        val httpRequestDataSlot = slot<HttpRequestData>()
 
-        mockkStatic("io.ktor.client.call.UtilsKt")
-        coEvery { mockHttpClient.call(capture(httpRequestBuilderSlot)) } returns mockHttpClientCall
-        coEvery { mockHttpClientCall.receive<String>() } returns """
+        val mockEngine = MockEngine { request ->
+            httpRequestDataSlot.captured = request
+            respondOk("""
             |<?xml version="1.0" encoding="utf-8"?>
             |<soap:Envelope
             |   xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
@@ -150,17 +149,19 @@ class OpenLDBWSApiTest : BaseTest {
             |       </GetServiceDetailsResponse>
             |   </soap:Body>
             |</soap:Envelope>
-        """.trimMargin()
+        """.trimMargin())
+        }
 
+        val underTest = OpenLDBWSApi(HttpClient(mockEngine))
         underTest.getServiceDetails(accessToken, "test-service-id") shouldBe ServiceDetails()
 
-        val httpRequestBuilder = httpRequestBuilderSlot.captured
-        httpRequestBuilder.method shouldBe HttpMethod.Post
-        httpRequestBuilder.url.buildString() shouldBe "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx"
-        httpRequestBuilder.headers["SOAPAction"] shouldBe "http://thalesgroup.com/RTTI/2012-01-13/ldb/GetServiceDetails"
-        httpRequestBuilder.body::class shouldBe TextContent::class
-        (httpRequestBuilder.body as TextContent).contentType shouldBe ContentType.Text.Xml.withParameter("charset", "UTF-8")
-        (httpRequestBuilder.body as TextContent).text shouldBe """
+        val httpRequestData = httpRequestDataSlot.captured
+        httpRequestData.method shouldBe HttpMethod.Post
+        httpRequestData.url.toString() shouldBe "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx"
+        httpRequestData.headers["SOAPAction"] shouldBe "http://thalesgroup.com/RTTI/2012-01-13/ldb/GetServiceDetails"
+        httpRequestData.body::class shouldBe TextContent::class
+        (httpRequestData.body as TextContent).contentType shouldBe ContentType.Text.Xml.withParameter("charset", "UTF-8")
+        (httpRequestData.body as TextContent).text shouldBe """
             <?xml version='1.0' encoding='utf-8' ?>
             <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://thalesgroup.com/RTTI/2013-11-28/Token/types" xmlns:ldb="http://thalesgroup.com/RTTI/2017-10-01/ldb/">
                 <soap:Header>

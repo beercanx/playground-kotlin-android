@@ -14,8 +14,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
 import io.ktor.client.HttpClient
-import kotlinx.android.synthetic.main.content_app_bar_layout.*
-import kotlinx.android.synthetic.main.content_service_details.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -25,6 +23,7 @@ import uk.co.baconi.pka.common.openldbws.requests.OpenLDBWSApi
 import uk.co.baconi.pka.common.openldbws.services.CallingPoint
 import uk.co.baconi.pka.common.openldbws.services.CallingPoints
 import uk.co.baconi.pka.td.R
+import uk.co.baconi.pka.td.databinding.ActivityServiceDetailsBinding
 import uk.co.baconi.pka.td.provideAccessToken
 import uk.co.baconi.pka.td.startErrorActivity
 import uk.co.baconi.pka.td.tables.updateRow
@@ -42,18 +41,21 @@ class ServiceDetailsActivity : AppCompatActivity() {
 
     private val openLDBWSApi = OpenLDBWSApi(HttpClient())
 
+    private lateinit var binding: ActivityServiceDetailsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Configure to be service details layout
-        setContentView(R.layout.activity_service_details)
-        setSupportActionBar(toolbar)
+        binding = ActivityServiceDetailsBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
+        setSupportActionBar(binding.contentAppBarLayout.toolbar)
 
         runCatching {
             provideAccessToken()
         }.onSuccess { accessToken ->
             val serviceId = intent.getStringExtra(SERVICE_ID)
-            searchForServiceDetails(accessToken, serviceId)
+            searchForServiceDetails(accessToken, serviceId!!)
         }.onFailure { exception ->
             Log.e(TAG, "Unable to get access token", exception)
             startErrorActivity(exception)
@@ -77,36 +79,38 @@ class ServiceDetailsActivity : AppCompatActivity() {
 
     private fun displayServiceDetailsView(result: ServiceDetails) = GlobalScope.launch(Dispatchers.Main) {
 
+        val details = binding.contentServiceDetails
+
         // Update service details layout
-        updateRow(generated_at_row, generated_at_value, result.generatedAt)
-        updateRow(service_type_row, service_type_value, result.serviceType)
-        updateRow(location_row, location_value, result.locationName)
-        updateRow(crs_row, crs_value, result.crs)
-        updateRow(operator_row, operator_value, result.operator)
-        updateRow(operator_code_row, operator_code_value, result.operatorCode)
-        updateRow(rsid_row, rsid_value, result.rsid)
-        updateRow(cancelled_row, cancelled_value, result.isCancelled)
-        updateRow(cancel_reason_row, cancel_reason_value, result.cancelReason)
-        updateRow(delay_reason_row, delay_reason_value, result.delayReason)
-        updateRow(overdue_message_row, overdue_message_value, result.overdueMessage)
-        updateRow(length_row, length_value, result.length)
-        updateRow(detach_front_row, detach_front_value, result.detachFront)
-        updateRow(reverse_formation_row, reverse_formation_value, result.isReverseFormation)
-        updateRow(platform_row, platform_value, result.platform)
-        updateRow(sta_row, sta_value, result.scheduledArrivalTime)
-        updateRow(eta_row, eta_value, result.estimatedArrivalTime)
-        updateRow(ata_row, ata_value, result.actualArrivalTime)
-        updateRow(std_row, std_value, result.scheduledDepartureTime)
-        updateRow(etd_row, etd_value, result.estimatedDepartureTime)
-        updateRow(atd_row, atd_value, result.actualDepartureTime)
+        updateRow(details.generatedAtRow, details.generatedAtValue, result.generatedAt)
+        updateRow(details.serviceTypeRow, details.serviceTypeValue, result.serviceType)
+        updateRow(details.locationRow, details.locationValue, result.locationName)
+        updateRow(details.crsRow, details.crsValue, result.crs)
+        updateRow(details.operatorRow, details.operatorValue, result.operator)
+        updateRow(details.operatorCodeRow, details.operatorCodeValue, result.operatorCode)
+        updateRow(details.rsidRow, details.rsidValue, result.rsid)
+        updateRow(details.cancelledRow, details.cancelledValue, result.isCancelled)
+        updateRow(details.cancelReasonRow, details.cancelReasonValue, result.cancelReason)
+        updateRow(details.delayReasonRow, details.delayReasonValue, result.delayReason)
+        updateRow(details.overdueMessageRow, details.overdueMessageValue, result.overdueMessage)
+        updateRow(details.lengthRow, details.lengthValue, result.length)
+        updateRow(details.detachFrontRow, details.detachFrontValue, result.detachFront)
+        updateRow(details.reverseFormationRow, details.reverseFormationValue, result.isReverseFormation)
+        updateRow(details.platformRow, details.platformValue, result.platform)
+        updateRow(details.staRow, details.staValue, result.scheduledArrivalTime)
+        updateRow(details.etaRow, details.etaValue, result.estimatedArrivalTime)
+        updateRow(details.ataRow, details.ataValue, result.actualArrivalTime)
+        updateRow(details.stdRow, details.stdValue, result.scheduledDepartureTime)
+        updateRow(details.etdRow, details.etdValue, result.estimatedDepartureTime)
+        updateRow(details.atdRow, details.atdValue, result.actualDepartureTime)
 
         // TODO - Improve if we ever start getting this data
-        updateRow(adhoc_alerts_row, result.adhocAlerts) { messages ->
-            adhoc_alerts_value.text = messages.joinToString("\n")
+        updateRow(details.adhocAlertsRow, result.adhocAlerts) { messages ->
+            details.adhocAlertsValue.text = messages.joinToString("\n")
         }
 
         // TODO - Improve if we ever start getting this data
-        updateRow(formation_row, formation_value, result.formation)
+        updateRow(details.formationRow, details.formationValue, result.formation)
 
         val previousCallingPoints: List<CallingPoint> = result
             .previousCallingPoints
@@ -124,7 +128,7 @@ class ServiceDetailsActivity : AppCompatActivity() {
             .plus(currentCallingPoint)
             .plus(subsequentCallingPoints)
 
-        service_details_calling_points.apply {
+        binding.contentServiceDetails.serviceDetailsCallingPoints.apply {
 
             // Set the maximum number of rows
             rowCount = allCallingPoints.size + 1
