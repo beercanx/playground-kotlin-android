@@ -25,7 +25,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.5")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.8")
 
                 implementation("io.ktor:ktor-client-core:3.2.1")
             }
