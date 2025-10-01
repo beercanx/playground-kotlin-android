@@ -58,7 +58,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
-    implementation("io.ktor:ktor-client-okhttp:3.2.1")
+    implementation("io.ktor:ktor-client-okhttp:3.3.0")
 
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
