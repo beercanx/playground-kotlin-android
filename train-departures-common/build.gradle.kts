@@ -35,7 +35,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("io.mockk:mockk:1.14.5")
+                implementation("io.mockk:mockk:1.14.6")
                 implementation("io.ktor:ktor-client-mock:3.3.1")
             }
         }
@@ -59,7 +59,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit5"))
 
-                implementation("io.mockk:mockk:1.14.5")
+                implementation("io.mockk:mockk:1.14.6")
 
                 // https://github.com/kotlintest/kotlintest/blob/master/doc/reference.md
 //                implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
