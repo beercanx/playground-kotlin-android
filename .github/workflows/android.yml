@@ -33,19 +33,19 @@ jobs:
           java-version: 17
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Build with Gradle
         run: ./gradlew build
 
       - name: Upload Artifact - Debug
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: retro_brick_game-debug.apk
           path: ${{github.workspace}}/train-departures-android/build/outputs/apk/debug/train-departures-android-debug.apk
 
       - name: Upload Artifact - Release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: retro_brick_game-release.apk
           path: ${{github.workspace}}/train-departures-android/build/outputs/apk/release/train-departures-android-release-unsigned.apk
