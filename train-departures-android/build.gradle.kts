@@ -9,7 +9,7 @@ kotlin {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = 36
     namespace = "uk.co.baconi.pka.td"
     defaultConfig {
         applicationId = "uk.co.baconi.pka.td"
@@ -58,7 +58,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
-    implementation("io.ktor:ktor-client-okhttp:3.3.1")
+    implementation("io.ktor:ktor-client-okhttp:3.3.2")
 
     implementation("androidx.core:core-ktx:1.17.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
