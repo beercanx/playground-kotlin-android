@@ -27,7 +27,7 @@ kotlin {
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.8")
 
-                implementation("io.ktor:ktor-client-core:3.3.2")
+                implementation("io.ktor:ktor-client-core:3.3.3")
             }
         }
 
@@ -36,7 +36,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation("io.mockk:mockk:1.14.6")
-                implementation("io.ktor:ktor-client-mock:3.3.2")
+                implementation("io.ktor:ktor-client-mock:3.3.3")
             }
         }
 
@@ -46,7 +46,7 @@ kotlin {
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
-                implementation("io.ktor:ktor-client-core-jvm:3.3.2")
+                implementation("io.ktor:ktor-client-core-jvm:3.3.3")
 
                 // XML - https://developer.android.com/training/basics/network-ops/xml
                 compileOnly("net.sf.kxml:kxml2:2.3.0")
