@@ -12,8 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  # The Dependency Submission API requires write permission on the repository to submit dependencies
-  contents: write
+  contents: read
   actions: write
 
 env:
@@ -35,8 +34,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-        with:
-          dependency-graph: ${{ github.ref == 'refs/heads/master' && 'generate-and-submit' || 'generate' }}
 
       - name: Build with Gradle
         run: ./gradlew build
