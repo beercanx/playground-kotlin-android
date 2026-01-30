@@ -6,13 +6,9 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-    labels:
-      - "dependencies"
 
   # Maintain dependencies in Gradle module
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "monthly"
-    labels:
-      - "dependencies"
