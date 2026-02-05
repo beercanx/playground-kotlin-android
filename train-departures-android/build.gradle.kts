@@ -31,11 +31,11 @@ android {
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("release") {
             isMinifyEnabled = true // runProguard
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     packaging {
@@ -56,22 +56,22 @@ dependencies {
 
     implementation(project(":train-departures-common"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    implementation(libs.kotlinx.coroutines.android)
 
-    implementation("io.ktor:ktor-client-okhttp:3.3.3")
+    implementation(libs.ktor.client.okhttp)
 
-    implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("androidx.fragment:fragment-ktx:1.8.9")
-    implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("com.google.android.material:material:1.13.0")
-    implementation("androidx.recyclerview:recyclerview:1.4.0")
-    implementation("androidx.annotation:annotation:1.9.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0")
+    implementation(libs.core.ktx)
+    implementation(libs.preference.ktx)
+    implementation(libs.fragment.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    implementation(libs.recyclerview)
+    implementation(libs.annotation)
+    implementation(libs.constraintlayout)
+    implementation(libs.swiperefreshlayout)
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
-    androidTestImplementation("androidx.test:runner:1.7.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
