@@ -22,7 +22,7 @@ buildscript {
     )
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.13.2")
+        classpath("com.android.tools.build:gradle:9.0.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0")
 
         for (securityBom in gradle.extra["securityBoms"] as List<*>) {

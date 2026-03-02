@@ -64,11 +64,10 @@ class StationCodeAdapter(context: Context) : ArrayAdapter<StationCode>(
     }
 
     override fun setDropDownViewTheme(theme: Resources.Theme?) {
-        dropDownInflater = when {
-            theme == null -> null
-            theme == inflater.context.theme -> inflater
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> LayoutInflater.from(ContextThemeWrapper(context, theme))
-            else -> null
+        dropDownInflater = when (theme) {
+            null -> null
+            inflater.context.theme -> inflater
+            else -> LayoutInflater.from(ContextThemeWrapper(context, theme))
         }
     }
 }

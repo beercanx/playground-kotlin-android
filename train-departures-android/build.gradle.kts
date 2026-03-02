@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    kotlin("android")
     id("kotlin-parcelize")
 }
 
@@ -13,8 +12,8 @@ android {
     namespace = "uk.co.baconi.pka.td"
     defaultConfig {
         applicationId = "uk.co.baconi.pka.td"
-        minSdk = 22
-        targetSdk = 35
+        minSdk = 26
+        targetSdk = 36
         versionCode = 2
         versionName = "1.1"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
