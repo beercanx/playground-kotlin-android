@@ -65,6 +65,7 @@ fun TextToSpeech.configureFocusGain(context: Context) {
                 onDone(utteranceId)
             }
 
+            @Deprecated("Deprecated in Java")
             override fun onError(utteranceId: String) {
                 onDone(utteranceId)
             }

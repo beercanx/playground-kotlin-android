@@ -10,11 +10,10 @@ import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import uk.co.baconi.pka.common.AccessToken
 import uk.co.baconi.pka.common.openldbws.requests.DepartureBoardType
@@ -193,7 +192,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun searchForDepartures(accessToken: AccessToken) = GlobalScope.launch {
+    private fun searchForDepartures(accessToken: AccessToken) = lifecycleScope.launch {
 
         val from = stationSelections.getStationSelectionFrom()
         val to = stationSelections.getStationSelectionTo()
@@ -225,7 +224,7 @@ class DepartureSearchActivity : AppCompatActivity() {
     private fun handleError(error: Throwable) {
 
         // Turn off the spinner
-        GlobalScope.launch(Dispatchers.Main) {
+        runOnUiThread {
             binding.contentDepartureSearch.searchResultsRefreshLayout.isRefreshing = false
         }
 
@@ -233,7 +232,7 @@ class DepartureSearchActivity : AppCompatActivity() {
         startErrorActivity(error)
     }
 
-    private fun displaySearchResultsView(serviceItems: List<Service>) = GlobalScope.launch(Dispatchers.Main) {
+    private fun displaySearchResultsView(serviceItems: List<Service>) = runOnUiThread {
 
         // Turn off the spinner
         binding.contentDepartureSearch.searchResultsRefreshLayout.isRefreshing = false

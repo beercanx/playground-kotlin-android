@@ -24,10 +24,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
-
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.8")
-
-                implementation("io.ktor:ktor-client-core:3.3.3")
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.ktor.client.core)
             }
         }
 
@@ -35,51 +33,31 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("io.mockk:mockk:1.14.7")
-                implementation("io.ktor:ktor-client-mock:3.3.3")
+                implementation(libs.mockk)
+                implementation(libs.ktor.client.mock)
             }
         }
 
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
                 implementation(kotlin("stdlib"))
-
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-
-                implementation("io.ktor:ktor-client-core-jvm:3.3.3")
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.ktor.client.core)
 
                 // XML - https://developer.android.com/training/basics/network-ops/xml
-                compileOnly("net.sf.kxml:kxml2:2.3.0")
+                compileOnly(libs.kxml2)
             }
         }
 
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
-
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit5"))
-
-                implementation("io.mockk:mockk:1.14.7")
-
-                // https://github.com/kotlintest/kotlintest/blob/master/doc/reference.md
-//                implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
-
-                // Adding support for running junit4
-//                runtimeOnly("org.junit.vintage:junit-vintage-engine:5.12.2")
+                implementation(libs.mockk)
 
                 // XmlPull impl
-                implementation("net.sf.kxml:kxml2:2.3.0")
+                implementation(libs.kxml2)
             }
         }
-
-        // TODO - Add iOS support at some point
-        //iosMain {
-        //    dependencies {
-        //        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.2.2")
-        //
-        //        implementation("io.ktor:ktor-client-core-native:1.1.3")
-        //        implementation("io.ktor:ktor-client-ios:1.1.3")
-        //    }
-        //}
     }
 }
