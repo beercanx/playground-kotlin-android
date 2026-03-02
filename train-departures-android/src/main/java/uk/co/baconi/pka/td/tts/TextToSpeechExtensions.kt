@@ -31,44 +31,40 @@ fun TextToSpeech.configureFocusGain(context: Context) {
 
     val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-    // TODO - Work out how we do it for older devices
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    setOnUtteranceProgressListener(object : UtteranceProgressListener() {
 
-        setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+        val focusRequests = mutableMapOf<String, AudioFocusRequest>()
 
-            val focusRequests = mutableMapOf<String, AudioFocusRequest>()
+        override fun onStart(utteranceId: String) {
 
-            override fun onStart(utteranceId: String) {
-
-                val focusGain = when(Settings.WhichSpeechType.getSetting(context)) {
-                    SpeechType.PAUSE_OTHER_SOUNDS -> AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE
-                    SpeechType.DIM_OTHER_SOUNDS -> AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
-                }
-
-                val audioFocusRequest = AudioFocusRequest
-                    .Builder(focusGain)
-                    .build()
-
-                focusRequests[utteranceId] = audioFocusRequest
-
-                audioManager.requestAudioFocus(audioFocusRequest)
+            val focusGain = when(Settings.WhichSpeechType.getSetting(context)) {
+                SpeechType.PAUSE_OTHER_SOUNDS -> AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE
+                SpeechType.DIM_OTHER_SOUNDS -> AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
             }
 
-            override fun onDone(utteranceId: String) {
-                val focusRequest = focusRequests[utteranceId]
-                if(focusRequest != null) {
-                    audioManager.abandonAudioFocusRequest(focusRequest)
-                }
-            }
+            val audioFocusRequest = AudioFocusRequest
+                .Builder(focusGain)
+                .build()
 
-            override fun onStop(utteranceId: String, interrupted: Boolean) {
-                onDone(utteranceId)
-            }
+            focusRequests[utteranceId] = audioFocusRequest
 
-            @Deprecated("Deprecated in Java")
-            override fun onError(utteranceId: String) {
-                onDone(utteranceId)
+            audioManager.requestAudioFocus(audioFocusRequest)
+        }
+
+        override fun onDone(utteranceId: String) {
+            val focusRequest = focusRequests[utteranceId]
+            if(focusRequest != null) {
+                audioManager.abandonAudioFocusRequest(focusRequest)
             }
-        })
-    }
+        }
+
+        override fun onStop(utteranceId: String, interrupted: Boolean) {
+            onDone(utteranceId)
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onError(utteranceId: String) {
+            onDone(utteranceId)
+        }
+    })
 }

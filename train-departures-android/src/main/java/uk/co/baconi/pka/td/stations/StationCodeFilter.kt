@@ -3,7 +3,6 @@ package uk.co.baconi.pka.td.stations
 import android.widget.Filter
 import uk.co.baconi.pka.common.stations.StationCode
 import uk.co.baconi.pka.common.stations.StationCodes
-import  uk.co.baconi.pka.td.thenComparingWith
 
 class StationCodeFilter(private val adapter: StationCodeAdapter) : Filter() {
 
@@ -34,6 +33,6 @@ class StationCodeFilter(private val adapter: StationCodeAdapter) : Filter() {
     private fun levenshteinDistanceFrom(constraint: CharSequence): Comparator<StationCode> {
         val byCrsCode = LevenshteinConstraintComparator(constraint, StationCode::crsCode, ignoreCase = true)
         val byStationName = LevenshteinConstraintComparator(constraint, StationCode::stationName)
-        return byCrsCode.thenComparingWith(byStationName)
+        return byCrsCode.thenComparing(byStationName)
     }
 }

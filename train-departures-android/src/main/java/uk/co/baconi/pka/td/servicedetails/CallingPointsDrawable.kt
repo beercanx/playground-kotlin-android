@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable
 import uk.co.baconi.pka.td.DepartureStatus.*
 import uk.co.baconi.pka.td.R
 import uk.co.baconi.pka.td.departureStatus
-import uk.co.baconi.pka.td.getColourCompat
 import uk.co.baconi.pka.common.openldbws.services.CallingPoint
 import kotlin.math.min
 
@@ -19,26 +18,26 @@ class CallingPointsDrawable(
 ): Drawable() {
 
     private val unknownPaint = Paint().apply {
-        color = context.getColourCompat(R.color.search_result_departure_time_etd_unknown)
+        color = context.getColor(R.color.search_result_departure_time_etd_unknown)
     }
     private val noReportPaint = Paint().apply {
-        color = context.getColourCompat(R.color.search_result_departure_time_no_report)
+        color = context.getColor(R.color.search_result_departure_time_no_report)
     }
     private val onTimePaint = Paint().apply {
-        color = context.getColourCompat(R.color.search_result_departure_time_on_time)
+        color = context.getColor(R.color.search_result_departure_time_on_time)
     }
     private val delayedPaint = Paint().apply {
-        color = context.getColourCompat(R.color.search_result_departure_time_delayed)
+        color = context.getColor(R.color.search_result_departure_time_delayed)
     }
     private val cancelledPaint = Paint().apply {
-        color = context.getColourCompat(R.color.search_result_departure_time_cancelled)
+        color = context.getColor(R.color.search_result_departure_time_cancelled)
     }
     private val estimatedPaint = Paint().apply {
-        color = context.getColourCompat(R.color.search_result_departure_time_estimated)
+        color = context.getColor(R.color.search_result_departure_time_estimated)
     }
 
     private val connectionPaint = Paint().apply {
-        color = context.getColourCompat(R.color.service_details_calling_point_connection)
+        color = context.getColor(R.color.service_details_calling_point_connection)
     }
 
     override fun draw(canvas: Canvas) {
