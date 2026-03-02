@@ -13,7 +13,7 @@ buildscript {
     gradle.extra["securityPatches"] = listOf(
         "org.apache.httpcomponents:httpmime:4.5.14",
         "org.apache.httpcomponents:httpclient:4.5.14",
-        "org.apache.commons:commons-compress:1.26.0",
+        "org.apache.commons:commons-compress:1.28.0",
         "org.apache.commons:commons-lang3:3.18.0",
         "com.google.protobuf:protobuf-java:3.25.5",
         "com.google.protobuf:protobuf-kotlin:3.25.5",
