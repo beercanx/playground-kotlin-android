@@ -14,7 +14,7 @@ buildscript {
         "org.apache.httpcomponents:httpmime:4.5.14",
         "org.apache.httpcomponents:httpclient:4.5.14",
         "org.apache.commons:commons-compress:1.28.0",
-        "org.apache.commons:commons-lang3:3.18.0",
+        "org.apache.commons:commons-lang3:3.20.0",
         "com.google.protobuf:protobuf-java:4.33.5",
         "com.google.protobuf:protobuf-kotlin:4.33.5",
         "org.jdom:jdom2:2.0.6.1",
