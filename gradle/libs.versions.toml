@@ -4,7 +4,7 @@ androidx-test-runner = "1.7.0"
 
 androidx-espresso-core = "3.7.0"
 
-annotation = "1.9.1"
+annotation = "1.10.0"
 
 appcompat = "1.7.1"
 
