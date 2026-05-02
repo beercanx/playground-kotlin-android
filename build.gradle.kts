@@ -45,8 +45,8 @@ allprojects {
         mavenCentral()
     }
 
-    configurations.named { it.startsWith("unified-test-platform") }.configureEach {
-        // Handles the patching of the Android UTP (Unified Test Platform)
+    // Handles the patching of the Android UTP (Unified Test Platform) and Android Lint
+    configurations.named { it.startsWith("unified-test-platform") || it == "androidLintTool" }.configureEach {
         dependencies {
             for (securityBom in gradle.extra["securityBoms"] as List<*>) {
                 add(name, platform(securityBom!!))
