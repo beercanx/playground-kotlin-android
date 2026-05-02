@@ -45,7 +45,7 @@ allprojects {
         mavenCentral()
     }
 
-    configurations.named { it.startsWith("_internal-unified-test-platform") }.configureEach {
+    configurations.named { it.startsWith("unified-test-platform") }.configureEach {
         // Handles the patching of the Android UTP (Unified Test Platform)
         dependencies {
             for (securityBom in gradle.extra["securityBoms"] as List<*>) {
