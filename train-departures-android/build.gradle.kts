@@ -34,6 +34,7 @@ android {
         }
         getByName("release") {
             isMinifyEnabled = true // runProguard
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -48,7 +49,7 @@ android {
     }
 
     // Disabled because adding in an MMP module manages to break the lint tasks
-    tasks["lint"].enabled = false
+    tasks.matching { it.name.startsWith("lint") }.configureEach { enabled = false }
 }
 
 dependencies {
