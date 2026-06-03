@@ -16,7 +16,7 @@ fragment-ktx = "1.8.9"
 
 junit = "4.13.2"
 
-kotlinx-coroutines = "1.10.2"
+kotlinx-coroutines = "1.11.0"
 
 ktor-client = "3.4.3"
 
