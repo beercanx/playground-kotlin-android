@@ -9,7 +9,7 @@ buildscript {
     // Review these on each update of the AGP (com.android.application)
     gradle.extra["securityBoms"] = listOf(
         "org.bouncycastle:bc-jdk18on-bom:1.84",
-        "io.netty:netty-bom:4.2.11.Final",
+        "io.netty:netty-bom:4.2.14.Final",
     )
     gradle.extra["securityPatches"] = listOf(
         "org.apache.httpcomponents:httpmime:4.5.14",
