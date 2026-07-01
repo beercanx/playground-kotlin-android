@@ -22,7 +22,7 @@ ktor-client = "3.4.3"
 
 material = "1.13.0"
 
-mockk = "1.14.9"
+mockk = "1.14.11"
 
 preference-ktx = "1.2.1"
 
