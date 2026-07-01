@@ -18,7 +18,7 @@ junit = "4.13.2"
 
 kotlinx-coroutines = "1.11.0"
 
-ktor-client = "3.4.3"
+ktor-client = "3.5.1"
 
 material = "1.13.0"
 
