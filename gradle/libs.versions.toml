@@ -20,7 +20,7 @@ kotlinx-coroutines = "1.11.0"
 
 ktor-client = "3.5.1"
 
-material = "1.13.0"
+material = "1.14.0"
 
 mockk = "1.14.11"
 
