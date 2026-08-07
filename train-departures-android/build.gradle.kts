@@ -8,12 +8,12 @@ kotlin {
 }
 
 android {
-    compileSdk = 36
+    compileSdk = 37
     namespace = "uk.co.baconi.pka.td"
     defaultConfig {
         applicationId = "uk.co.baconi.pka.td"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 2
         versionName = "1.1"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
