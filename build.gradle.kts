@@ -8,16 +8,16 @@ buildscript {
 
     // Review these on each update of the AGP (com.android.application)
     gradle.extra["securityBoms"] = listOf(
-        "org.bouncycastle:bc-jdk18on-bom:1.85",
-        "io.netty:netty-bom:4.2.16.Final",
+        "org.bouncycastle:bc-jdk18on-bom:1.85.2",
+        "io.netty:netty-bom:4.2.17.Final",
     )
     gradle.extra["securityPatches"] = listOf(
         "org.apache.httpcomponents:httpmime:4.5.14",
         "org.apache.httpcomponents:httpclient:4.5.14",
         "org.apache.commons:commons-compress:1.28.0",
         "org.apache.commons:commons-lang3:3.20.0",
-        "com.google.protobuf:protobuf-java:4.35.1",
-        "com.google.protobuf:protobuf-kotlin:4.35.1",
+        "com.google.protobuf:protobuf-java:4.36.0",
+        "com.google.protobuf:protobuf-kotlin:4.36.0",
         "org.jdom:jdom2:2.0.6.1",
         "org.bitbucket.b_c:jose4j:0.9.6",
     )
