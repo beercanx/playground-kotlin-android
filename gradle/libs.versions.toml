@@ -4,21 +4,21 @@ androidx-test-runner = "1.7.0"
 
 androidx-espresso-core = "3.7.0"
 
-annotation = "1.10.0"
+annotation = "1.11.0"
 
 appcompat = "1.8.0"
 
 constraintlayout = "2.2.2"
 
-core-ktx = "1.19.0"
+core-ktx = "1.19.1"
 
-fragment-ktx = "1.9.0"
+fragment-ktx = "1.9.1"
 
 junit = "4.13.2"
 
 kotlinx-coroutines = "1.11.0"
 
-ktor-client = "3.5.2"
+ktor-client = "3.6.0"
 
 material = "1.14.0"
 
