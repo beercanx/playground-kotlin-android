@@ -10,6 +10,7 @@ buildscript {
     gradle.extra["securityBoms"] = listOf(
         "org.bouncycastle:bc-jdk18on-bom:1.86.2",
         "io.netty:netty-bom:4.2.19.Final",
+        "com.google.guava:guava-bom:33.7.2-jre",
     )
     gradle.extra["securityPatches"] = listOf(
         "org.apache.httpcomponents:httpmime:4.5.14",
