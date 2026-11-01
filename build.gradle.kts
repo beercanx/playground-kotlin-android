@@ -8,14 +8,14 @@ buildscript {
 
     // Review these on each update of the AGP (com.android.application)
     gradle.extra["securityBoms"] = listOf(
-        "org.bouncycastle:bc-jdk18on-bom:1.86.1",
-        "io.netty:netty-bom:4.2.18.Final",
+        "org.bouncycastle:bc-jdk18on-bom:1.86.2",
+        "io.netty:netty-bom:4.2.19.Final",
     )
     gradle.extra["securityPatches"] = listOf(
         "org.apache.httpcomponents:httpmime:4.5.14",
         "org.apache.httpcomponents:httpclient:4.5.14",
         "org.apache.commons:commons-compress:1.28.0",
-        "org.apache.commons:commons-lang3:3.20.0",
+        "org.apache.commons:commons-lang3:3.21.0",
         "com.google.protobuf:protobuf-java:4.36.2",
         "com.google.protobuf:protobuf-kotlin:4.36.2",
         "org.jdom:jdom2:2.0.6.1",
@@ -24,7 +24,7 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:9.2.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.21")
 
         for (securityBom in gradle.extra["securityBoms"] as List<*>) {
             classpath(platform(securityBom!!))
